@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/wordTable"
+        android:title="@string/wordTableStr"/>
+    <item
+        android:id="@+id/userTable"
+        android:title="@string/userTableStr"/>
+    <item
+        android:id="@+id/restoreDB"
+        android:title="@string/restoreDBStr" />
+    
+</menu>
