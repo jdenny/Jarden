@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jardenconsulting.spanishapp.MainActivity" >
+
+    <item android:id="@+id/verbTable"
+        android:title="@string/verbTableStr"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/userSettings"
+        android:title="@string/userSettingsStr"
+        app:showAsAction="never" />
+
+    <!-- 
+    <item android:id="@+id/questionStyle"
+        android:title="@string/questionStyleStr"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/updateDB"
+        android:title="@string/updateDBStr"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/restoreDB"
+        android:title="@string/restoreDBStr"
+        app:showAsAction="never" />
+    -->
+
+</menu>

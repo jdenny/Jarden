@@ -1,0 +1,116 @@
+CALCULATING LEVELS
+------------------
+requirements
+	quickly find user's level, and adjust accordingly
+	revise words user got wrong; higher priority to
+		words most recently wrong, most number of errors
+
+5 tenses (if we combine si & no), plus a few more, plus compound tenses
+user cannot move up a level until he has passed words at all levels so far
+
+new user gets quick quiz to establish level
+	e.g. Hola, cual es tu nombre?
+	buttons: Go, Explain 
+	if answers properly, go up a level
+	else go down a level
+	ask another question
+	Hola Julie. ¿Quieres aprender español? Si, No, Explain, Back radio buttons
+	¿De donde eres?
+
+data-driven design:
+	question; options; next step per option
+	option: form & buttons, or check-boxes
+E.g.
+	userLevel = 1
+	Q1: Hola, ¿cual es tu nombre?
+	Input field: Name
+	Options: Go, Explain buttons
+		Go -> ++userLevel; pass name to Q2
+	Q2: Hola Julie. ¿Quieres aprender español?
+	Options: Si, no, explain, radio buttons
+
+If all right, only ask from currentWords (i.e. not from availableWords)
+also take into account time to answer questions
+
+answer all words at current level; any words wrong need to get right twice
+if multiple wrongs, need 3 consecutive rights
+at next level, in addition to above:
+	if wrong at previous level: add to currents (i.e. get right once)
+	if wrong at previous 2 levels: add to currents for this and next level
+
+
+DESIGN
+availableWords (A) = list of words where difficulty <= userLevel
+currentWordList (C) = words & history where difficulty == userLevel
+shuffle A and C, then go through each sequentially
+	skipping if already used recently - see rule below
+failedWords (F) = words got wrong at this level; initially empty
+between sessions, save C, F and userLevel
+for each word
+	wrongCt: number of wrongs at this level
+	consecutiveRightCt: at this level
+	levelsWrongCt: levels wrong - levels not wrong
+		(min 0, max 2)
+drop word from failedWordList if passed - see EngSpa.isPassed()
+if no words in F and all words in C are passed
+	increment userLevel
+	for each EngSpa
+		if wrongCt > 0:
+			increment levelsWrongCt, max 2
+		else:
+			decrement levelsWrongCt, min 0
+		wrongCt = 0
+		consecutiveRightCt = 0
+		if levelsWrongCt > 0:
+			add to currentList
+	restart
+
+choose words from availableWordList (A, which also includes other lists),
+	from currentLevelWordList (C) and from failedWordList (F)
+	in this sequence: A A C A F, A A C A F, etc
+	don't use word again for 3 goes
+END OF DESIGN
+
+have 3 broad categories: beginner, medium, advanced
+	use this to set initial skillLevel
+	add difficultyLevel to EngSpa
+	level 1: verb tenses: present
+		comer, beber; see BBC web site?
+	for each user, record his level; record words that he got wrong
+		e.g. spanish, errorCount;
+		each time wrong, errorCount += 2;
+		each time right, errorCount -= 1;
+at end of session, ask if user wants to save level & errorCounts
+
+first page: checkboxes: john, julie, sam, new
+	i.e. all users registered on this device
+defaults to owner of device
+if "new", ask name and skill level: beginner (default), medium, advanced
+	set initial level based on this
+at end of session:
+	if new user:
+		save level? (prompt for name if not already given
+
+algorithm for setting level
+	question levels 1.0 up, in increments of tenths
+		for verbs, the tenses also have levels!
+	player levels 1.0, in increments of tenths
+	+0.1 for correct answer first time
+
+Alternatively, and this would only work for one player
+if player gets word wrong, increment level of that word
+e.g. +0.1 for each incorrect answer
+or +0.1 for first incorrect answer, then +0.2 for each consecutive wrong answer
+
+get indices of all words <= current level
+got to get it right 3 times on the row; don't use same word for next 3 questions
+when all words okay, move to next level
+on exit from game, save list to device
+
+NOTES
+possible future enhancements:
+user can mark words as key, so more likely to be tested
+remember which words user consistently gets wrong
+	so can promote to higher difficultyLevel
+
+sue@suebird.co.uk gamification using games in theory

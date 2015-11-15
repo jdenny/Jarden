@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Spanish</string>
+	<string name="cancelStr">Cancel</string>
+    <string name="conjugateStr">Conjugate</string>
+	<string name="currentStr">Currents:</string>
+    <string name="englishStr">English</string>
+    <string name="failStr">Fails:</string>
+    <string name="goStr">Go</string>
+    <string name="homeStr">Home</string>
+    <string name="levelStr">Level:</string>
+    <string name="passStr">Pass</string>
+    <string name="phraseStr">Phrase</string>
+    <string name="questionAnswerStr">Question -> Answer</string>
+    <string name="questionStyleStr">Question Style</string>
+    <string name="repeatStr">Repeat</string>
+    <string name="sentenceStr">Sentence</string>
+    <string name="spanishStr">Spanish</string>
+	<string name="updateStr">Update</string>
+	<string name="userLevelStr">User level</string>
+	<string name="userNameStr">User name</string>
+	<string name="userSettingsStr">User Settings</string>
+    <string name="verbTableStr">Verb Table</string>
+    <string name="verbsOnlyStr">Verbs Only</string>
+    <string name="wordStr">Word</string>
+	
+    <string name="explainStr">Explain</string>
+		
+    <string name="appDescription">English - Spanish Tutor</string>
+</resources>
