@@ -1,6 +1,5 @@
 TODO
 prioritise everything in this list (including this line?)
-investigate use of GIT source control
 outstanding tests
 Short-term
 	*sort words in engspa.txt, to reflect school words
