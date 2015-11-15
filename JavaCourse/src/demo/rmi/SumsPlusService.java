@@ -10,7 +10,7 @@ import java.rmi.Naming;
 	3. start registry: >rmiregistry
 	1-3 or:
 		run RegistryImpl, in JRE System Library, rt.jar, sun.rmi.registry
-	4. run SumsPlusServer
+	4. run SumsPlusService
 	5. run SumsPlusGUI
  * @author john.denny@gmail.com
  *

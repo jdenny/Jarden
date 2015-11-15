@@ -13,7 +13,7 @@ import java.util.concurrent.RecursiveTask;
  */
 public class ForkJoinDemo extends RecursiveTask<List<Double>> {
 	private static final long serialVersionUID = 1L;
-	private static final double MARGIN = 0.01;
+	private static final double MARGIN = 0.001;
 	private static final int THRESHOLD = 5;
 	
 	private List<Double> numberList;
@@ -22,8 +22,33 @@ public class ForkJoinDemo extends RecursiveTask<List<Double>> {
 	public ForkJoinDemo(List<Double> numberList) {
 		this.numberList = numberList;
 	}
-	
-	public List<Double> getRoots() {
+	@Override
+	protected List<Double> compute() {
+		if (this.numberList.size() <= THRESHOLD) {
+			return getRoots();
+		}
+		ForkJoinDemo.numSplits++;
+		int midpoint = numberList.size() / 2;
+		List<Double> secondHalf = new ArrayList<Double>(numberList);
+		List<Double> temp = secondHalf.subList(0, midpoint);
+		List<Double> firstHalf = new ArrayList<Double>(temp);
+		temp.clear(); // as temp is sublist of secondHalf, 
+			// clear() removes elements from secondHalf; that's handy!
+		ForkJoinDemo left = new ForkJoinDemo(firstHalf);
+		left.fork();
+		ForkJoinDemo right = new ForkJoinDemo(secondHalf); 
+		List<Double> rightResult = right.compute();
+		List<Double> leftResult = left.join();
+		leftResult.addAll(rightResult);
+		return leftResult;
+	}
+
+	/*
+	 * This is the method that does the work. It is called from
+	 * compute() when the size of the array is small enough.
+	 * @return
+	 */
+	private List<Double> getRoots() {
 		List<Double> roots = new ArrayList<>();
 		for (double number: numberList) {
 			roots.add(squareRoot(number));
@@ -50,7 +75,7 @@ public class ForkJoinDemo extends RecursiveTask<List<Double>> {
 	public static void main(String[] args) {
 		System.out.println("squareRoot of 10 is " + squareRoot(10.0));
 		
-		double[] numbers = {2, 4, 6, 8, 10, 12, 14, 22, 24, 26, 108, 110, 112};
+		double[] numbers = {2, 3, 6, 8, 10, 12, 14, 22, 24, 26, 108, 110, 112};
 		List<Double> numberList = new ArrayList<Double>();
 		for (double d: numbers) {
 			numberList.add(d);
@@ -60,39 +85,11 @@ public class ForkJoinDemo extends RecursiveTask<List<Double>> {
 		List<Double> results = pool.invoke(task);
 		System.out.println("number of splits: " + ForkJoinDemo.numSplits);
 		
-		System.out.println("number\troot\troot*root");
+		System.out.println("number\troot\t\t\troot*root");
 		for (int i = 0; i < numbers.length; i++) {
 			double result = results.get(i);
 			System.out.println(numbers[i] + "\t" + result + "\t" + (result * result));
 		}
 		System.out.println("adios mi amigita");
 	}
-
-	public static <T> void printElements(List<T> list) {
-		for (T t: list) {
-			System.out.print(t + ", ");
-		}
-		System.out.println();
-	}
-
-	@Override
-	protected List<Double> compute() {
-		if (this.numberList.size() <= THRESHOLD) {
-			return getRoots();
-		}
-		ForkJoinDemo.numSplits++;
-		int midpoint = numberList.size() / 2;
-		List<Double> secondHalf = new ArrayList<Double>(numberList);
-		List<Double> temp = secondHalf.subList(0, midpoint);
-		List<Double> firstHalf = new ArrayList<Double>(temp);
-		temp.clear();
-		ForkJoinDemo left = new ForkJoinDemo(firstHalf);
-		left.fork();
-		ForkJoinDemo right = new ForkJoinDemo(secondHalf); 
-		List<Double> rightResult = right.compute();
-		List<Double> leftResult = left.join();
-		leftResult.addAll(rightResult);
-		return leftResult;
-	}
-
 }

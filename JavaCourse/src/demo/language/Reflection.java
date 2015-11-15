@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,6 +23,7 @@ import javax.swing.SwingUtilities;
 public class Reflection implements ActionListener {
 	private JTextField textField;
 	private JTextArea messageArea;
+	private JLabel statusLabel;
 
 	public static void main(String[] args) {
 		//Schedule a job for the event-dispatching thread:
@@ -35,12 +39,14 @@ public class Reflection implements ActionListener {
 		JLabel textLabel = new JLabel("Class name:");
 		textField = new JTextField(20);
 		messageArea = new JTextArea(10, 20);
+		statusLabel = new JLabel();
 		JButton goButton = new JButton("Go");
 		JButton clearButton = new JButton("Clear");
 		Container container = frame.getContentPane();
 		JPanel controlPanel = new JPanel();
 		container.add(controlPanel, BorderLayout.NORTH);
 		container.add(messageArea, BorderLayout.CENTER);
+		container.add(statusLabel, BorderLayout.SOUTH);
 		controlPanel.add(textLabel);
 		controlPanel.add(textField);
 		controlPanel.add(goButton);
@@ -54,41 +60,67 @@ public class Reflection implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		statusLabel.setText("");
 		String action = event.getActionCommand();
 		if (action.equals("Clear")) {
 			textField.setText("");
 			messageArea.setText("");
 		} else {
 			messageArea.setText("");
-			String className = textField.getText();
-			Class<?> clazz;
 			try {
-				clazz = Class.forName(className);
-				Method[] methods = clazz.getMethods();
-				for (Method method: methods) {
-					messageArea.append(method.getName() + "(");
-					Class<?>[] params = method.getParameterTypes();
-					for (int i = 0; i < params.length; i++) {
-						Class<?> parType = params[i];
-						messageArea.append(parType.getName());
-						if ((i+1) < params.length) {
-							messageArea.append(", ");
-						}
-					}
-					messageArea.append(");\n");
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				showClass(textField.getText(), messageArea);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				statusLabel.setText(e1.toString());
 			}
 		}
 	}
+	private static void showClass(String className, JTextArea messageArea) throws Exception {
+		Class<?> clazz = Class.forName(className);
+		messageArea.append(Modifier.toString(clazz.getModifiers()) + " class " +
+				clazz.getName() + " {\n");
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field: fields) {
+			messageArea.append("   " + Modifier.toString(field.getModifiers()) + " ");
+			messageArea.append(field.getType().getName() + " " + field.getName() + ";\n");
+		}
+		Constructor<?>[] constructors = clazz.getConstructors();
+		if (constructors.length > 0) {
+			messageArea.append("\n");
+			for (Constructor<?> constructor: constructors) {
+				messageArea.append("   " + Modifier.toString(constructor.getModifiers()) + " ");
+				messageArea.append(constructor.getName());
+				printParameters(constructor.getParameterTypes(), messageArea);
+			}
+		}
+		Method[] methods = clazz.getDeclaredMethods();
+		if (methods.length > 0) {
+			messageArea.append("\n");
+			for (Method method: methods) {
+				messageArea.append("   " + Modifier.toString(method.getModifiers()) + " ");
+				messageArea.append(method.getReturnType().getName());
+				messageArea.append(" " + method.getName());
+				printParameters(method.getParameterTypes(), messageArea);
+			}
+		}
+		messageArea.append("}\n\n\n");
+	}
+	private static void printParameters(Class<?>[] parameterTypes, JTextArea messageArea) {
+		messageArea.append("(");
+		StringBuilder builder = new StringBuilder();
+		for (Class<?> type: parameterTypes) {
+			if (type.isArray()) {
+				builder.append(type.getComponentType().getName() + "[]");
+			} else {
+				builder.append(type.getName());
+			}
+			builder.append(", ");
+		}
+		if (builder.length() > 2) {
+			// remove last ", "
+			builder.setLength(builder.length() - 2);
+		}
+		messageArea.append(builder.toString() + ");\n");
+	}
 }
 
-/*
-
-import java.lang.reflect.Method;
-
-public class Reflection {
-
-}
-*/

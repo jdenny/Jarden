@@ -38,7 +38,7 @@ public class TestCardPack {
 		System.out.println();
 	}
 	@Test
-	public static void getAllHands() {
+	public void getAllHands() {
 		CardPack cardPack = new CardPack();
 		cardPack.deal();
 		for (Player player: Player.values()) {

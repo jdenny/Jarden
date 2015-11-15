@@ -34,7 +34,4 @@ public class CurrentAccount extends BankAccount {
 		return super.getBalance();
 	}
 
-	public static void main(String[] args) {
-	}
-
 }
