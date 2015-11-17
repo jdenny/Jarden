@@ -506,4 +506,5 @@ seem,parecer,verb,transIntrans,n_a,1
 revise,repasar,verb,transIntrans,n_a,1
 show,mostrar,verb,transIntrans,n_a,1
 ring,sonar,verb,transIntrans,n_a,1
-
+download,descargar,verb,transIntrans,music,6
+cost,costar,verb,transIntrans,n_a,6

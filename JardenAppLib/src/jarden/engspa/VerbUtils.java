@@ -347,7 +347,6 @@ public class VerbUtils {
 	};
 	private static Object[][] contarTenses = {
 		{"p", contarPresent}, {"si", "cuenta"}, {"no", "cuentes"}
-
 	};
 
 	private static String[][] continuarPresent = {
@@ -357,6 +356,14 @@ public class VerbUtils {
 	private static Object[][] continuarTenses = {
 		{"p", continuarPresent}, {"si", "continúa"}, {"no", "continúes"}
 
+	};
+
+	private static String[][] costarPresent = {
+		{"yo", "cuesto"}, {"tu", "cuestas"}, {"el", "cuesta"},
+		{"e", "cuestan"}
+	};
+	private static Object[][] costarTenses = {
+		{"p", costarPresent}, {"si", "cuesta"}, {"no", "cuestes"}
 	};
 
 	private static String[][] creerPreterite = {
@@ -389,6 +396,11 @@ public class VerbUtils {
 		{"f", "dir"}, {"si", "di"}, {"no", "digas"}
 	};
 	
+	private static String[][] descargarPreterite = { {"yo", "descargué"} };
+	private static Object[][] descargarTenses = {
+		{"r", descargarPreterite}, {"no", "descargues"}
+	};
+
 	private static String[][] despedirPresent = {
 		{"yo", "despido"}, {"tu", "despides"}, {"el", "despide"},
 		{"e", "despiden"}
@@ -840,10 +852,12 @@ public class VerbUtils {
 		{"alcanzar", alcanzarTenses}, {"caer", caerTenses},
 		{"chocar", chocarTenses}, {"conocer", conocerTenses},
 		{"contar", contarTenses}, {"continuar", continuarTenses},
+		{"costar", costarTenses},
 		{"creer", creerTenses}, {"dar", darTenses},
 		{"decir", decirTenses}, {"despertar", despertarTenses},
 		{"despedir", despedirTenses}, {"dirigir", dirigirTenses},
 		{"doler", dolerTenses}, {"dormir", dormirTenses},
+		{"descargar", descargarTenses},
 		{"encontrar", encontrarTenses}, {"estar", estarTenses},
 		{"entender", entenderTenses}, {"enviar", enviarTenses},
 		{"haber", haberTenses}, {"hacer", hacerTenses},
@@ -879,7 +893,7 @@ public class VerbUtils {
 		{"awake", "awoke"}, {"bring", "brought"},
 		{"break", "broke"}, {"buy", "bought"}, {"can", "could"}, 
 		{"carry", "carried"}, {"chat", "chatted"},
-		{"choose", "chose"}, {"come", "came"}, {"cry", "cried"},
+		{"choose", "chose"}, {"come", "came"}, {"cost", "cost"}, {"cry", "cried"},
 		{"do", "did"}, {"draw", "drew"}, {"drink", "drank"}, {"eat", "ate"},
 		{"fall", "fell"}, {"forget", "forgot"}, {"forgive", "forgave"},
 		{"give", "gave"}, {"go", "went"}, {"have", "had"},

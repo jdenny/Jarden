@@ -23,11 +23,9 @@ click,cliquear, hacer clic,verb,transIntrans,n_a,6
 climb mountains,escalar montañas,verb,transIntrans,n_a,6
 complain,quejarse,verb,transIntrans,n_a,6
 contact,contactar,verb,transIntrans,n_a,6
-cost,costar,verb,transIntrans,n_a,6
 discuss,hablar de,verb,transIntrans,n_a,6
 do the vacuum cleaning,pasar la aspiradora,verb,transIntrans,n_a,6
 do the washing up,fregar (los platos),verb,transIntrans,n_a,6
-download (music),descargar (música),verb,transIntrans,n_a,6
 dress,vestirse,verb,transIntrans,n_a,6
 drive,conducir,verb,transIntrans,n_a,6
 end,terminar(se),verb,transIntrans,n_a,6
