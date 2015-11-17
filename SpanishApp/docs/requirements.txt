@@ -1,5 +1,4 @@
 TODO
-use HEAD instead of GET to find dateUpdated; coded it - new test it!
 prioritise everything in this list (including this line?)
 outstanding tests
 Short-term
