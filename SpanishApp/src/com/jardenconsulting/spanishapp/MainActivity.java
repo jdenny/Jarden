@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
 				long savedVersion = prefs.getLong(DATA_VERSION, 0);
 				try {
 					dateEngSpaFileModified = MyHttpClient.getLastModified(
-							QuizCache.serverUrlStr + "engspaversion.txt?attredirects=0&d=1");
+							QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1");
 					engSpaFileModified = dateEngSpaFileModified > savedVersion;
 				} catch (IOException e) {
 					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity
 	@Override // UserSettingsListener
 	public void onUpdateUser(String userName, int userLevel, int questionStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onUserUpdate(" + userName + ", " + userLevel +
+				"MainActivity.onUpdateUser(" + userName + ", " + userLevel +
 				", " + questionStyle + ")");
 		if (userName.trim().length() < 1) {
 			this.statusTextView.setText("no user name supplied");
@@ -265,6 +265,11 @@ public class MainActivity extends AppCompatActivity
 		if (userLevel < 1) {
 			this.statusTextView.setText("invalid userLevel supplied");
 			return;
+		}
+		int maxUserLevel = this.engSpaFragment.getEngSpaQuiz().getMaxUserLevel();
+		if (userLevel > maxUserLevel) {
+			userLevel = maxUserLevel;
+			this.statusTextView.setText("userLevel set to maximum");
 		}
 		boolean newUser = (this.engSpaUser == null);
 		boolean newLevel = !newUser && (this.engSpaUser.getUserLevel() != userLevel);

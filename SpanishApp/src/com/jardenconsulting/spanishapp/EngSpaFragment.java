@@ -64,7 +64,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextToSpeech textToSpeech;
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
-	private ArrayList<EngSpa> engSpaList;
 	private int currentQuestionStyleIndex;
 	
 	@Override
@@ -373,7 +372,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (cursor == null) {
 			Toast.makeText(getActivity(), "no matching entries found!", Toast.LENGTH_LONG).show();
 		} else {
-			this.engSpaList = new ArrayList<EngSpa>();
+			ArrayList<EngSpa> engSpaList = new ArrayList<EngSpa>();
 			while (cursor.moveToNext()) {
 				int id = cursor.getInt(0);
 				String english = cursor.getString(1);
@@ -390,11 +389,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						wordType, qualifier, attribute, level));
 			}
 			cursor.close();
+			this.engSpaQuiz = new EngSpaQuiz(engSpaList, getUserLevel());
+			this.engSpaQuiz.setQuizEventListener((MainActivity) getActivity());
+			showUserValues();
+			nextQuestion();
 		}
-		this.engSpaQuiz = new EngSpaQuiz(engSpaList, getUserLevel());
-		this.engSpaQuiz.setQuizEventListener((MainActivity) getActivity());
-		showUserValues();
-		nextQuestion();
 	}
 
 	@Override // LoaderCallbacks<Cursor>

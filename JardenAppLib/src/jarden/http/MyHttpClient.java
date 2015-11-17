@@ -16,14 +16,21 @@ public class MyHttpClient {
 	private final static int BUFFER_SIZE = 1024;
 	
 	public static long getLastModified(String urlStr) throws IOException {
-		HttpURLConnection httpUrlConnection = getConnectionFromUrlStr(urlStr);
+		URL url = new URL(urlStr);
+		HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
+		//? httpUrlConnection.setInstanceFollowRedirects(true);
+		//? httpUrlConnection.setReadTimeout(5000); // 5 seconds
+		//? System.setProperty("http.keepAlive", "false");
+		httpUrlConnection.setRequestMethod("HEAD");
+		httpUrlConnection.setRequestProperty("Accept-Encoding",
+			"identity"); // see https://code.google.com/p/android/issues/detail?id=24672
+		httpUrlConnection.connect();
+		// int code = httpUrlConnection.getResponseCode();
 		long lastModified = httpUrlConnection.getLastModified();
-		// we are not using the page itself, as we only want to find out the
-		// date last modified; we are simply flushing out the buffers
-		getPageFromUrlConnection(httpUrlConnection, "UTF-8");
 		httpUrlConnection.disconnect();
 		return lastModified;
 	}
+	
 	/**
 	 * Get the page returned by the named URL.
 	 * Uses URLConnection; this is equivalent to:

@@ -18,10 +18,10 @@ public class EngSpaQuiz extends Quiz {
 	static public interface QuizEventListener {
 		void onNewLevel(int userLevel);
 	}
-	private static int WORDS_PER_LEVEL = 10;
 	public enum QuestionType {
 		WORD, PHRASE, SENTENCE;
 	}
+	private static int WORDS_PER_LEVEL = 10;
 	private String spanish;
 	private String english;
 	
@@ -78,11 +78,13 @@ public class EngSpaQuiz extends Quiz {
 	public EngSpa getCurrentWord() {
 		return this.currentWord;
 	}
+	public int getMaxUserLevel() {
+		return this.engSpaList.size() / WORDS_PER_LEVEL;
+	}
 	private boolean incrementUserLevel() {
 		int newUserLevel = this.userLevel + 1;
 		// successful if there are questions at the next difficulty level
-		boolean levelIncremented =
-				(newUserLevel <= engSpaList.size() / WORDS_PER_LEVEL);
+		boolean levelIncremented = (newUserLevel <= getMaxUserLevel());
 		if (levelIncremented) {
 			for (EngSpa word: availableWordList) {
 				word.onIncrementingLevel(newUserLevel);
