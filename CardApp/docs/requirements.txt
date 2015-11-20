@@ -1,0 +1,11 @@
+To Test
+	bluetooth still works - but how is it to be used now?
+	
+TODO:
+rename app to Hot Bridge
+stay on same hand if rotate or go to another app
+lastBid, bidList, westDeal, primaryBid, bidNumber should
+	all be in business class, not presentation class; also keep
+	track of 3 consecutive passes
+align east to right of screen
+
