@@ -1,13 +1,24 @@
 TODO
 prioritise everything in this list (including this line?)
 outstanding tests
+	*see if level correctly shown; wasn't reflecting value on DB, but
+	maybe it was an old version of Spanish?
 Short-term
 	*sort words in engspa.txt, to reflect school words
 	*JardenProviders
 		there seems to be a bug: can only do 1 update
 		add sort, find, link to Spanish app
+	*is there a way of auto deploying JardenProvider along with Spanish?
+	if we take the dictionary out of JardenProvider, this may become
+	very stable, but still would need re-deploying occasionally.
+	*save state between sessions
+	*self-mark mode; no input field, but instead Fail checkBox next to answer
+	i.e. assume correct if user doesn't mark it fail
+	*random mode: set questionStyle to AF
 Long-term
-	have main dictionary in JardenProviders, plus extra text file online;
+	have main dictionary in JardenProviders (or perhaps better in Spanish),
+		plus extra text file(s) online; document why do we need a dictionary,
+		instead of set of text files like BKH.
 		as words mature, they can migrate to JardenProviders;
 		this would require an extra column on the database, but we
 		could use the now redundant LEVEL - see EngSpaQuiz.setUserLevel()

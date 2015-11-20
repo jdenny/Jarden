@@ -95,9 +95,8 @@ hotel,hotel,noun,masculine,building,1
 guest house,pensión,noun,feminine,building,1
 youth,juvenil,noun,masculine,person,1
 hostel,albergue,noun,masculine,building,1
-bath,baño,noun,masculine,home,1
+bathroom,baño,noun,masculine,home,1
 telephone,teléfono,noun,masculine,home,1
-toilets,servicios,noun,masculine,building,1
 floor,piso,noun,masculine,place,1
 outside,fuera,adjective,n_a,place,1
 upstairs,arriba,adverb,n_a,home,1

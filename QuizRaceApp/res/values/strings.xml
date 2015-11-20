@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">QuizRace</string>
+    <string name="app_name">Quiz Race</string>
     <string name="arithmetic">Arithmetic</string>
     <string name="numbers">Numbers</string>
     <string name="algebra">Algebra</string>
