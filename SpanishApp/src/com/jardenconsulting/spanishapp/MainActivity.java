@@ -98,6 +98,12 @@ public class MainActivity extends AppCompatActivity
 			}
 			showFragment(verbTableFragment, VERB_TABLE);
 			return true;
+		/* not used at the moment
+		} else if (id == R.id.selfMark) {
+			item.setChecked(!item.isChecked()); // what android should do!
+			if (BuildConfig.DEBUG) Log.d(TAG, "selfMark=" + item.isChecked());
+			engSpaFragment.setSelfMark(item.isChecked());
+		 */
 		}
 		return super.onOptionsItemSelected(item);
 	}

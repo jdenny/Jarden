@@ -359,7 +359,7 @@ public class EngSpaQuiz extends Quiz {
 	}
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
-		StringBuilder sb = new StringBuilder(); 
+		StringBuilder sb = new StringBuilder("Fails: "); 
 		for (EngSpa word: this.failedWordList) {
 			sb.append(word + ",");
 		}

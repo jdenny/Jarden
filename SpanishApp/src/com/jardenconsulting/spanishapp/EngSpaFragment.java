@@ -65,6 +65,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
 	private int currentQuestionStyleIndex;
+	private ViewGroup selfMarkLayout;
+	private ViewGroup buttonLayout;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,18 +89,23 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		// Potentially restore state after configuration change; see knowledgeBase.txt
 		String pendingAnswer = null;
 		if (this.answerEditText != null) pendingAnswer = answerEditText.getText().toString();
-
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
 		this.userLevelTextView = (TextView) rootView.findViewById(R.id.userLevelTextView);
 		this.currentCtTextView = (TextView) rootView.findViewById(R.id.currentCtTextView);
 		this.failCtTextView = (TextView) rootView.findViewById(R.id.failCtTextView);
-		
+		this.selfMarkLayout = (ViewGroup) rootView.findViewById(R.id.selfMarkLayout);
+		this.buttonLayout = (ViewGroup) rootView.findViewById(R.id.buttonLayout);
+		this.selfMarkLayout.setVisibility(View.GONE);
 		Button button = (Button) rootView.findViewById(R.id.goButton);
 		button.setOnClickListener(this);
 		button = (Button) rootView.findViewById(R.id.repeatButton);
 		button.setOnClickListener(this);
-		button = (Button) rootView.findViewById(R.id.passButton);
+		button = (Button) rootView.findViewById(R.id.showButton);
+		button.setOnClickListener(this);
+		button = (Button) rootView.findViewById(R.id.incorrectButton);
+		button.setOnClickListener(this);
+		button = (Button) rootView.findViewById(R.id.correctButton);
 		button.setOnClickListener(this);
 		this.questionTextView = (TextView) rootView.findViewById(R.id.questionTextView);
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
@@ -172,11 +179,24 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
-		} else if (id == R.id.passButton) {
-			showAnswer();
 		} else if (id == R.id.repeatButton) {
-			speakQuestion();
+			askQuestion();
+		} else if (id == R.id.showButton) {
+			this.buttonLayout.setVisibility(View.GONE);
+			this.selfMarkLayout.setVisibility(View.VISIBLE);
+			this.answerEditText.setText(this.correctAnswer);
+		} else if (id == R.id.correctButton) {
+			selfMarkButton(true);
+		} else if (id == R.id.incorrectButton) {
+			selfMarkButton(false);
 		}
+	}
+	private void selfMarkButton(boolean isCorrect) {
+		this.selfMarkLayout.setVisibility(View.GONE);
+		this.buttonLayout.setVisibility(View.VISIBLE);
+		engSpaQuiz.setCorrect(isCorrect);
+		showStats();
+		nextQuestion();
 	}
 	private void showAnswer() {
 		String status = this.question;
