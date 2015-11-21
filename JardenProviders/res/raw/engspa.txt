@@ -144,7 +144,6 @@ ham,jamón,noun,masculine,food,1
 dry sausage,chorizo,noun,masculine,food,1
 steak,filete,noun,masculine,food,1
 fish,pescado,noun,masculine,food,1
-seafood(pl),mariscos,noun,masculine,food,1
 beer,cerveza,noun,feminine,drink,1
 tea,té,noun,masculine,drink,1
 coffee,café,noun,masculine,drink,1

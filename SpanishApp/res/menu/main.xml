@@ -12,19 +12,4 @@
         android:title="@string/userSettingsStr"
         app:showAsAction="never" />
 
-    <!-- 
-    <item android:id="@+id/questionStyle"
-        android:title="@string/questionStyleStr"
-        app:showAsAction="never" />
-    
-    <item
-        android:id="@+id/updateDB"
-        android:title="@string/updateDBStr"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/restoreDB"
-        android:title="@string/restoreDBStr"
-        app:showAsAction="never" />
-    -->
-
 </menu>
