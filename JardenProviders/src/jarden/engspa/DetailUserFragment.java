@@ -55,7 +55,8 @@ public class DetailUserFragment extends Fragment implements OnClickListener {
 
 		questionStyleSpinner = (Spinner) view.findViewById(R.id.questionStyleSpinner);
 		ArrayAdapter<String> questionStyleAdapter = new ArrayAdapter<String>(context,
-				android.R.layout.simple_spinner_item, EngSpaContract.QUESTION_STYLES);
+				android.R.layout.simple_spinner_item,
+				EngSpaContract.QuestionStyle.getFullNameArray());
 		questionStyleSpinner.setAdapter(questionStyleAdapter);
 		Button newButton = (Button) view.findViewById(R.id.newButton);
 		newButton.setOnClickListener(this);

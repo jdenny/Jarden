@@ -164,7 +164,7 @@ public class PresetQuiz extends Quiz {
 	@Override
 	public String getHint() {
 		int len = getAttempts() * 2;
-		String answer = super.getAnswer();
+		String answer = super.getCorrectAnswer();
 		if (len > answer.length()) {
 			len = answer.length();
 		}

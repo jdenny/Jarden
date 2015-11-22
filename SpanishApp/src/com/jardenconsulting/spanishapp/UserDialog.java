@@ -47,7 +47,7 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		this.questionStyleSpinner = (Spinner) view.findViewById(R.id.questionStyleSpinner);
 		ArrayAdapter<String> questionStyleAdapter = new ArrayAdapter<String>(activity,
 				android.R.layout.simple_spinner_item,
-				EngSpaContract.QUESTION_STYLES);
+				EngSpaContract.QuestionStyle.getFullNameArray());
 		questionStyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		questionStyleSpinner.setAdapter(questionStyleAdapter);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();

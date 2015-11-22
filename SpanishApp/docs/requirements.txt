@@ -1,11 +1,11 @@
 TODO
 prioritise everything in this list (including this line?)
 outstanding tests
-	*see if level correctly shown; wasn't reflecting value on DB, but
-	maybe it was an old version of Spanish?
 Short-term
-	*hide 'repeat' unless the question is spoken
-	*random mode: set questionStyle to AF
+	*hide 'repeat' unless the question is spoken; test the various modes
+	to see if we are clearing out correct fields, e.g. we should show
+	both Spanish and English on showButton if it's spokenSpaToSpa
+	*random mode: set questionStyle to AAF
 	*sort words in engspa.txt, to reflect school words
 	*JardenProviders
 		there seems to be a bug: can only do 1 update

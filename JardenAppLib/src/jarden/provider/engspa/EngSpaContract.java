@@ -44,14 +44,35 @@ public final class EngSpaContract {
 	public static final String[] PROJECTION_ALL_USER_WORD_FIELDS = {
 		USER_ID, WORD_ID, CONSEC_RIGHT_CT, WRONG_CT, LEVELS_WRONG_CT
 	};
-	public static final String[] QUESTION_STYLES = {
-        "Spoken Spanish -> Spanish",
-		"Spoken Spanish -> English",
-		"Spoken + Written Sp. -> English",
-		"Written Spanish -> English",
-		"Written English -> Spanish",
-		"Random: any of above"
-	};
+	public enum QuestionStyle {
+		spokenSpaToSpa("Spoken Spanish -> Spanish"),
+		spokenSpaToEng("Spoken Spanish -> English"),
+		spokenWrittenSpaToEng("Spoken + Written Sp. -> English"),
+		writtenSpaToEng("Written Spanish -> English"),
+		writtenEngToSpa("Written English -> Spanish"),
+		random("Random: any of above");
+		
+		private static String[] fullNameArray;
+		static {
+			QuestionStyle[] values = QuestionStyle.values();
+			fullNameArray = new String[values.length];
+			for (int i = 0; i < values.length; i++) {
+				fullNameArray[i] = values[i].fullName;
+			}
+		}
+		
+		private String fullName;
+
+		private QuestionStyle(String fullName) {
+			this.fullName = fullName;
+		}
+		public String getFullName() {
+			return this.fullName;
+		}
+		public static String[] getFullNameArray() {
+			return fullNameArray;
+		}
+	}
 
 	public enum WordType {
 		noun, verb, adjective, adverb, number,
@@ -65,9 +86,9 @@ public final class EngSpaContract {
 	}
 	
 	public enum Attribute {
-		animal, body, building, clothing, colour, drink, fact, food, home, language,
-		mineral, music, n_a, permanent, person, place, size, temporary, time, transport,
-		weather;
+		animal, body, building, clothing, colour, drink, fact, food, home,
+		language, mineral, money, music, n_a, permanent, person, place,
+		size, temporary, time, transport, weather;
 	}
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;

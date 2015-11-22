@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity
 	private static final String VERB_TABLE = "VERB_TABLE";
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaFragment engSpaFragment;
+	private DialogFragment userDialog;
 	/*
 	 * userLevel can be incremented by EngSpaQuiz when user answered
 	 * enough questions, or set by user invoking options menu item
@@ -108,13 +109,8 @@ public class MainActivity extends AppCompatActivity
 		return super.onOptionsItemSelected(item);
 	}
 	private void showUserDialog() {
-		// this seems as if we are re-creating the dialog each time
-		// it is shown, but user-groups suggest that Android automatically
-		// re-uses the dialog if it's already been created. This doesn't
-		// seem to be the case for me!
-		// TODO: investigate further.
-		DialogFragment dialog = new UserDialog();
-		dialog.show(getSupportFragmentManager(), "UserSettingsDialog");
+		if (this.userDialog == null) this.userDialog = new UserDialog();
+		this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 	}
 	/* Update EngSpa table on database if engspa.txt on server has been updated.
 	 * get dateEngSpaModified from url of engspaversion.txt on server

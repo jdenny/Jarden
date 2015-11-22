@@ -339,7 +339,7 @@ public class DrawingCanvas extends ShapeCanvas implements MouseListener,
 	}
 
 	public void setShapeSet(ShapeSet shapeSet) {
-		// !! test if old shape set has changed; popup dialog if so.
+		// TODO: test if old shape set has changed; popup dialog if so.
 		this.shapeSet = shapeSet;
 	}
 }

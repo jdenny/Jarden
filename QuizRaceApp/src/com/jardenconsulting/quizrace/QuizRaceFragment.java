@@ -323,7 +323,7 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 			}
 			nextQuestion();
 		} else if (result == Quiz.FAIL) {
-			logMessage(answer + " is wrong! correct answer is " + quiz.getAnswer());
+			logMessage(answer + " is wrong! correct answer is " + quiz.getCorrectAnswer());
 			nextQuestion();
 		} else {
 			logMessage(answer + " is wrong!");

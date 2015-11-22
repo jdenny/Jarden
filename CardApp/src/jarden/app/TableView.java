@@ -9,6 +9,7 @@ public class TableView extends LinearLayout {
 	private TextView[] cellTextViews;
 	private int cellNumber = 0;
 
+	@SuppressWarnings("deprecation")
 	public TableView(Context context, int rowCt, int columnCt) {
 		super(context);
 		int cellCt = rowCt * columnCt;

@@ -40,14 +40,6 @@ import android.widget.TextView.OnEditorActionListener;
 public class EngSpaFragment extends Fragment implements OnClickListener,
 		OnEditorActionListener, OnInitListener, LoaderCallbacks<Cursor> {
 	public final static int WORD_LOADER_ID = 1;
-	// question styles: TODO: can these somehow be consolidated with
-	private final static int QAS_SpokenSpaToSpa = 0;
-	// private final static int QAS_SpokenSpaToEng = 1;
-	// private final static int QAS_SpokenWrittenSpaToEng = 2;
-	// private final static int QAS_WrittenSpaToEng = 3;
-	private final static int QAS_WrittenEngToSpa = 4;
-	private final static int QAS_Random = 5;
-	// end of question styles
 
 	private final static Locale LOCALE_ES = new Locale("es", "ES");
 	private TextView userNameTextView;
@@ -123,16 +115,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		
 		int qStyleIndex = ((MainActivity) getActivity())
 				.getEngSpaUser().getQuestionStyleIndex();
-		if (qStyleIndex == QAS_Random) {
+		if (qStyleIndex == EngSpaContract.QuestionStyle.random.ordinal()) {
 			this.currentQuestionStyleIndex = random.nextInt(5);
 		} else {
 			this.currentQuestionStyleIndex = qStyleIndex;
 		}
 		this.responseIfCorrect = "Right!";
-		if (currentQuestionStyleIndex == QAS_WrittenEngToSpa) {
+		if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.writtenEngToSpa.ordinal()) {
 			this.question = english;
 			this.correctAnswer = spanish;
-		} else if (currentQuestionStyleIndex == QAS_SpokenSpaToSpa) {
+		} else if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.spokenSpaToSpa.ordinal()) {
 			this.question = spanish;
 			this.correctAnswer = this.question;
 			this.responseIfCorrect = "Right! " + english;
@@ -150,9 +142,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		askQuestion();
 	}
 	private void askQuestion() {
-		if (currentQuestionStyleIndex == QAS_WrittenEngToSpa) {
+		if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.writtenEngToSpa.ordinal()) {
 			this.answerEditText.setHint(R.string.spanishStr);
-		} else if (currentQuestionStyleIndex == QAS_SpokenSpaToSpa) {
+		} else if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.spokenSpaToSpa.ordinal()) {
 			this.answerEditText.setHint(R.string.spanishStr);
 		} else {
 			this.answerEditText.setHint(R.string.englishStr);

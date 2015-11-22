@@ -79,6 +79,7 @@ public class CardFragment extends Fragment implements OnClickListener {
 	private int consecutivePasses;
 	private boolean biddingOver;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

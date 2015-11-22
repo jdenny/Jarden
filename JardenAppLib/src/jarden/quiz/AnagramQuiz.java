@@ -162,7 +162,7 @@ public class AnagramQuiz extends Quiz {
 	@Override
 	public String getHint() {
 		int len = getAttempts();
-		String answer = super.getAnswer();
+		String answer = super.getCorrectAnswer();
 		if (len > answer.length()) {
 			len = answer.length();
 		}

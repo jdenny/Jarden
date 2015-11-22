@@ -46,6 +46,7 @@ tall,alto,adjective,n_a,person,1
 short,bajo,adjective,n_a,person,1
 big,grande,adjective,n_a,person,1
 small,pequeño,adjective,n_a,person,1
+
 I am tall,soy alto,phrase,n_a,n_a,1
 I am short,soy bajo,phrase,n_a,n_a,1
 mother,madre,noun,feminine,person,1
@@ -158,7 +159,107 @@ salt,sal,noun,feminine,food,1
 rice,arroz,noun,masculine,food,1
 soup,sopa,noun,feminine,food,1
 cereal,cereal,noun,masculine,food,1
-chips or crips,patatas fritas,phrase,n_a,food,1
+potato chip,patata frita,noun,n_a,food,1
+apricot,albaricoque,noun,masculine,food,1
+appetite,apetito,noun,masculine,food,1
+bill,cuenta,noun,feminine,food,1
+bean,alubia,noun,feminine,food,1
+biscuit,galleta,noun,feminine,food,1
+bottle,botella,noun,feminine,drink,1
+Brussels sprout,cole de Bruselas,noun,feminine,food,1
+butter,mantequilla,noun,masculine,food,1
+café,cafetería,noun,feminine,drink,1
+cake,pastel,noun,masculine,food,1
+champagne,champán,noun,masculine,drink,1
+cheese,queso,noun,masculine,food,1
+chocolate,chocolate,noun,masculine,food,1
+choice,elección,noun,feminine,n_a,1
+chop,chuleta,noun,feminine,food,1
+cider,sidra,noun,feminine,drink,1
+delicious,delicioso,adjective,n_a,food,1
+dessert,postre,noun,masculine,food,1
+dining room,comedor,noun,masculine,food,1
+dish of the day,plato del día,phrase,n_a,food,1
+enjoy your meal,buen provecho,phrase,n_a,food,1
+fixed price menu,menú a precio fijo,phrase,n_a,food,1
+food,comida,noun,feminine,food,1
+food shopping,compra de comestibles,phrase,n_a,food,1
+fork,tenedor,noun,masculine,food,1
+fruit,fruta,noun,feminine,food,1
+fruit pie,tarta de frutas,noun,feminine,food,1
+fruit juice,jugo de fruta,noun,masculine,food,1
+glass,vaso,noun,masculine,drink,1
+sauce,salsa,noun,feminine,food,1
+green bean,judía verde,noun,feminine,food,1
+hamburger,hamburguesa,noun,feminine,food,1
+hot chocolate,chocolate caliente,noun,masculine,drink,1
+hypermarket,hipermercado,noun,masculine,building,1
+ice cream,helado,noun,masculine,food,1
+ice cream shop,heladería,noun,feminine,building,1
+inn,posada,noun,feminine,building,1
+jar,tarro,noun,masculine,food,1
+jam,mermelada,noun,feminine,food,1
+kebab,brocheta,noun,feminine,food,1
+knife,cuchillo,noun,masculine,food,1
+lemonade,limonada,noun,feminine,drink,1
+salad,ensalada,noun,feminine,food,1
+main course,plato principal,noun,masculine,food,1
+margarine,margarina,noun,feminine,food,1
+meal,comida,noun,feminine,food,1
+meat,carne,noun,feminine,food,1
+meatball,albóndiga,noun,feminine,food,1
+menu,menú,noun,masculine,food,1
+menu of the day,menú del día,phrase,n_a,food,1
+mince,carne picada,noun,feminine,food,1
+mineral water,agua mineral,noun,masculine,drink,1
+water,agua,noun,masculine,drink,1
+mixed,mixto,adjective,n_a,n_a,1
+money,dinero,noun,masculine,n_a,1
+mustard,mostaza,noun,feminine,food,1
+napkin,servilleta,noun,feminine,food,1
+omelette,tortilla,noun,feminine,food,1
+orange,naranja,noun,feminine,food,1
+packet,paquete,noun,masculine,food,1
+pasta,pasta,noun,feminine,food,1
+pâté,paté,noun,masculine,food,1
+pizza,pizza,noun,feminine,food,1
+pineapple,piña,noun,feminine,food,1
+plate,plato,noun,masculine,food,1
+plum,ciruela,noun,feminine,food,1
+radish,rábano,noun,masculine,food,1
+refreshment,refresco,noun,masculine,food,1
+rest day,día de descanso,noun,masculine,time,1
+bread roll,panecillo,noun,masculine,food,1
+savoury,salado,adjective,n_a,food,1
+salad dressing,aliño para ensalada,noun,masculine,food,1
+sandwich,bocadillo,noun,masculine,food,1
+self-service,autoservicio,noun,masculine,food,1
+service,servicio,noun,masculine,food,1
+set meal,menú del día,noun,masculine,food,1
+slice,rebanada,noun,feminine,food,1
+snack,merienda,noun,feminine,food,1
+café,cafetería,noun,feminine,building,1
+speciality,especialidad,noun,feminine,food,1
+spoon,cuchara,noun,feminine,food,1
+starter,entrada,noun,feminine,food,1
+sweet,dulce,adjective,n_a,food,1
+sweet,caramelo,noun,masculine,food,1
+table,mesa,noun,feminine,food,1
+table cloth,mantel,noun,masculine,food,1
+tart,tarta,noun,feminine,food,1
+tasty,sabroso,adjective,n_a,food,1
+tea room,salón de té,noun,masculine,building,1
+teaspoon,cucharita,noun,feminine,food,1
+tip,propina,noun,feminine,money,1
+pay,pagar,verb,transIntrans,n_a,1
+tuna,atún,noun,masculine,food,1
+vanilla,vainilla,noun,feminine,food,1
+vegetable,verdura,noun,feminine,food,1
+vegetarian,vegetariano,adjective,n_a,food,1
+vinegar,vinagre,noun,masculine,food,1
+waiter,camarero,noun,masculine,person,1
+yoghurt,yogur,noun,masculine,food,1
+pizza restaurant,pizzería,noun,feminine,building,1
 building,edificio,noun,masculine,building,1
 bank,banco,noun,masculine,building,1
 butcher's,carnicería,noun,feminine,building,1
@@ -214,6 +315,8 @@ today,hoy,adverb,n_a,time,1
 tomorrow,mañana,adverb,n_a,time,1
 yesterday,ayer,adverb,n_a,time,1
 week,semana,noun,feminine,time,1
+month,mes,noun,masculine,time,1
+season,estación,noun,feminine,time,1
 run,correr,verb,transIntrans,transport,1
 often,a menudo,adverb,n_a,time,1
 always,siempre,adverb,n_a,time,1
@@ -359,6 +462,12 @@ business,negocio,noun,masculine,n_a,1
 magazine,revista,noun,feminine,n_a,1
 reward,galardón,noun,masculine,n_a,1
 hide,esconder,verb,transIntrans,n_a,1
+closed on Mondays,cerrado los lunes,phrase,n_a,n_a,1
+cocoa,cacao,noun,masculine,drink,1
+cooked, boiled cocido/a, hervido/a
+cream,crema,noun,feminine,food,1
+cup,taza,noun,feminine,drink,1
+customer,cliente,noun,masculine,person,1
 inside,dentro,adjective,n_a,place,1
 awaken,despertar,verb,n_a,n_a,1
 exhaust,agotar,verb,transitive,n_a,1
@@ -427,7 +536,6 @@ go,ir,verb,transIntrans,n_a,1
 hate,odiar,verb,transIntrans,n_a,1
 have,tener,verb,transIntrans,n_a,1
 breakfast,desayunar,verb,transIntrans,n_a,1
-dine,cenar,verb,transIntrans,n_a,1
 hear,oír,verb,transIntrans,n_a,1
 help,ayudar,verb,transIntrans,n_a,1
 hope,esperar,verb,transIntrans,n_a,1
