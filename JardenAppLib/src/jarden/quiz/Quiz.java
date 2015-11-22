@@ -161,8 +161,7 @@ public abstract class Quiz {
 			return Quiz.INCORRECT;
 		}
 	}
-	// TODO: rename this to getCorrectAnswer()
-	public String getAnswer() {
+	public String getCorrectAnswer() {
 		return this.correctAnswer;
 	}
 	public int getMaxInt(int level) {
