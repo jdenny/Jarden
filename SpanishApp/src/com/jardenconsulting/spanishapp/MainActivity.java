@@ -64,13 +64,13 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
+		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState != null) {
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
 		}
-		setContentView(R.layout.activity_main);
-		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
-		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.engSpaUser = loadUserFromDB();
 		if (this.engSpaUser == null) { // i.e. no user yet on database
 			showUserDialog();
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
 							QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1");
 					engSpaFileModified = dateEngSpaFileModified > savedVersion;
 				} catch (IOException e) {
-					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
+					Log.e(TAG, "Exception in checkDataFileVersion: ", e);
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity
 						editor.commit();
 						updateStatus = "";
 					} catch (IOException e) {
-						Log.e(TAG, "Exception in onUpdateDecision: " + e);
+						Log.e(TAG, "Exception in onUpdateDecision()", e);
 						updateStatus = "dictionary update failed; using existing version";
 					}
 					runOnUiThread(new Runnable() {

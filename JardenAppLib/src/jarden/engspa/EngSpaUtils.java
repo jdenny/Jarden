@@ -33,19 +33,10 @@ public class EngSpaUtils {
 			is.close();
 		}
 	}
-	// Note: don't run this method on the UI thread!
 	public static ContentValues[] getContentValuesArray(List<String> engSpaLines) {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>(); 
-		//! BufferedReader reader = null;
-		//! try {
-			// iso-8859 needed for Android, and maybe for Java;
-			// see javadocs in QuizCache.loadQuizFromServer()
-			//! InputStreamReader isReader = new InputStreamReader(is, "iso-8859-1");
-			//! reader = new BufferedReader(isReader);
-			// String line; // e.g. room,habitación,n,f,place,2
 		ContentValues contentValues;
 		for (String line: engSpaLines) {
-		//! while ((line = reader.readLine()) != null) {
 			String[] tokens = line.split(",");
 			if (tokens.length == 6) {
 				contentValues = new ContentValues();
@@ -61,18 +52,6 @@ public class EngSpaUtils {
 						line);
 			}
 		}
-//!		} catch (IOException ioe) {
-//			Log.e(TAG, "Exception updating database: " + ioe);
-//		}
-//		finally {
-//			if (reader != null) {
-//				try {
-//					reader.close();
-//				} catch (IOException ioe) {
-//					throw new RuntimeException(ioe);
-//				}
-//			}
-//		}
 		return contentValuesList.toArray(new ContentValues[contentValuesList.size()]);
 	}
 }

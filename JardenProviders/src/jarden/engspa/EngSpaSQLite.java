@@ -95,7 +95,7 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 			contentValuesArray = EngSpaUtils.getContentValuesArray(is);
 			return this.bulkInsert(engSpaDB, contentValuesArray);
 		} catch (IOException e) {
-			Log.e(TAG, "exception in EngSpaSQLite.populateDatabase(): " + e);
+			Log.e(TAG, "exception in EngSpaSQLite.populateDatabase(): ", e);
 			return 0;
 		}
 	}
@@ -107,7 +107,7 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 			return true;
 		} catch(Exception ex) {
 			if (DEBUG) throw new RuntimeException(ex);
-			Log.e(TAG, "exception in EngSpaSQLite.validateValues(): " + ex);
+			Log.e(TAG, "exception in EngSpaSQLite.validateValues(): ", ex);
 			return false;
 		}
 	}

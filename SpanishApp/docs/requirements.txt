@@ -7,14 +7,14 @@ Short-term
 	both Spanish and English on showButton if it's spokenSpaToSpa
 	*random mode: set questionStyle to AAF
 	*sort words in engspa.txt, to reflect school words
-	*JardenProviders
-		there seems to be a bug: can only do 1 update
-		add sort, find, link to Spanish app
 	*is there a way of auto deploying JardenProvider along with Spanish?
 	if we take the dictionary out of JardenProvider, this may become
 	very stable, but still would need re-deploying occasionally.
 	*save state between sessions
 Long-term
+	long hold over a button shows tip, e.g.
+		spokenSpaToSpa shows: we speak the Spanish, you type the Spanish")
+		refactor EngSpaContract.QuestionStyle to be like the other enums
 	have main dictionary in JardenProviders (or perhaps better in Spanish),
 		plus extra text file(s) online; document why do we need a dictionary,
 		instead of set of text files like BKH.
@@ -25,7 +25,11 @@ Long-term
 		from extra file to LEVEL=2, when we updated the extra file we
 		would have to delete all words with LEVEL=2, and reset nextID
 		to numberOfRows + 1
-	change EngSpa.Attribute from Enum to a String?
+	extend verbTable menu option to include all words:
+		menu verbTable -> Word Lookup; search for English or Spanish, as now,
+		but some kind of auto-completion and/or wild cards in search
+		if verb chosen, option to show conjugation;
+	change EngSpa.Attribute from enum to a String?
 	for time and dates and places, use preposition, e.g.
 	last Tuesday; at five o'clock; next June; to England; at the chemist
 	make more use of Activity.Title, e.g. wordType, "Verb Table"

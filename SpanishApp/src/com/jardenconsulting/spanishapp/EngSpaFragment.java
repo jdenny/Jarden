@@ -3,6 +3,7 @@ package com.jardenconsulting.spanishapp;
 import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
+import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.provider.engspa.EngSpaContract.WordType;
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaQuiz;
@@ -65,9 +66,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
-		MainActivity mainActivity = (MainActivity) getActivity();
-		mainActivity.checkDataFileVersion();
 		setRetainInstance(true);
+		MainActivity mainActivity = (MainActivity) getActivity();
+		if (savedInstanceState == null) { // only check for dictionary updates
+				// when app is opened, not restarted
+			mainActivity.checkDataFileVersion();
+		}
 	}
 	public void loadDB() {
 		getActivity().getSupportLoaderManager().initLoader(
@@ -115,16 +119,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		
 		int qStyleIndex = ((MainActivity) getActivity())
 				.getEngSpaUser().getQuestionStyleIndex();
-		if (qStyleIndex == EngSpaContract.QuestionStyle.random.ordinal()) {
-			this.currentQuestionStyleIndex = random.nextInt(5);
+		if (qStyleIndex == QuestionStyle.random.ordinal()) {
+			this.currentQuestionStyleIndex = random.nextInt(5); // TODO: base this on size of array
 		} else {
 			this.currentQuestionStyleIndex = qStyleIndex;
 		}
 		this.responseIfCorrect = "Right!";
-		if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.writtenEngToSpa.ordinal()) {
+		if (currentQuestionStyleIndex == QuestionStyle.writtenEngToSpa.ordinal()) {
 			this.question = english;
 			this.correctAnswer = spanish;
-		} else if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.spokenSpaToSpa.ordinal()) {
+		} else if (currentQuestionStyleIndex == QuestionStyle.spokenSpaToSpa.ordinal()) {
 			this.question = spanish;
 			this.correctAnswer = this.question;
 			this.responseIfCorrect = "Right! " + english;
@@ -142,9 +146,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		askQuestion();
 	}
 	private void askQuestion() {
-		if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.writtenEngToSpa.ordinal()) {
+		if (currentQuestionStyleIndex == QuestionStyle.writtenEngToSpa.ordinal()) {
 			this.answerEditText.setHint(R.string.spanishStr);
-		} else if (currentQuestionStyleIndex == EngSpaContract.QuestionStyle.spokenSpaToSpa.ordinal()) {
+		} else if (currentQuestionStyleIndex == QuestionStyle.spokenSpaToSpa.ordinal()) {
 			this.answerEditText.setHint(R.string.spanishStr);
 		} else {
 			this.answerEditText.setHint(R.string.englishStr);
@@ -177,6 +181,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.buttonLayout.setVisibility(View.GONE);
 			this.selfMarkLayout.setVisibility(View.VISIBLE);
 			this.answerEditText.setText(this.correctAnswer);
+			if (this.currentQuestionStyleIndex ==
+					QuestionStyle.spokenSpaToSpa.ordinal()) {
+				this.statusTextView.setText(engSpaQuiz.getEnglish());
+			} else {
+				this.statusTextView.setText("");
+			}
 		} else if (id == R.id.correctButton) {
 			selfMarkButton(true);
 		} else if (id == R.id.incorrectButton) {
@@ -210,25 +220,24 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (suppliedAnswer.length() == 0) {
 			showAnswer();
 		} else {
-			boolean correct;
+			boolean isCorrect;
 			if ((this.correctAnswer.startsWith("ellos ") ||
 					this.correctAnswer.startsWith("ellas ")) &&
 					(suppliedAnswer.startsWith("ellos ") ||
 					suppliedAnswer.startsWith("ellas ")))
-				correct = suppliedAnswer.substring(6).equalsIgnoreCase(this.correctAnswer.substring(6));
+				isCorrect = suppliedAnswer.substring(6).equalsIgnoreCase(this.correctAnswer.substring(6));
 			else {
 				if (this.correctAnswer.endsWith("!")) {
 					// ! at end of imperatives is optional
 					if (!suppliedAnswer.endsWith("!")) suppliedAnswer += "!";
 				}
-				correct = suppliedAnswer.equalsIgnoreCase(this.correctAnswer);
+				isCorrect = suppliedAnswer.equalsIgnoreCase(this.correctAnswer);
 			}
-			if (correct) {
-				engSpaQuiz.setCorrect(true);
+			engSpaQuiz.setCorrect(isCorrect);
+			if (isCorrect) {
 				this.statusTextView.setText(this.responseIfCorrect);
 				nextQuestion();
 			} else {
-				engSpaQuiz.setCorrect(false);
 				this.statusTextView.setText("Wrong!");
 				if (this.currentQuestionStyleIndex < 3) {
 					speakQuestion();
@@ -266,8 +275,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onResume()");
 		super.onResume();
 		// TextToSpeech is recreated here because it's shut down in onPause()
-		this.textToSpeech = new TextToSpeech(
-				getActivity(), this); // invokes onInit() on completion
+		if (this.textToSpeech == null) {
+			this.textToSpeech = new TextToSpeech(
+					getActivity(), this); // invokes onInit() on completion
+		}
 		if (this.question != null) {
 			askQuestion();
 			showStats();
