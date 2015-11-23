@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class EngSpaSQLite extends SQLiteOpenHelper {
 	private final static String DB_NAME = "engspa.db";
-	private final static int DB_VERSION = 24; // updated 20 Dec 2014
+	private final static int DB_VERSION = 25; // updated 23 Nov 2015
 	private static final int DATA_FILE_ID = // R.raw.engspatest;
 									R.raw.engspa;
 
@@ -38,7 +38,7 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 		BaseColumns._ID +          " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
 		EngSpaContract.NAME +      " TEXT NOT NULL, " +
 		EngSpaContract.LEVEL +     " INTEGER, " +
-		EngSpaContract.QUESTION_STYLE + " INTEGER);";
+		EngSpaContract.QUESTION_STYLE + " TEXT NOT NULL);";
 	private final static String CREATE_USER_WORD_TABLE =
 		"CREATE TABLE " + EngSpaContract.USER_WORD_TABLE + " (" +
 		EngSpaContract.USER_ID +   " INTEGER NOT NULL PRIMARY KEY, " +

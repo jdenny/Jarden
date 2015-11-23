@@ -1,6 +1,7 @@
 package jarden.engspa;
 
 import jarden.provider.engspa.EngSpaContract;
+import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 
 import com.jardenconsulting.providerdemoapp.BuildConfig;
 import com.jardenconsulting.providerdemoapp.MainActivity;
@@ -56,7 +57,7 @@ public class DetailUserFragment extends Fragment implements OnClickListener {
 		questionStyleSpinner = (Spinner) view.findViewById(R.id.questionStyleSpinner);
 		ArrayAdapter<String> questionStyleAdapter = new ArrayAdapter<String>(context,
 				android.R.layout.simple_spinner_item,
-				EngSpaContract.QuestionStyle.getFullNameArray());
+				EngSpaContract.questionStyleNames);
 		questionStyleSpinner.setAdapter(questionStyleAdapter);
 		Button newButton = (Button) view.findViewById(R.id.newButton);
 		newButton.setOnClickListener(this);
@@ -128,15 +129,16 @@ public class DetailUserFragment extends Fragment implements OnClickListener {
 		if (cursor.moveToFirst()) {
 			String name = cursor.getString(1);
 			String level = cursor.getString(2);
-			int questionStyleIndex = cursor.getInt(3);
+			String questionStyleStr = cursor.getString(3);
 			this.nameEdit.setText(name);
 			this.levelEdit.setText(level);
-			this.questionStyleSpinner.setSelection(questionStyleIndex);
+			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
+			this.questionStyleSpinner.setSelection(questionStyle.ordinal());
 			if (BuildConfig.DEBUG) {
 				Log.d(MainActivity.TAG,
 						"DetailUserFragment.showUser(); name=" + name +
-						", level=" + level + ", questionStyleIndex=" +
-						questionStyleIndex);
+						", level=" + level + ", questionStyle=" +
+						questionStyle);
 			}
 			mainActivity.setStatus("");
 		} else {

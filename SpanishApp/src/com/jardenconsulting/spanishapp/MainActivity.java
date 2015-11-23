@@ -9,6 +9,7 @@ import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
 import jarden.provider.engspa.EngSpaContract;
+import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
@@ -231,13 +232,14 @@ public class MainActivity extends AppCompatActivity
 				EngSpaContract.CONTENT_URI_USER,
 				EngSpaContract.PROJECTION_ALL_USER_FIELDS,
 				selection, null, sortOrder);
-		if (cursor.moveToNext()) {
+		if (cursor.moveToFirst()) {
 			int userId = cursor.getInt(0);
 			String userName = cursor.getString(1);
 			int userLevel = cursor.getInt(2);
-			int questionStyleIndex = cursor.getInt(3);
+			String questionStyleStr = cursor.getString(3);
+			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
 			EngSpaUser user = new EngSpaUser(userId, userName, userLevel,
-					questionStyleIndex);
+					questionStyle);
 			Log.i(MainActivity.TAG, "retrieved from database: " + user);
 			return user;
 		} else return null;
@@ -256,11 +258,11 @@ public class MainActivity extends AppCompatActivity
 	 * 			update this.engSpaUser
 	 */
 	@Override // UserSettingsListener
-	public void onUpdateUser(String userName, int userLevel, int questionStyle) {
+	public void onUpdateUser(String userName, int userLevel, QuestionStyle questionStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onUpdateUser(" + userName + ", " + userLevel +
 				", " + questionStyle + ")");
-		if (userName.trim().length() < 1) {
+		if (userName.length() < 1) {
 			this.statusTextView.setText("no user name supplied");
 			return;
 		}
@@ -268,32 +270,42 @@ public class MainActivity extends AppCompatActivity
 			this.statusTextView.setText("invalid userLevel supplied");
 			return;
 		}
-		int maxUserLevel = this.engSpaFragment.getEngSpaQuiz().getMaxUserLevel();
-		if (userLevel > maxUserLevel) {
-			userLevel = maxUserLevel;
-			this.statusTextView.setText("userLevel set to maximum");
+		if (this.engSpaFragment == null) {
+			userLevel = 1;
+		} else {
+			int maxUserLevel = this.engSpaFragment.getEngSpaQuiz().getMaxUserLevel();
+			if (userLevel > maxUserLevel) {
+				userLevel = maxUserLevel;
+				this.statusTextView.setText("userLevel set to maximum");
+			}
+		}
+		if (this.engSpaUser != null &&
+				this.engSpaUser.getUserName().equals(userName) &&
+				this.engSpaUser.getUserLevel() == userLevel &&
+				this.engSpaUser.getQuestionStyle() == questionStyle) {
+			this.statusTextView.setText("no changes made to user");
+			return;
 		}
 		boolean newUser = (this.engSpaUser == null);
 		boolean newLevel = !newUser && (this.engSpaUser.getUserLevel() != userLevel);
 		String uriStr;
 		if (newUser) {
 			uriStr = EngSpaContract.CONTENT_URI_USER_STR;
-			this.engSpaUser = new EngSpaUser(userName, userLevel, questionStyle);
+			this.engSpaUser = new EngSpaUser(userName,
+					userLevel, questionStyle);
 		} else {
 			uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" +
 					engSpaUser.getUserId();
 			this.engSpaUser.setUserName(userName);
-			if (this.engSpaUser.getUserLevel() != userLevel) {
-				this.engSpaUser.setUserLevel(userLevel);
-				this.engSpaFragment.onNewLevel(userLevel);
-			}
-			this.engSpaUser.setQuestionStyleIndex(questionStyle);
+			this.engSpaUser.setUserLevel(userLevel);
+			this.engSpaUser.setQuestionStyle(questionStyle);
 		}
 		Uri userUri = Uri.parse(uriStr);
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(EngSpaContract.NAME, engSpaUser.getUserName());
 		contentValues.put(EngSpaContract.LEVEL, engSpaUser.getUserLevel());
-		contentValues.put(EngSpaContract.QUESTION_STYLE, engSpaUser.getQuestionStyleIndex());
+		contentValues.put(EngSpaContract.QUESTION_STYLE,
+				engSpaUser.getQuestionStyle().name());
 		ContentResolver contentResolver = getContentResolver();
 		String message;
 		if (newUser) {
@@ -309,9 +321,12 @@ public class MainActivity extends AppCompatActivity
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		if (newUser) {
 			showEngSpaFragment();
-		} else if (newLevel) {
-			getEngSpaQuiz().setUserLevel(userLevel);
-			this.engSpaFragment.onNewLevel(userLevel);
+		} else {
+			if (newLevel) {
+				getEngSpaQuiz().setUserLevel(userLevel);
+			}
+			// Note: wouldn't have reached this point if user hadn't been updated
+			this.engSpaFragment.onUserUpdated();
 		}
 	}
 	@Override // UserSettingsListener
@@ -339,5 +354,8 @@ public class MainActivity extends AppCompatActivity
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		this.engSpaUser.setUserLevel(userLevel);
 		this.engSpaFragment.onNewLevel(userLevel);
+	}
+	public void setStatus(String status) {
+		this.statusTextView.setText(status);
 	}
 }

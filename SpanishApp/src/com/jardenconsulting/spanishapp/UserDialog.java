@@ -2,6 +2,7 @@ package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaUser;
 import jarden.provider.engspa.EngSpaContract;
+import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,7 +25,7 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 	private AlertDialog alertDialog;
 	
 	public interface UserSettingsListener {
-		void onUpdateUser(String userName, int userLevel, int questionStyle);
+		void onUpdateUser(String userName, int userLevel, QuestionStyle questionStyle);
 		EngSpaUser getEngSpaUser();
 	}
 	
@@ -47,7 +48,7 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		this.questionStyleSpinner = (Spinner) view.findViewById(R.id.questionStyleSpinner);
 		ArrayAdapter<String> questionStyleAdapter = new ArrayAdapter<String>(activity,
 				android.R.layout.simple_spinner_item,
-				EngSpaContract.QuestionStyle.getFullNameArray());
+				EngSpaContract.questionStyleNames);
 		questionStyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		questionStyleSpinner.setAdapter(questionStyleAdapter);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();
@@ -57,7 +58,8 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		} else {
 			userNameEditText.setText(user.getUserName());
 			userLevelEditText.setText(String.valueOf(user.getUserLevel()));
-			questionStyleSpinner.setSelection(user.getQuestionStyleIndex());
+			int position = user.getQuestionStyle().ordinal();
+			this.questionStyleSpinner.setSelection(position);
 			// cancel button provided only for updates
 			builder.setNegativeButton(R.string.cancelStr, this);
 		}
@@ -76,7 +78,7 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 			// may be tempted to click again
 			Button positiveButton = this.alertDialog.getButton(which);
 			positiveButton.setEnabled(false);
-			String userName = userNameEditText.getText().toString();
+			String userName = userNameEditText.getText().toString().trim();
 			String userLevelStr = userLevelEditText.getText().toString();
 			int userLevel;
 			try {
@@ -84,7 +86,8 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 			} catch (NumberFormatException nfe) {
 				userLevel = -1;
 			}
-			int questionStyle = questionStyleSpinner.getSelectedItemPosition();
+			String questionStyleStr = (String) questionStyleSpinner.getSelectedItem();
+			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
 			this.userSettingsListener.onUpdateUser(userName, userLevel, questionStyle);
 		}
 	}

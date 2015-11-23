@@ -2,16 +2,16 @@ TODO
 prioritise everything in this list (including this line?)
 outstanding tests
 Short-term
-	*hide 'repeat' unless the question is spoken; test the various modes
-	to see if we are clearing out correct fields, e.g. we should show
-	both Spanish and English on showButton if it's spokenSpaToSpa
-	*random mode: set questionStyle to AAF
-	*sort words in engspa.txt, to reflect school words
-	*is there a way of auto deploying JardenProvider along with Spanish?
-	if we take the dictionary out of JardenProvider, this may become
-	very stable, but still would need re-deploying occasionally.
-	*save state between sessions
+	sort words in engspa.txt, to reflect school words; complete GCSE words
 Long-term
+	alternatives, word lookup; is it better to do this using in-memory
+	collections, or directly on the database? try some timings?
+	is there a way of auto deploying JardenProvider along with Spanish?
+		if we take the dictionary out of JardenProvider, this may become
+		very stable, but still would need re-deploying occasionally.
+	use same dialog or fragment for updating user in JardenProviders & Spanish
+	random mode (when reached max level): set EngSpaQuiz.questionSequence to AAF
+	save state between sessions
 	long hold over a button shows tip, e.g.
 		spokenSpaToSpa shows: we speak the Spanish, you type the Spanish")
 		refactor EngSpaContract.QuestionStyle to be like the other enums

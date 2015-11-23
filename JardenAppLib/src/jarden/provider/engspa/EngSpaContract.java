@@ -5,6 +5,8 @@ import android.provider.BaseColumns;
 
 public final class EngSpaContract {
 	public static final String AUTHORITY = "com.jardenconsulting.engspa.provider";
+	
+	// constants for EngSpa table:
 	public static final String TABLE = "EngSpa";
 	public static final String CONTENT_URI_STR = "content://" + AUTHORITY + "/" + TABLE;
 	public static final Uri CONTENT_URI_ENGSPA = Uri.parse(CONTENT_URI_STR);
@@ -40,40 +42,32 @@ public final class EngSpaContract {
 	public static final String CONSEC_RIGHT_CT = "consecutiveRightCt";
 	public static final String WRONG_CT = "wrongCt";
 	public static final String LEVELS_WRONG_CT = "levelsWrongCt";
-	
 	public static final String[] PROJECTION_ALL_USER_WORD_FIELDS = {
 		USER_ID, WORD_ID, CONSEC_RIGHT_CT, WRONG_CT, LEVELS_WRONG_CT
 	};
+	
+	public enum VoiceText {
+		voice, text, both;
+	}
 	public enum QuestionStyle {
-		spokenSpaToSpa("Spoken Spanish -> Spanish"),
-		spokenSpaToEng("Spoken Spanish -> English"),
-		spokenWrittenSpaToEng("Spoken + Written Sp. -> English"),
-		writtenSpaToEng("Written Spanish -> English"),
-		writtenEngToSpa("Written English -> Spanish"),
-		random("Random: any of above");
+		spokenSpaToSpa(VoiceText.voice, true, true),
+		spokenSpaToEng(VoiceText.voice, true, false),
+		spokenWrittenSpaToEng(VoiceText.both, true, false),
+		writtenSpaToEng(VoiceText.text, true, false),
+		writtenEngToSpa(VoiceText.text, false, true),
+		random(null, false, false);
 		
-		private static String[] fullNameArray;
-		static {
-			QuestionStyle[] values = QuestionStyle.values();
-			fullNameArray = new String[values.length];
-			for (int i = 0; i < values.length; i++) {
-				fullNameArray[i] = values[i].fullName;
-			}
-		}
-		
-		private String fullName;
+		public final VoiceText voiceText;
+		public final boolean spaQuestion;
+		public final boolean spaAnswer;
 
-		private QuestionStyle(String fullName) {
-			this.fullName = fullName;
-		}
-		public String getFullName() {
-			return this.fullName;
-		}
-		public static String[] getFullNameArray() {
-			return fullNameArray;
+		private QuestionStyle(VoiceText voiceText, boolean spaQ, boolean spaA) {
+			this.voiceText = voiceText;
+			this.spaQuestion = spaQ;
+			this.spaAnswer = spaA;
 		}
 	}
-
+	
 	public enum WordType {
 		noun, verb, adjective, adverb, number,
 		pronoun, preposition, phrase;
@@ -93,6 +87,7 @@ public final class EngSpaContract {
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;
 	public static final String[] attributeNames;
+	public static final String[] questionStyleNames;
 	
 	static {
 		WordType[] wordTypes = WordType.values();
@@ -110,5 +105,11 @@ public final class EngSpaContract {
 		for (int i = 0; i < attributes.length; i++) {
 			attributeNames[i] = attributes[i].name();
 		}
+		QuestionStyle[] questionStyles = QuestionStyle.values();
+		questionStyleNames = new String[questionStyles.length];
+		for (int i = 0; i < questionStyles.length; i++) {
+			questionStyleNames[i] = questionStyles[i].name();
+		}
+
 	}
 }

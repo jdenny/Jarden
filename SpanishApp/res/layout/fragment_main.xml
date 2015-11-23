@@ -102,12 +102,6 @@
             android:text="@string/goStr" />
 
         <Button
-            android:id="@+id/showButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/showStr" />
-
-        <Button
             android:id="@+id/repeatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

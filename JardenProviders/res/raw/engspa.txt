@@ -1,3 +1,11 @@
+hello,hola,phrase,n_a,n_a,1
+boy,chico,noun,masculine,person,1
+girl,chica,noun,feminine,person,1
+my name is,me llamo,,n_a,n_a,1
+I am well,estoy bien,phrase,n_a,n_a,1
+I am not well,estoy mal,phrase,n_a,n_a,1
+please,por favor,adverb,n_a,n_a,1
+thank you,gracias,phrase,n_a,n_a,1
 one,uno,number,n_a,n_a,1
 two,dos,number,n_a,n_a,1
 three,tres,number,n_a,n_a,1
@@ -7,17 +15,15 @@ cat,gato,noun,masculine,animal,1
 dog,perro,noun,masculine,animal,1
 eat,comer,verb,transIntrans,food,1
 drink,beber,verb,transIntrans,food,1
-hello,hola,phrase,n_a,n_a,1
 six,seis,number,n_a,n_a,1
 seven,siete,number,n_a,n_a,1
 eight,ocho,number,n_a,n_a,1
 nine,nueve,number,n_a,n_a,1
 ten,diez,number,n_a,n_a,1
-please,por favor,adverb,n_a,n_a,1
-thank you,gracias,phrase,n_a,n_a,1
 mouse,ratón,noun,masculine,animal,1
 rat,rata,noun,feminine,animal,1
 cow,vaca,noun,feminine,animal,1
+my pleasure,mucho gusto,phrase,n_a,n_a,1
 house,casa,noun,feminine,building,1
 horse,caballo,noun,masculine,animal,1
 bird,pájaro,noun,masculine,animal,1
@@ -46,7 +52,6 @@ tall,alto,adjective,n_a,person,1
 short,bajo,adjective,n_a,person,1
 big,grande,adjective,n_a,person,1
 small,pequeño,adjective,n_a,person,1
-
 I am tall,soy alto,phrase,n_a,n_a,1
 I am short,soy bajo,phrase,n_a,n_a,1
 mother,madre,noun,feminine,person,1
@@ -464,7 +469,6 @@ reward,galardón,noun,masculine,n_a,1
 hide,esconder,verb,transIntrans,n_a,1
 closed on Mondays,cerrado los lunes,phrase,n_a,n_a,1
 cocoa,cacao,noun,masculine,drink,1
-cooked, boiled cocido/a, hervido/a
 cream,crema,noun,feminine,food,1
 cup,taza,noun,feminine,drink,1
 customer,cliente,noun,masculine,person,1

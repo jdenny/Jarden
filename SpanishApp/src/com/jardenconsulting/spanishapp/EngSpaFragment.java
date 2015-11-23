@@ -4,11 +4,13 @@ import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.VoiceText;
 import jarden.provider.engspa.EngSpaContract.WordType;
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaQuiz.QuestionType;
 import jarden.engspa.EngSpaUser;
+import jarden.engspa.EngSpaUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +59,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextToSpeech textToSpeech;
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
-	private int currentQuestionStyleIndex;
+	private QuestionStyle currentQuestionStyle;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
+	private Button repeatButton;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,10 +98,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.selfMarkLayout.setVisibility(View.GONE);
 		Button button = (Button) rootView.findViewById(R.id.goButton);
 		button.setOnClickListener(this);
-		button = (Button) rootView.findViewById(R.id.repeatButton);
-		button.setOnClickListener(this);
-		button = (Button) rootView.findViewById(R.id.showButton);
-		button.setOnClickListener(this);
+		this.repeatButton = (Button) rootView.findViewById(R.id.repeatButton);
+		this.repeatButton.setOnClickListener(this);
 		button = (Button) rootView.findViewById(R.id.incorrectButton);
 		button.setOnClickListener(this);
 		button = (Button) rootView.findViewById(R.id.correctButton);
@@ -117,28 +118,37 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		String english = engSpaQuiz.getEnglish();
 		EngSpa engSpa = engSpaQuiz.getCurrentWord();
 		
-		int qStyleIndex = ((MainActivity) getActivity())
-				.getEngSpaUser().getQuestionStyleIndex();
-		if (qStyleIndex == QuestionStyle.random.ordinal()) {
-			this.currentQuestionStyleIndex = random.nextInt(5); // TODO: base this on size of array
+		QuestionStyle questionStyle = ((MainActivity) getActivity())
+				.getEngSpaUser().getQuestionStyle();
+		if (questionStyle == QuestionStyle.random) {
+			// minus 1 as last one is Random itself:
+			int randInt = random.nextInt(QuestionStyle.values().length - 1);
+			this.currentQuestionStyle = QuestionStyle.values()[randInt];
 		} else {
-			this.currentQuestionStyleIndex = qStyleIndex;
+			this.currentQuestionStyle = questionStyle;
 		}
 		this.responseIfCorrect = "Right!";
-		if (currentQuestionStyleIndex == QuestionStyle.writtenEngToSpa.ordinal()) {
-			this.question = english;
-			this.correctAnswer = spanish;
-		} else if (currentQuestionStyleIndex == QuestionStyle.spokenSpaToSpa.ordinal()) {
-			this.question = spanish;
-			this.correctAnswer = this.question;
-			this.responseIfCorrect = "Right! " + english;
+		if (this.currentQuestionStyle.voiceText != VoiceText.text) {
+			this.repeatButton.setVisibility(View.VISIBLE);
 		} else {
+			this.repeatButton.setVisibility(View.INVISIBLE);
+		}
+		if (this.currentQuestionStyle.spaQuestion) {
 			this.question = spanish;
+			if (this.currentQuestionStyle.spaAnswer) {
+				this.responseIfCorrect = "Right! " + english;
+			}
+		} else {
+			this.question = english;
+		}
+		if (this.currentQuestionStyle.spaAnswer) {
+			this.correctAnswer = spanish;
+		} else {
 			this.correctAnswer = english;
 		}
 		Attribute attribute = engSpa.getAttribute();
 		if (attribute != Attribute.n_a) {
-			this.attributeTextView.setText(attribute.toString());
+			this.attributeTextView.setText("hint: " + attribute.toString());
 		} else {
 			this.attributeTextView.setText("");
 		}
@@ -146,20 +156,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		askQuestion();
 	}
 	private void askQuestion() {
-		if (currentQuestionStyleIndex == QuestionStyle.writtenEngToSpa.ordinal()) {
-			this.answerEditText.setHint(R.string.spanishStr);
-		} else if (currentQuestionStyleIndex == QuestionStyle.spokenSpaToSpa.ordinal()) {
+		if (currentQuestionStyle.spaAnswer) {
 			this.answerEditText.setHint(R.string.spanishStr);
 		} else {
 			this.answerEditText.setHint(R.string.englishStr);
 		}
-		if (currentQuestionStyleIndex < 3) {
+		if (currentQuestionStyle.voiceText != VoiceText.text) {
 			speakQuestion();
 		}
-		if (currentQuestionStyleIndex > 1) {
-			this.questionTextView.setText(this.question);
-		} else {
+		if (currentQuestionStyle.voiceText == VoiceText.voice) {
 			this.questionTextView.setText("");
+		} else {
+			this.questionTextView.setText(this.question);
 		}
 	}
 	public EngSpaQuiz getEngSpaQuiz() {
@@ -172,79 +180,100 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onClick(View view) {
+		MainActivity mainActivity = (MainActivity) getActivity();
+		mainActivity.setStatus("");
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
 		} else if (id == R.id.repeatButton) {
 			askQuestion();
-		} else if (id == R.id.showButton) {
-			this.buttonLayout.setVisibility(View.GONE);
-			this.selfMarkLayout.setVisibility(View.VISIBLE);
-			this.answerEditText.setText(this.correctAnswer);
-			if (this.currentQuestionStyleIndex ==
-					QuestionStyle.spokenSpaToSpa.ordinal()) {
-				this.statusTextView.setText(engSpaQuiz.getEnglish());
-			} else {
-				this.statusTextView.setText("");
-			}
 		} else if (id == R.id.correctButton) {
 			selfMarkButton(true);
 		} else if (id == R.id.incorrectButton) {
 			selfMarkButton(false);
 		}
 	}
+	private String getSuppliedAnswer() {
+		return this.answerEditText.getText().toString().trim();
+	}
 	private void selfMarkButton(boolean isCorrect) {
+		this.statusTextView.setText("");
 		this.selfMarkLayout.setVisibility(View.GONE);
 		this.buttonLayout.setVisibility(View.VISIBLE);
 		engSpaQuiz.setCorrect(isCorrect);
 		showStats();
 		nextQuestion();
 	}
-	private void showAnswer() {
-		String status = this.question;
-		if (this.currentQuestionStyleIndex > 0) {
-			status += " = " + this.correctAnswer;
-		}
-		String suppliedAnswer = getSuppliedAnswer();
-		if (suppliedAnswer.length() > 0) {
-			status += "; yourAnswer: " + suppliedAnswer;
-		}
-		this.statusTextView.setText(status);
-		nextQuestion();
-	}
-	private String getSuppliedAnswer() {
-		return this.answerEditText.getText().toString().trim();
-	}
+	/*
+	if answer supplied:
+		isCorrect = check if correct
+		inform engSpaQuiz of result
+		if correct: nextQuestion()
+		showStats()
+	else:
+		switch button layout to selfMark (yes, no)
+		display correctAnswer in answer field
+		if spokenSpaToSpa also show English
+	 */
 	private void goPressed() {
 		String suppliedAnswer = getSuppliedAnswer().trim();
 		if (suppliedAnswer.length() == 0) {
-			showAnswer();
-		} else {
-			boolean isCorrect;
-			if ((this.correctAnswer.startsWith("ellos ") ||
-					this.correctAnswer.startsWith("ellas ")) &&
-					(suppliedAnswer.startsWith("ellos ") ||
-					suppliedAnswer.startsWith("ellas ")))
-				isCorrect = suppliedAnswer.substring(6).equalsIgnoreCase(this.correctAnswer.substring(6));
-			else {
-				if (this.correctAnswer.endsWith("!")) {
-					// ! at end of imperatives is optional
-					if (!suppliedAnswer.endsWith("!")) suppliedAnswer += "!";
+			this.buttonLayout.setVisibility(View.GONE);
+			this.selfMarkLayout.setVisibility(View.VISIBLE);
+			this.answerEditText.setText(this.correctAnswer);
+			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
+				// if question was spoken only, user may want to see the translated word
+				if (this.currentQuestionStyle.spaAnswer) {
+					this.statusTextView.setText(engSpaQuiz.getEnglish());
+				} else {
+					this.statusTextView.setText(engSpaQuiz.getSpanish());
 				}
-				isCorrect = suppliedAnswer.equalsIgnoreCase(this.correctAnswer);
+			} else {
+				this.statusTextView.setText("");
 			}
+		} else {
+			String normalisedCorrectAnswer = normalise(this.correctAnswer);
+			String normalisedSuppliedAnswer = normalise(suppliedAnswer);
+			boolean isCorrect = normalisedCorrectAnswer.equals(normalisedSuppliedAnswer);
+			if (!isCorrect && this.currentQuestionStyle.spaAnswer) {
+				int res = EngSpaUtils.compareSpaWords(normalisedCorrectAnswer,
+						normalisedSuppliedAnswer);
+				if (res >= 0) {
+					isCorrect = true;
+					this.responseIfCorrect += " but note accent: " +
+							this.correctAnswer + "; your answer: " +
+							suppliedAnswer;
+				}
+			}
+			
 			engSpaQuiz.setCorrect(isCorrect);
 			if (isCorrect) {
 				this.statusTextView.setText(this.responseIfCorrect);
 				nextQuestion();
 			} else {
 				this.statusTextView.setText("Wrong!");
-				if (this.currentQuestionStyleIndex < 3) {
+				if (this.currentQuestionStyle.voiceText != VoiceText.text) {
 					speakQuestion();
 				}
 			}
 			showStats();
 		}
+	}
+	/*
+	 * Normalise a word or phrase, to make the comparison more likely to succeed.
+	 */
+	private static String normalise(String text) {
+		StringBuilder builder = new StringBuilder(text.toLowerCase());
+		// 'they' in English can be 'ellos' or 'ellas' in Spanish; normalise 'ellas' to 'ellos'
+		if (builder.length() >= 5 && builder.substring(0, 5).equals("ellas")) {
+			builder.setCharAt(3, 'o');
+		}
+		// ! at end of imperatives is optional
+		int builderLastCharIndex = builder.length() - 1;
+		if (builder.charAt(builderLastCharIndex) == '!') {
+			builder.deleteCharAt(builderLastCharIndex);
+		}
+		return builder.toString();
 	}
 	private int getUserLevel() {
 		return ((MainActivity) getActivity()).getEngSpaUser().getUserLevel();
@@ -372,6 +401,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onNewLevel(int userLevel) {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
 				"EngSpaFragment.onNewLevel(" + userLevel + ")");
+		userUpdated();
+	}
+	public void onUserUpdated() {
+		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
+				"EngSpaFragment.onUserUpdated()");
+		userUpdated();
+	}
+	private void userUpdated() {
+		this.selfMarkLayout.setVisibility(View.GONE);
+		this.buttonLayout.setVisibility(View.VISIBLE);
 		nextQuestion();
 		showUserValues();
 	}

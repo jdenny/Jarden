@@ -37,8 +37,6 @@ public class DetailFragment extends Fragment implements OnClickListener {
 	private Spinner attributeSpinner;
 	private String wordId;
 	private Uri wordUri;
-//!	private MainActivity mainActivity;
-//!	private ContentResolver contentResolver;
 	private View view; // Main Layout View
 
 	@Override
@@ -48,11 +46,6 @@ public class DetailFragment extends Fragment implements OnClickListener {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "DetailFragment.onCreateView()");
 		if (savedInstanceState != null) {
 			this.wordId = savedInstanceState.getString(WORD_ID_NAME);
-//!			Uri uri = Uri.parse(uriStr);
-//			String idStr = uri.getLastPathSegment();
-//			if (idStr != null && !idStr.equals(EngSpaContract.TABLE)) {
-//				wordUri = uri;
-//			}
 		}
 		view = inflater.inflate(R.layout.eng_spa_edit_layout, container, false);
 		Context context = view.getContext();
@@ -136,10 +129,9 @@ public class DetailFragment extends Fragment implements OnClickListener {
 			Log.d(MainActivity.TAG, "DetailFragment.setWordId(" +
 					wordId + ")");
 		}
+		this.wordId = wordId;
 		String uriStr = EngSpaContract.CONTENT_URI_STR + "/" + this.wordId;
 		this.wordUri = Uri.parse(uriStr);
-		//! this.contentResolver = mainActivity.getContentResolver();
-		this.wordId = wordId;
 	}
 	private void showWord() {
 		String[] selectionArgs = null;
@@ -179,8 +171,8 @@ public class DetailFragment extends Fragment implements OnClickListener {
 	}
 	
 	private ContentValues getContentValues() {
-		String wordType = ((String) wordTypeSpinner.getSelectedItem());
-		String qualifier = ((String) qualifierSpinner.getSelectedItem());
+		String wordType = (String) wordTypeSpinner.getSelectedItem();
+		String qualifier = (String) qualifierSpinner.getSelectedItem();
 		String attribute = (String) attributeSpinner.getSelectedItem();
 		Integer level = Integer.valueOf(levelEdit.getText().toString());
 		ContentValues values = new ContentValues();
