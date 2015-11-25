@@ -4,6 +4,8 @@ outstanding tests
 Short-term
 	sort words in engspa.txt, to reflect school words; complete GCSE words
 Long-term
+	voice recognition
+	anagrams!
 	alternatives, word lookup; is it better to do this using in-memory
 	collections, or directly on the database? try some timings?
 	is there a way of auto deploying JardenProvider along with Spanish?
@@ -28,7 +30,8 @@ Long-term
 	extend verbTable menu option to include all words:
 		menu verbTable -> Word Lookup; search for English or Spanish, as now,
 		but some kind of auto-completion and/or wild cards in search
-		if verb chosen, option to show conjugation;
+		if verb chosen, option to show conjugation; search menu option
+		on toolbar; button to speak selected word
 	change EngSpa.Attribute from enum to a String?
 	for time and dates and places, use preposition, e.g.
 	last Tuesday; at five o'clock; next June; to England; at the chemist

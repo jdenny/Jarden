@@ -11,12 +11,11 @@ import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaQuiz.QuestionType;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -262,6 +261,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	/*
 	 * Normalise a word or phrase, to make the comparison more likely to succeed.
 	 */
+	@SuppressLint("DefaultLocale")
 	private static String normalise(String text) {
 		StringBuilder builder = new StringBuilder(text.toLowerCase());
 		// 'they' in English can be 'ellos' or 'ellas' in Spanish; normalise 'ellas' to 'ellos'

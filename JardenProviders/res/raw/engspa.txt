@@ -164,7 +164,7 @@ salt,sal,noun,feminine,food,1
 rice,arroz,noun,masculine,food,1
 soup,sopa,noun,feminine,food,1
 cereal,cereal,noun,masculine,food,1
-potato chip,patata frita,noun,n_a,food,1
+potato chip,patata frita,noun,feminine,food,1
 apricot,albaricoque,noun,masculine,food,1
 appetite,apetito,noun,masculine,food,1
 bill,cuenta,noun,feminine,food,1
@@ -172,8 +172,8 @@ bean,alubia,noun,feminine,food,1
 biscuit,galleta,noun,feminine,food,1
 bottle,botella,noun,feminine,drink,1
 Brussels sprout,cole de Bruselas,noun,feminine,food,1
-butter,mantequilla,noun,masculine,food,1
-café,cafetería,noun,feminine,drink,1
+butter,mantequilla,noun,feminine,food,1
+café,cafetería,noun,feminine,building,1
 cake,pastel,noun,masculine,food,1
 champagne,champán,noun,masculine,drink,1
 cheese,queso,noun,masculine,food,1

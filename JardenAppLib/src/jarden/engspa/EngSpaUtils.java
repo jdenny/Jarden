@@ -67,7 +67,7 @@ public class EngSpaUtils {
 			char char1 = word1.charAt(pos);
 			char char2 = word2.charAt(pos);
 			if (char1 != char2) {
-				if (differByAccent(char1, char2)) {
+				if (sameWithoutAccent(char1, char2)) {
 					if (res < 0) res = pos; // only capture 1st difference
 				}
 				else return -2;
@@ -83,7 +83,7 @@ public class EngSpaUtils {
 	 * 
 	 * @return true if same with the accents removed
 	 */
-	private static boolean differByAccent(char char1, char char2) {
+	private static boolean sameWithoutAccent(char char1, char char2) {
 		char char1a = removeAccent(char1);
 		char char2a = removeAccent(char2);
 		return char1a == char2a;
