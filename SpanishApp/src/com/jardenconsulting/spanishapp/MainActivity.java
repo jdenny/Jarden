@@ -23,7 +23,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,19 +41,6 @@ public class MainActivity extends AppCompatActivity
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaFragment engSpaFragment;
 	private DialogFragment userDialog;
-	/*
-	 * userLevel can be incremented by EngSpaQuiz when user answered
-	 * enough questions, or set by user invoking options menu item
-	 * UserDialog at any time.
-	 * EngSpaQuiz ->
-	 * 		MainActivity.onNewLevel() [I/F QuizEventListener] ->
-	 * 			EngSpaFragment.onNewLevel()
-	 * UserDialog ->
-	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
-	 *			EngSpaQuiz.setUserLevel()
-	 * 			EngSpaFragment.onNewLevel()
-	 */
-	private EngSpaUser engSpaUser;
 	private VerbTableFragment verbTableFragment;
 	private ProgressBar progressBar;
 	private TextView statusTextView;
@@ -75,12 +61,7 @@ public class MainActivity extends AppCompatActivity
 		if (savedInstanceState != null) {
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
 		}
-		this.engSpaUser = loadUserFromDB();
-		if (this.engSpaUser == null) { // i.e. no user yet on database
-			showUserDialog();
-		} else {
-			showEngSpaFragment();
-		}
+		showEngSpaFragment();
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,7 +87,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	private void showUserDialog() {
+	public void showUserDialog() {
 		if (this.userDialog == null) this.userDialog = new UserDialog();
 		this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 	}
@@ -134,7 +115,7 @@ public class MainActivity extends AppCompatActivity
 							QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1");
 					engSpaFileModified = dateEngSpaFileModified > savedVersion;
 				} catch (IOException e) {
-					Log.e(TAG, "Exception in checkDataFileVersion: ", e);
+					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -190,7 +171,7 @@ public class MainActivity extends AppCompatActivity
 						editor.commit();
 						updateStatus = "";
 					} catch (IOException e) {
-						Log.e(TAG, "Exception in onUpdateDecision()", e);
+						Log.e(TAG, "Exception in onUpdateDecision() " + e);
 						updateStatus = "dictionary update failed; using existing version";
 					}
 					runOnUiThread(new Runnable() {
@@ -219,27 +200,6 @@ public class MainActivity extends AppCompatActivity
 		ft.replace(R.id.fragmentLayout, fragment, tag);
 		if (tag == VERB_TABLE) ft.addToBackStack(tag);
 		ft.commit();
-	}
-
-	private EngSpaUser loadUserFromDB() {
-		ContentResolver contentResolver = getContentResolver();
-		String selection = null;
-		String sortOrder = null;
-		Cursor cursor = contentResolver.query(
-				EngSpaContract.CONTENT_URI_USER,
-				EngSpaContract.PROJECTION_ALL_USER_FIELDS,
-				selection, null, sortOrder);
-		if (cursor.moveToFirst()) {
-			int userId = cursor.getInt(0);
-			String userName = cursor.getString(1);
-			int userLevel = cursor.getInt(2);
-			String questionStyleStr = cursor.getString(3);
-			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
-			EngSpaUser user = new EngSpaUser(userId, userName, userLevel,
-					questionStyle);
-			Log.i(MainActivity.TAG, "retrieved from database: " + user);
-			return user;
-		} else return null;
 	}
 
 	/**
@@ -276,26 +236,27 @@ public class MainActivity extends AppCompatActivity
 				this.statusTextView.setText("userLevel set to maximum");
 			}
 		}
-		if (this.engSpaUser != null &&
-				this.engSpaUser.getUserName().equals(userName) &&
-				this.engSpaUser.getUserLevel() == userLevel &&
-				this.engSpaUser.getQuestionStyle() == questionStyle) {
+		EngSpaUser engSpaUser = this.engSpaFragment.getEngSpaUser();
+		if (engSpaUser != null &&
+				engSpaUser.getUserName().equals(userName) &&
+				engSpaUser.getUserLevel() == userLevel &&
+				engSpaUser.getQuestionStyle() == questionStyle) {
 			this.statusTextView.setText("no changes made to user");
 			return;
 		}
-		boolean newUser = (this.engSpaUser == null);
-		boolean newLevel = !newUser && (this.engSpaUser.getUserLevel() != userLevel);
+		boolean newUser = (engSpaUser == null);
+		boolean newLevel = !newUser && (engSpaUser.getUserLevel() != userLevel);
 		String uriStr;
 		if (newUser) {
 			uriStr = EngSpaContract.CONTENT_URI_USER_STR;
-			this.engSpaUser = new EngSpaUser(userName,
+			engSpaUser = new EngSpaUser(userName,
 					userLevel, questionStyle);
 		} else {
 			uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" +
 					engSpaUser.getUserId();
-			this.engSpaUser.setUserName(userName);
-			this.engSpaUser.setUserLevel(userLevel);
-			this.engSpaUser.setQuestionStyle(questionStyle);
+			engSpaUser.setUserName(userName);
+			engSpaUser.setUserLevel(userLevel);
+			engSpaUser.setQuestionStyle(questionStyle);
 		}
 		Uri userUri = Uri.parse(uriStr);
 		ContentValues contentValues = new ContentValues();
@@ -328,7 +289,7 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // UserSettingsListener
 	public EngSpaUser getEngSpaUser() {
-		return this.engSpaUser;
+		return this.engSpaFragment.getEngSpaUser();
 	}
 	
 	/**
@@ -338,6 +299,7 @@ public class MainActivity extends AppCompatActivity
 	 */
 	@Override // QuizEventListener
 	public void onNewLevel(int userLevel) {
+		EngSpaUser engSpaUser = this.engSpaFragment.getEngSpaUser();
 		String uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" +
 				engSpaUser.getUserId();
 		ContentValues contentValues = new ContentValues();
@@ -349,7 +311,7 @@ public class MainActivity extends AppCompatActivity
 			Log.d(TAG, message);
 		}
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-		this.engSpaUser.setUserLevel(userLevel);
+		engSpaUser.setUserLevel(userLevel);
 		this.engSpaFragment.onNewLevel(userLevel);
 	}
 	public void setStatus(String status) {

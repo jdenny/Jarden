@@ -1,0 +1,41 @@
+MainActivity
+
+onCreate()
+  if no user: showUserDialog
+  else: showEngSpaFragment
+
+checkDataFileVersion()
+  in thread:
+    compare dateModified of engspa.txt on server
+    with date save in preferences
+    runOnUiThread: dataFileCheckCompleted
+
+dataFileCheckCompleted()
+  if updated: popup dialog to ask for confirmation
+
+onUpdateDecision()
+  if yes:
+    in thread:
+      replace DB with data from engspa.txt
+      update version in preferences
+      runOnUiThread: endOfUpdate
+
+endOfUpdate()
+  engSpaFragment.loadDB
+  
+EngSpaFragment
+
+onCreate()
+  if start of app: main.checkDataFileVersion()
+  
+New Design: put all this into EngSpaFragment!
+	QuizEventListener
+	UserSettingsListener
+	userDialog?
+	engSpaUser; loadUserFromDB - DONE
+	onUpdateUser?
+	
+	progressBar? - it's just a View!
+	menu items? - they can be in fragment
+	checkDataFileVersion?
+	onNewLevel? (quiz)

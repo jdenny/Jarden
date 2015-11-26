@@ -58,6 +58,19 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextToSpeech textToSpeech;
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
+	/*
+	 * userLevel can be incremented by EngSpaQuiz when user answered
+	 * enough questions, or set by user invoking options menu item
+	 * UserDialog at any time.
+	 * EngSpaQuiz ->
+	 * 		MainActivity.onNewLevel() [I/F QuizEventListener] ->
+	 * 			EngSpaFragment.onNewLevel()
+	 * UserDialog ->
+	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
+	 *			EngSpaQuiz.setUserLevel()
+	 * 			EngSpaFragment.onNewLevel()
+	 */
+	private EngSpaUser engSpaUser;
 	private QuestionStyle currentQuestionStyle;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
@@ -70,6 +83,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
 		MainActivity mainActivity = (MainActivity) getActivity();
+		this.engSpaUser = loadUserFromDB();
+		if (this.engSpaUser == null) { // i.e. no user yet on database
+			mainActivity.showUserDialog();
+		}
 		if (savedInstanceState == null) { // only check for dictionary updates
 				// when app is opened, not restarted
 			mainActivity.checkDataFileVersion();
@@ -111,14 +128,34 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
 		return rootView;
 	}
+	private EngSpaUser loadUserFromDB() {
+		ContentResolver contentResolver = getActivity().getContentResolver();
+		String selection = null;
+		String sortOrder = null;
+		Cursor cursor = contentResolver.query(
+				EngSpaContract.CONTENT_URI_USER,
+				EngSpaContract.PROJECTION_ALL_USER_FIELDS,
+				selection, null, sortOrder);
+		if (cursor.moveToFirst()) {
+			int userId = cursor.getInt(0);
+			String userName = cursor.getString(1);
+			int userLevel = cursor.getInt(2);
+			String questionStyleStr = cursor.getString(3);
+			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
+			EngSpaUser user = new EngSpaUser(userId, userName, userLevel,
+					questionStyle);
+			Log.i(MainActivity.TAG, "retrieved from database: " + user);
+			return user;
+		} else return null;
+	}
+
 	private void nextQuestion() {
 		QuestionType questionType = QuestionType.WORD;
 		String spanish = engSpaQuiz.getNextQuestion(questionType);
 		String english = engSpaQuiz.getEnglish();
 		EngSpa engSpa = engSpaQuiz.getCurrentWord();
 		
-		QuestionStyle questionStyle = ((MainActivity) getActivity())
-				.getEngSpaUser().getQuestionStyle();
+		QuestionStyle questionStyle = this.engSpaUser.getQuestionStyle();
 		if (questionStyle == QuestionStyle.random) {
 			// minus 1 as last one is Random itself:
 			int randInt = random.nextInt(QuestionStyle.values().length - 1);
@@ -172,8 +209,20 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
 	}
-	@SuppressWarnings("deprecation")
 	private void speakQuestion() {
+		if (this.textToSpeech == null) {
+			new Thread(new Runnable() {
+				public void run() {
+					EngSpaFragment.this.textToSpeech = new TextToSpeech(
+						getActivity(), EngSpaFragment.this); // invokes onInit() on completion
+				}
+			}).start();
+		} else {
+			speakQuestion2();
+		}
+	}
+	@SuppressWarnings("deprecation")
+	private void speakQuestion2() {
 		textToSpeech.speak(question, TextToSpeech.QUEUE_ADD, null);
 	}
 
@@ -276,7 +325,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return builder.toString();
 	}
 	private int getUserLevel() {
-		return ((MainActivity) getActivity()).getEngSpaUser().getUserLevel();
+		return this.engSpaUser.getUserLevel();
 	}
 	private void showStats() {
 		int owct = engSpaQuiz.getOutstandingWordCount();
@@ -303,11 +352,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onResume() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onResume()");
 		super.onResume();
-		// TextToSpeech is recreated here because it's shut down in onPause()
-		if (this.textToSpeech == null) {
-			this.textToSpeech = new TextToSpeech(
-					getActivity(), this); // invokes onInit() on completion
-		}
 		if (this.question != null) {
 			askQuestion();
 			showStats();
@@ -371,7 +415,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	private ContentValues populateContentValues(EngSpa es) {
 		ContentValues contentValues = new ContentValues();
-		int userId = ((MainActivity) getActivity()).getEngSpaUser().getUserId();
+		int userId = this.engSpaUser.getUserId();
 		contentValues.put(EngSpaContract.USER_ID, userId);
 		contentValues.put(EngSpaContract.WORD_ID, es.getId());
 		contentValues.put(EngSpaContract.CONSEC_RIGHT_CT, es.getConsecutiveRightCt());
@@ -389,13 +433,23 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			}
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
-				this.statusTextView.setText("TextToSpeech for Spanish is not supported");
+				setStatusOnUiThread("TextToSpeech for Spanish is not supported");
 			}
+			// do on UI thread? seems okay as it is
+			if (EngSpaFragment.this.question != null) speakQuestion2(); 
 		} else {
 			Log.w(MainActivity.TAG, "EngSpaFragment.onInit(" + status + ")");
-			this.statusTextView.setText(
+			// this.statusTextView.setText(
+			setStatusOnUiThread(
 				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
 		}
+	}
+	private void setStatusOnUiThread(final String status) {
+		this.statusTextView.post(new Runnable() {
+			public void run() {
+				statusTextView.setText(status);
+			}
+		});
 	}
 
 	public void onNewLevel(int userLevel) {
@@ -464,9 +518,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 
 	private void showUserValues() {
-		EngSpaUser engSpaUser = ((MainActivity) getActivity()).getEngSpaUser();
 		userNameTextView.setText(engSpaUser.getUserName());
 		userLevelTextView.setText(Integer.toString(engSpaUser.getUserLevel()));
 		showStats();
+	}
+	public EngSpaUser getEngSpaUser() {
+		return this.engSpaUser;
 	}
 }
