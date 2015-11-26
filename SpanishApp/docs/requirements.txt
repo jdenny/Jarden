@@ -1,6 +1,17 @@
 TODO
 prioritise everything in this list (including this line?)
 outstanding tests
+	test invalid value for one of enums in engspa.txt
+	need a way to force reload of DB, from built-in or from web site
+	The application may be doing too much work on its main thread; try
+		to track this down
+		What is in MainActivity that could be in EngSpaFragment?
+			userDialog?
+			engSpaUser; loadUserFromDB; onUpdateUser?
+			progressBar?
+			menu items? - they can be in fragment
+			checkDataFileVersion?
+			onNewLevel? (quiz)
 Short-term
 	sort words in engspa.txt, to reflect school words; complete GCSE words
 Long-term

@@ -1,7 +1,7 @@
 hello,hola,phrase,n_a,n_a,1
 boy,chico,noun,masculine,person,1
 girl,chica,noun,feminine,person,1
-my name is,me llamo,,n_a,n_a,1
+my name is,me llamo,phrase,n_a,n_a,1
 I am well,estoy bien,phrase,n_a,n_a,1
 I am not well,estoy mal,phrase,n_a,n_a,1
 please,por favor,adverb,n_a,n_a,1

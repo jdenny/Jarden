@@ -55,13 +55,11 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 
 	private Context context;
 	private final String TAG;
-	private final boolean DEBUG;
 
 	public EngSpaSQLite(Context context, String debugTag) {
 		super(context, DB_NAME, null, DB_VERSION);
 		this.context = context;
 		this.TAG = debugTag;
-		this.DEBUG = (debugTag != null);
 	}
 
 	// methods from SQLiteOpenHelper
@@ -106,7 +104,6 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 			Attribute.valueOf((String) values.get(EngSpaContract.ATTRIBUTE));
 			return true;
 		} catch(Exception ex) {
-			if (DEBUG) throw new RuntimeException(ex);
 			Log.e(TAG, "exception in EngSpaSQLite.validateValues(): ", ex);
 			return false;
 		}

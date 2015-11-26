@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onCreate(savedInstanceState is " +
+				(savedInstanceState==null?"":"not ") + "null)");
 		setContentView(R.layout.activity_main);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -100,12 +103,6 @@ public class MainActivity extends AppCompatActivity
 			}
 			showFragment(verbTableFragment, VERB_TABLE);
 			return true;
-		/* not used at the moment
-		} else if (id == R.id.selfMark) {
-			item.setChecked(!item.isChecked()); // what android should do!
-			if (BuildConfig.DEBUG) Log.d(TAG, "selfMark=" + item.isChecked());
-			engSpaFragment.setSelfMark(item.isChecked());
-		 */
 		}
 		return super.onOptionsItemSelected(item);
 	}
