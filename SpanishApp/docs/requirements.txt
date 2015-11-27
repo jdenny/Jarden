@@ -10,6 +10,10 @@ Short-term
 	only turn on textToSpeech if question style requires it
 Long-term
 	voice recognition
+		wait for textToSpeech to finish; in our case when user clicks button
+		or selects input field?
+		startVoiceRecognitionActivity()
+		onActivityResult()
 	anagrams!
 	alternatives, word lookup; is it better to do this using in-memory
 	collections, or directly on the database? try some timings?

@@ -1,4 +1,4 @@
-MainActivity
+MainActivity MVC?
 
 onCreate()
   if no user: showUserDialog
