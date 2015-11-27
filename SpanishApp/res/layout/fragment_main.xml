@@ -106,6 +106,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/repeatStr" />
+        
+        <ImageButton
+            android:id="@+id/micButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/micStr"
+            android:src="@drawable/abc_ic_voice_search_api_mtrl_alpha" />
+        
 
     </LinearLayout>
 

@@ -2,15 +2,11 @@ TODO
 prioritise everything in this list (including this line?)
 outstanding tests
 	test invalid value for one of enums in engspa.txt
-	need a way to force reload of DB, from built-in or from web site
-	The application may be doing too much work on its main thread; try
-		to track this down
 Short-term
 	sort words in engspa.txt, to reflect school words; complete GCSE words
 	only turn on textToSpeech if question style requires it
 Long-term
-	voice recognition
-	anagrams!
+	need a way to force reload of DB, from built-in or from web site
 	alternatives, word lookup; is it better to do this using in-memory
 	collections, or directly on the database? try some timings?
 	is there a way of auto deploying JardenProvider along with Spanish?

@@ -11,15 +11,20 @@ import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaQuiz.QuestionType;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
@@ -35,6 +40,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
@@ -42,6 +48,7 @@ import android.widget.TextView.OnEditorActionListener;
 public class EngSpaFragment extends Fragment implements OnClickListener,
 		OnEditorActionListener, OnInitListener, LoaderCallbacks<Cursor> {
 	public final static int WORD_LOADER_ID = 1;
+	private final static int PHRASE_ACTIVITY_CODE = 1002; 
 
 	private final static Locale LOCALE_ES = new Locale("es", "ES");
 	private TextView userNameTextView;
@@ -58,25 +65,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextToSpeech textToSpeech;
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
-	/*
-	 * userLevel can be incremented by EngSpaQuiz when user answered
-	 * enough questions, or set by user invoking options menu item
-	 * UserDialog at any time.
-	 * EngSpaQuiz ->
-	 * 		MainActivity.onNewLevel() [I/F QuizEventListener] ->
-	 * 			EngSpaFragment.onNewLevel()
-	 * UserDialog ->
-	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
-	 *			EngSpaQuiz.setUserLevel()
-	 * 			EngSpaFragment.onNewLevel()
-	 */
 	private EngSpaUser engSpaUser;
 	private QuestionStyle currentQuestionStyle;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
 	private Button repeatButton;
+	private ImageButton micButton;
 	
-	@Override
+	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreate(" +
@@ -92,18 +88,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			mainActivity.checkDataFileVersion();
 		}
 	}
-	public void loadDB() {
-		getActivity().getSupportLoaderManager().initLoader(
-				WORD_LOADER_ID, null, this);
-	}
-	
-	@Override
+	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreateView()");
-		// Potentially restore state after configuration change; see knowledgeBase.txt
+		// Potentially restore state after configuration change; before we re-create
+		// the views, get relevant information from current values. See knowledgeBase.txt
 		String pendingAnswer = null;
+		int selfMarkLayoutVisibility = View.GONE;
 		if (this.answerEditText != null) pendingAnswer = answerEditText.getText().toString();
+		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
 		this.userLevelTextView = (TextView) rootView.findViewById(R.id.userLevelTextView);
@@ -116,6 +110,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		button.setOnClickListener(this);
 		this.repeatButton = (Button) rootView.findViewById(R.id.repeatButton);
 		this.repeatButton.setOnClickListener(this);
+		this.micButton = (ImageButton) rootView.findViewById(R.id.micButton);
+		this.micButton.setOnClickListener(this);
 		button = (Button) rootView.findViewById(R.id.incorrectButton);
 		button.setOnClickListener(this);
 		button = (Button) rootView.findViewById(R.id.correctButton);
@@ -124,10 +120,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
 		if (pendingAnswer != null) this.answerEditText.setText(pendingAnswer);
+		if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
 		this.answerEditText.setOnEditorActionListener(this);
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
 		return rootView;
 	}
+	public void loadDB() {
+		getActivity().getSupportLoaderManager().initLoader(
+				WORD_LOADER_ID, null, this);
+	}
+	
 	private EngSpaUser loadUserFromDB() {
 		ContentResolver contentResolver = getActivity().getContentResolver();
 		String selection = null;
@@ -149,11 +151,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else return null;
 	}
 
+	/*
+	 * part 1 of next question: set up business model, i.e. attributes
+	 * which are not part of UI
+	 */
 	private void nextQuestion() {
 		QuestionType questionType = QuestionType.WORD;
 		String spanish = engSpaQuiz.getNextQuestion(questionType);
 		String english = engSpaQuiz.getEnglish();
-		EngSpa engSpa = engSpaQuiz.getCurrentWord();
 		
 		QuestionStyle questionStyle = this.engSpaUser.getQuestionStyle();
 		if (questionStyle == QuestionStyle.random) {
@@ -164,11 +169,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.currentQuestionStyle = questionStyle;
 		}
 		this.responseIfCorrect = "Right!";
-		if (this.currentQuestionStyle.voiceText != VoiceText.text) {
-			this.repeatButton.setVisibility(View.VISIBLE);
-		} else {
-			this.repeatButton.setVisibility(View.INVISIBLE);
-		}
 		if (this.currentQuestionStyle.spaQuestion) {
 			this.question = spanish;
 			if (this.currentQuestionStyle.spaAnswer) {
@@ -182,25 +182,33 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			this.correctAnswer = english;
 		}
-		Attribute attribute = engSpa.getAttribute();
+		this.answerEditText.getText().clear();
+		askQuestion();
+	}
+	/*
+	 * part 2 of next question: set up UI from business model
+	 */
+	private void askQuestion() {
+		Attribute attribute = engSpaQuiz.getCurrentWord().getAttribute();
 		if (attribute != Attribute.n_a) {
 			this.attributeTextView.setText("hint: " + attribute.toString());
 		} else {
 			this.attributeTextView.setText("");
 		}
-		this.answerEditText.getText().clear();
-		askQuestion();
-	}
-	private void askQuestion() {
-		if (currentQuestionStyle.spaAnswer) {
-			this.answerEditText.setHint(R.string.spanishStr);
+		if (this.currentQuestionStyle.voiceText == VoiceText.text) {
+			this.repeatButton.setVisibility(View.INVISIBLE);
 		} else {
-			this.answerEditText.setHint(R.string.englishStr);
-		}
-		if (currentQuestionStyle.voiceText != VoiceText.text) {
+			this.repeatButton.setVisibility(View.VISIBLE);
 			speakQuestion();
 		}
-		if (currentQuestionStyle.voiceText == VoiceText.voice) {
+		if (this.currentQuestionStyle.spaAnswer) {
+			this.answerEditText.setHint(R.string.spanishStr);
+			this.micButton.setVisibility(View.VISIBLE);
+		} else {
+			this.answerEditText.setHint(R.string.englishStr);
+			this.micButton.setVisibility(View.INVISIBLE);
+		}
+		if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
 			this.questionTextView.setText("");
 		} else {
 			this.questionTextView.setText(this.question);
@@ -226,7 +234,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		textToSpeech.speak(question, TextToSpeech.QUEUE_ADD, null);
 	}
 
-	@Override
+	@Override // onClickListener
 	public void onClick(View view) {
 		MainActivity mainActivity = (MainActivity) getActivity();
 		mainActivity.setStatus("");
@@ -235,10 +243,48 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			goPressed();
 		} else if (id == R.id.repeatButton) {
 			askQuestion();
+		} else if (id == R.id.micButton) {
+			startSpeechActivity();
 		} else if (id == R.id.correctButton) {
 			selfMarkButton(true);
 		} else if (id == R.id.incorrectButton) {
 			selfMarkButton(false);
+		}
+	}
+	private void startSpeechActivity() {
+		Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+		speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+	    speechIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 10);
+		startActivityForResult(speechIntent, PHRASE_ACTIVITY_CODE);
+	}
+	/**
+	 * Handle the results from the voice recognition activity.
+	 * Runs on main (UI) thread.
+	 */
+	@Override // Fragment
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (BuildConfig.DEBUG) {
+			Log.d(MainActivity.TAG,
+					"EngSpaFragment.onActivityResult(resultCode=" + resultCode);			
+		}
+		if (resultCode == Activity.RESULT_OK) {
+			ArrayList<String> matches = data.getStringArrayListExtra(
+					RecognizerIntent.EXTRA_RESULTS);
+			for (String match: matches) {
+				Log.d(MainActivity.TAG, "match=" + match);
+				if (match.equalsIgnoreCase(this.correctAnswer)) {
+					this.responseIfCorrect = "Right! " + match;
+					setIsCorrect(true);
+					return;
+				}
+			}
+			setIsCorrect(false, matches.get(0) + " is wrong");
+		} else {
+			this.statusTextView.setText(
+					"resultCode from speech recognition: " + resultCode);
 		}
 	}
 	private String getSuppliedAnswer() {
@@ -246,11 +292,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	private void selfMarkButton(boolean isCorrect) {
 		this.statusTextView.setText("");
-		this.selfMarkLayout.setVisibility(View.GONE);
-		this.buttonLayout.setVisibility(View.VISIBLE);
+		showButtonLayout();
 		engSpaQuiz.setCorrect(isCorrect);
 		showStats();
 		nextQuestion();
+	}
+	private void showSelfMarkLayout() {
+		this.buttonLayout.setVisibility(View.GONE);
+		this.selfMarkLayout.setVisibility(View.VISIBLE);
+	}
+	private void showButtonLayout() {
+		this.selfMarkLayout.setVisibility(View.GONE);
+		this.buttonLayout.setVisibility(View.VISIBLE);
 	}
 	/*
 	if answer supplied:
@@ -266,8 +319,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void goPressed() {
 		String suppliedAnswer = getSuppliedAnswer().trim();
 		if (suppliedAnswer.length() == 0) {
-			this.buttonLayout.setVisibility(View.GONE);
-			this.selfMarkLayout.setVisibility(View.VISIBLE);
+			showSelfMarkLayout();
 			this.answerEditText.setText(this.correctAnswer);
 			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
@@ -293,19 +345,24 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 							suppliedAnswer;
 				}
 			}
-			
-			engSpaQuiz.setCorrect(isCorrect);
-			if (isCorrect) {
-				this.statusTextView.setText(this.responseIfCorrect);
-				nextQuestion();
-			} else {
-				this.statusTextView.setText("Wrong!");
-				if (this.currentQuestionStyle.voiceText != VoiceText.text) {
-					speakQuestion();
-				}
-			}
-			showStats();
+			setIsCorrect(isCorrect);
 		}
+	}
+	private void setIsCorrect(boolean isCorrect) {
+		setIsCorrect(isCorrect, "Wrong!");
+	}
+	private void setIsCorrect(boolean isCorrect, String responseIfWrong) {
+		engSpaQuiz.setCorrect(isCorrect);
+		if (isCorrect) {
+			this.statusTextView.setText(this.responseIfCorrect);
+			nextQuestion();
+		} else {
+			this.statusTextView.setText(responseIfWrong);
+			if (this.currentQuestionStyle.voiceText != VoiceText.text) {
+				speakQuestion();
+			}
+		}
+		showStats();
 	}
 	/*
 	 * Normalise a word or phrase, to make the comparison more likely to succeed.
@@ -324,13 +381,22 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		return builder.toString();
 	}
-	private int getUserLevel() {
-		return this.engSpaUser.getUserLevel();
-	}
+	/*
+	 * userLevel can be incremented by EngSpaQuiz when user answered
+	 * enough questions, or set by user invoking options menu item
+	 * UserDialog at any time.
+	 * EngSpaQuiz ->
+	 * 		MainActivity.onNewLevel() [I/F QuizEventListener] ->
+	 * 			EngSpaFragment.onNewLevel()
+	 * UserDialog ->
+	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
+	 *			EngSpaQuiz.setUserLevel()
+	 * 			EngSpaFragment.onNewLevel()
+	 */
 	private void showStats() {
 		int owct = engSpaQuiz.getOutstandingWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
-		userLevelTextView.setText(Integer.toString(getUserLevel()));
+		userLevelTextView.setText(Integer.toString(this.engSpaUser.getUserLevel()));
 		this.currentCtTextView.setText(Integer.toString(owct));
 		this.failCtTextView.setText(Integer.toString(fwct));
 		if (BuildConfig.DEBUG) {
@@ -348,7 +414,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		return handled;
 	}
-	@Override
+	@Override // Fragment
 	public void onResume() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onResume()");
 		super.onResume();
@@ -357,7 +423,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			showStats();
 		}
 	}
-	@Override
+	@Override // Fragment
 	public void onPause() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onPause()");
 		super.onPause();
@@ -367,7 +433,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			textToSpeech = null;
 		}
 	}
-	@Override
+	@Override // Fragment
 	public void onDestroy() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onDestroy()");
 		super.onDestroy();
@@ -463,8 +529,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		userUpdated();
 	}
 	private void userUpdated() {
-		this.selfMarkLayout.setVisibility(View.GONE);
-		this.buttonLayout.setVisibility(View.VISIBLE);
+		showButtonLayout();
 		nextQuestion();
 		showUserValues();
 	}
@@ -505,7 +570,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						wordType, qualifier, attribute, level));
 			}
 			cursor.close();
-			this.engSpaQuiz = new EngSpaQuiz(engSpaList, getUserLevel());
+			this.engSpaQuiz = new EngSpaQuiz(engSpaList, this.engSpaUser.getUserLevel());
 			this.engSpaQuiz.setQuizEventListener((MainActivity) getActivity());
 			showUserValues();
 			nextQuestion();

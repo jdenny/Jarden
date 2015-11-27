@@ -4,20 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.MessageFormat;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Properties;
-import java.util.Set;
+import java.util.Comparator;
 
 /**
  * Read words from a file or database, and create anagram from each one.
  * @author john.denny@gmail.com
  */
 public class AnagramQuiz extends Quiz {
-	private ArrayList<QuestionAnswer> qaList;
+	private ArrayList<String> masterWordList;
 	private ArrayList<Integer> outstandingIndexList;
 	private int index = -1;
+	private int currentLevel = 0; // word size is level + 2, i.e. starts at 3
 	private String questionTemplate = null;
 
 	public AnagramQuiz(InputStream is, String encoding) throws IOException {
@@ -25,28 +26,17 @@ public class AnagramQuiz extends Quiz {
 	}
 	public AnagramQuiz(InputStreamReader isReader) throws IOException {
 		BufferedReader reader = new BufferedReader(isReader);
-		qaList = new ArrayList<QuestionAnswer>();
-		String question = null;
-		String answer;
-		while (true) {
-			String line = reader.readLine();
-			if (line == null) break; // end of file
-			if (line.startsWith("#")) continue; // comment
-			if (line.startsWith("$T: ")) {
-				questionTemplate = line.substring(4);
-			} else if (line.startsWith("$IO: ")) {
-				char questionStyle = line.charAt(5);
-				char answerStyle = line.charAt(6);
-				setQuestionStyle(questionStyle);
-				setAnswerStyle(answerStyle);
-			} else {
-				answer = line;
-				question = randomise(answer);
-				qaList.add(new QuestionAnswer(question, answer));
+		masterWordList = new ArrayList<String>();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (!line.startsWith("#")) { // comment
+				masterWordList.add(line);
 			}
 		}
 		reader.close();
-		common();
+	}
+	public AnagramQuiz(ArrayList<String> words) {
+		this.masterWordList = words;
 	}
 	private String randomise(String word) {
 		StringBuilder builder = new StringBuilder(word);
@@ -60,94 +50,39 @@ public class AnagramQuiz extends Quiz {
 		}
 		return builder.toString();
 	}
-	private void common() {
-		/*! if okay, replace calls to common() with reset()
-		if (questionTemplate == null) questionTemplate = "";
-		else if (!questionTemplate.endsWith(" ")) {
-			questionTemplate += " ";
-		}
-		*/
-		reset();
-	}
-	public AnagramQuiz(Properties properties) throws IOException {
-		Set<String> names = properties.stringPropertyNames();
-		qaList = new ArrayList<QuestionAnswer>();
-		for (String name: names) {
-			String value = properties.getProperty(name);
-			if (name.equals(Quiz.TEMPLATE_KEY)) {
-				questionTemplate = value;
-			} else if (name.equals(Quiz.IO_KEY)) {
-				setQuestionStyle(value.charAt(0));
-				setAnswerStyle(value.charAt(1));
-			} else {
-				qaList.add(new QuestionAnswer(name, value));
-			}
-		}
-		common();
-	}
-	/*!
-	public PresetQuiz(String[] qaLines) {
-		qaList = new ArrayList<QuestionAnswer>();
-		for (String qaLine: qaLines) {
-			if (qaLine.startsWith("$T: ")) {
-				questionTemplate = qaLine.substring(4);
-			} else {
-				int index = qaLine.indexOf('=');
-				if (index > 0) {
-					String question = qaLine.substring(0, index);
-					String answer = qaLine.substring(index+1);
-					qaList.add(new QuestionAnswer(question, answer));
-				}
-			}
-		}
-		common();
-	}
-	*/
-	public AnagramQuiz(ArrayList<QuestionAnswer> qaList) {
-		this(qaList, null);
-	}
-	public AnagramQuiz(ArrayList<QuestionAnswer> qaList, String questionTemplate) {
-		this.qaList = qaList;
-		/*!
-		if (questionTemplate.length() > 0 && !questionTemplate.endsWith(": ") ) {
-			questionTemplate += ": ";
-		}
-		*/
-		this.questionTemplate = questionTemplate;
-		common();
-	}
-	public ArrayList<QuestionAnswer> getQuestionAnswerList() {
-		return qaList;
-	}
 	public String getQuestionTemplate() {
 		return questionTemplate;
 	}
 	@Override
 	public void reset() {
 		super.reset();
-		outstandingIndexList = new ArrayList<Integer>();
-		for (int i = 0; i < qaList.size(); i++) {
-			outstandingIndexList.add(Integer.valueOf(i));
-		}
-		Collections.shuffle(outstandingIndexList);
 	}
 	@Override
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
+		if (level != this.currentLevel) {
+			this.outstandingIndexList = new ArrayList<Integer>();
+			this.currentLevel = level;
+			int wordSize = level + 2;
+			int i;
+			for (i = 0; i < this.masterWordList.size() &&
+					masterWordList.get(i).length() < wordSize; i++);
+			for (; i < this.masterWordList.size() &&
+					masterWordList.get(i).length() == wordSize; i++) {
+				outstandingIndexList.add(i);
+			}
+			Collections.shuffle(outstandingIndexList);
+			this.index = -1;
+		}
 		if (outstandingIndexList.size() == 0) {
 			throw new EndOfQuestionsException("No more questions");
 		}
-		index++;
+		this.index++;
 		if (index >= outstandingIndexList.size()) {
 			index = 0;
 		}
-		QuestionAnswer qa = qaList.get(outstandingIndexList.get(index));
-		String question;
-		if (questionTemplate == null) {
-			question = qa.question;
-		} else {
-			question = MessageFormat.format(questionTemplate, qa.question);
-		}
-		super.setQuestionAnswer(question, qa.answer);
+		String answer = this.masterWordList.get(outstandingIndexList.get(index));
+		String question = randomise(answer);
+		super.setQuestionAnswer(question, answer);
 		return question;
 	}
 	@Override
@@ -167,5 +102,34 @@ public class AnagramQuiz extends Quiz {
 			len = answer.length();
 		}
 		return answer.substring(0, len);
+	}
+	public static int engSpa2Word(InputStream is, OutputStream os) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		ArrayList<String> wordList = new ArrayList<String>();
+		String line;
+		String word;
+		while ((line = reader.readLine()) != null) {
+			if (line.length() > 0) {
+				int firstCommaIndex = line.indexOf(',');
+				word = line.substring(0, firstCommaIndex);
+				if (word.length() > 2) {
+					wordList.add(word);
+				}
+			}
+		}
+		reader.close();
+		// now sort by length
+		Collections.sort(wordList, new Comparator<String>() {
+			@Override
+			public int compare(String lhs, String rhs) {
+				return lhs.length() - rhs.length();
+			}
+		});
+		PrintWriter writer = new PrintWriter(os);
+		for (String word2: wordList) {
+			writer.println(word2);
+		}
+		writer.close();
+		return wordList.size();
 	}
 }
