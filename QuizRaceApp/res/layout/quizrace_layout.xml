@@ -76,119 +76,23 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content" >
 	    <TextView
 	        android:id="@+id/question"
 	        style="@style/QuizRaceFont"
 	        android:layout_width="wrap_content"
+	        android:layout_weight="0"
 	        android:layout_height="wrap_content" />
-	    <TextView
+
+	    <EditText
 	        android:id="@+id/answer"
 	        style="@style/QuizRaceFont"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" />
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:imeOptions="actionGo"
+	        android:inputType="number" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-
-        <Button
-	        android:id="@+id/button1"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/one" />
-        <Button
-	        android:id="@+id/button2"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/two" />
-        <Button
-	        android:id="@+id/button3"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/three" />
-        <Button
-	        android:id="@+id/button4"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/four" />
-        <Button
-	        android:id="@+id/button5"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/five" />
-        <ImageButton
-	        android:id="@+id/buttonBackspace"
-	        android:layout_width="0dp"
-	        android:layout_weight="6"
-	        android:layout_height="@dimen/buttonHeight"
-	        android:src="@android:drawable/ic_input_delete"
-	        android:contentDescription="@string/backspace" />
-        </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-
-        <Button
-	        android:id="@+id/button6"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/six" />
-        <Button
-	        android:id="@+id/button7"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/seven" />
-        <Button
-	        android:id="@+id/button8"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/eight" />
-        <Button
-	        android:id="@+id/button9"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/nine" />
-        <Button
-	        android:id="@+id/button0"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="5"
-	        android:layout_height="wrap_content"
-	        android:text="@string/zero" />
-        <Button
-	        android:id="@+id/buttonGo"
-	        style="@style/QuizRaceFont"
-	        android:layout_width="0dp"
-	        android:layout_weight="6"
-	        android:layout_height="wrap_content"
-	        android:text="@string/go" />
-    </LinearLayout>
-    
 </LinearLayout>

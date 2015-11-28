@@ -1,5 +1,8 @@
 package com.jardenconsulting.quizrace;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -9,6 +12,7 @@ import jarden.app.race.GameData;
 import jarden.app.race.LaneView;
 import jarden.app.race.QuizRaceIF;
 import jarden.quiz.AlgebraQuiz;
+import jarden.quiz.AnagramQuiz;
 import jarden.quiz.AreasQuiz;
 import jarden.quiz.ArithmeticQuiz;
 import jarden.quiz.EndOfQuestionsException;
@@ -23,7 +27,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,13 +37,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class QuizRaceFragment extends Fragment implements OnClickListener,
-			OnInitListener {
+			OnInitListener, OnEditorActionListener {
 	private int mode; // see QuizRaceListener
 	private static final long[] WRONG_VIBRATE = {
 		0, 200, 200, 200
@@ -45,11 +54,11 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 	private static final long[] LOST_VIBRATE = {
 		0, 400, 400, 400, 400, 400
 	};
-	private static final int CHASER_DELAY_TENTHS = 100;
+	private static final int CHASER_DELAY_TENTHS = 200;
 	// these variables don't change once setup in onCreateView:
     private Vibrator vibrator;
 	private TextView questionView;
-	private TextView answerView;
+	private TextView answerTextView; // could be EditText, subclass of TextView
 	private LaneView laneAView;
 	private LaneView laneBView;
 	private LaneView laneCView;
@@ -80,7 +89,37 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		View view = inflater.inflate(R.layout.quizrace_layout, container, false);
 		quiz = new ArithmeticQuiz();
 		questionView = (TextView) view.findViewById(R.id.question);
-		answerView = (TextView) view.findViewById(R.id.answer);
+		View answerView = view.findViewById(R.id.answer);
+		if (answerView instanceof EditText) {
+			this.answerTextView = (EditText) answerView;
+			this.answerTextView.setOnEditorActionListener(this);
+		} else {
+			this.answerTextView = (TextView) answerView;
+			Button button = (Button) view.findViewById(R.id.button1);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button2);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button3);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button4);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button5);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button6);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button7);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button8);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button9);
+			button.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.button0);
+			button.setOnClickListener(this);
+			ImageButton iButton = (ImageButton) view.findViewById(R.id.buttonBackspace);
+			iButton.setOnClickListener(this);
+			button = (Button) view.findViewById(R.id.buttonGo);
+			button.setOnClickListener(this);
+		}
 		laneAView = (LaneView) view.findViewById(R.id.laneA);
 		laneAView.setAttributes(Color.BLUE);
 		laneAView.setBitmapId(R.drawable.goodie);
@@ -91,31 +130,7 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		laneCView = (LaneView) view.findViewById(R.id.laneC);
 		laneCView.setAttributes(Color.GREEN);
 		levelCView = (TextView) view.findViewById(R.id.laneCLevel);
-		Button button = (Button) view.findViewById(R.id.button1);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button2);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button3);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button4);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button5);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button6);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button7);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button8);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button9);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.button0);
-		button.setOnClickListener(this);
-		ImageButton iButton = (ImageButton) view.findViewById(R.id.buttonBackspace);
-		iButton.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.buttonGo);
-		button.setOnClickListener(this);
-		button = (Button) view.findViewById(R.id.resetButton);
+		Button button = (Button) view.findViewById(R.id.resetButton);
 		button.setOnClickListener(this);
 		button = (Button) view.findViewById(R.id.helpButton);
 		button.setOnClickListener(this);
@@ -151,6 +166,15 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 			quiz = new ArithmeticQuiz();
 		} else if (menuId == R.id.numbers) {
 			quiz = new NumbersQuiz();
+		} else if (menuId == R.id.anagram) {
+			InputStream is = getResources().openRawResource(R.raw.words);
+			try {
+				quiz = new AnagramQuiz(new InputStreamReader(is));
+			} catch (IOException e) {
+				String message = "IOException opening raw/words.txt: " + e;
+				Log.e(MainActivity.TAG, message);
+				mainActivity.setStatusMessage(message);
+			}
 		} else if (menuId == R.id.algebra) {
 			quiz = new AlgebraQuiz();
 		} else if (menuId == R.id.areas) {
@@ -167,22 +191,27 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		} else {
 			return false;
 		}
+		if (quiz.getAnswerType() == Quiz.ANSWER_TYPE_STRING) {
+			this.answerTextView.setInputType(InputType.TYPE_CLASS_TEXT);
+		} else {
+			this.answerTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
+		}
 		reset();
 		return true;
 	}
 
 	@Override
 	public void onClick(View view) {
-		String answerStr = answerView.getText().toString();
+		String answerStr = answerTextView.getText().toString();
 		int id = view.getId();
 		if (id == R.id.buttonBackspace) {
 			int asl = answerStr.length();
 			if (asl > 0) {
 				answerStr = answerStr.substring(0, asl - 1);
 			}
-			answerView.setText(answerStr);
+			answerTextView.setText(answerStr);
 		} else if (id == R.id.buttonGo) {
-			checkAnswer();
+			checkAnswer(answerTextView.getText().toString().trim());
 		} else if (id == R.id.resetButton) {
 			reset();
 		} else if (id == R.id.helpButton) {
@@ -190,8 +219,17 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		} else {
 			Button button = (Button) view;
 			answerStr += button.getText();
-			answerView.setText(answerStr);
+			answerTextView.setText(answerStr);
 		}
+	}
+	@Override // OnEditorActionListener
+	public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+		boolean handled = false;
+		if (actionId == EditorInfo.IME_ACTION_GO) {
+			checkAnswer(answerTextView.getText().toString().trim());
+			handled = true;
+		}
+		return handled;
 	}
 
 	private void help() {
@@ -230,7 +268,7 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 						(1 + 0.5 * level));
 				try { Thread.sleep(currentChaserDelay * 100);
 				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
+					Log.e(MainActivity.TAG, "QuizRaceFragment.Chaser.run() " + e);
 				}
             	// check to see if game already over before we
 				// create new runnable object:
@@ -282,7 +320,7 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		try {
 			question = quiz.getNextQuestion(level);
 		} catch (EndOfQuestionsException e) {
-			throw new RuntimeException(e);
+			mainActivity.setStatusMessage(e.getMessage());
 		}
 		poseQuestion();
 	}
@@ -295,16 +333,19 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 		} else {
 			questionView.setText(question + " ");
 		}
-		answerView.setText("");
+		if (answerTextView instanceof EditText) {
+			((EditText) answerTextView).getText().clear();
+		} else {
+			answerTextView.setText("");
+		}
 	}
-	private void checkAnswer() {
-		String answerStr = answerView.getText().toString().trim();
+	private void checkAnswer(String answerStr) {
 		if (answerStr.length() < 1) {
 			logMessage("no answer supplied!");
 			return;
 		}
-		int answer = Integer.parseInt(answerStr);
-		int result = quiz.isCorrect(answer);
+		//!! int answer = Integer.parseInt(answerStr);
+		int result = quiz.isCorrect(answerStr);
 		if (result == Quiz.CORRECT) {
 			logMessage("correct");
 			if (this.gameData.status != GameData.CAUGHT) {
@@ -323,10 +364,10 @@ public class QuizRaceFragment extends Fragment implements OnClickListener,
 			}
 			nextQuestion();
 		} else if (result == Quiz.FAIL) {
-			logMessage(answer + " is wrong! correct answer is " + quiz.getCorrectAnswer());
+			logMessage(answerStr + " is wrong! correct answer is " + quiz.getCorrectAnswer());
 			nextQuestion();
 		} else {
-			logMessage(answer + " is wrong!");
+			logMessage(answerStr + " is wrong!");
 			vibrator.vibrate(WRONG_VIBRATE, -1);
 			poseQuestion();
 		}
