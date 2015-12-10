@@ -1,0 +1,31 @@
+Exercise 2 - Syntax Basics
+	3 - using recursion
+		algorithm should be x^n = x.x^n-1 if n is odd and +ve
+		not x^n = n.x^n-1
+OO Programming - slide 11, Companion Objects & Singletons
+	"Objects are singletons, and members of objects are
+	implicitly static"
+	should this be
+	"Objects are singletons, hence members of objects have
+	similar characteristics to Java statics, but with
+	inheritance & polymorphism"
+
+Inheritance and Traits - slide 24, Packages
+	is it appropriate to say "I think..."?
+	
+Numbering of exercises needs updating - 2 x Exercise 5
+
+Collections and Generics, slide 27
+	"A Stack can accept objects of type T or a subtype of T:
+	abstract class Stack[+T]"
+	perhaps better to say:
+	if B is subclass of A then Stack[B] is a subtype of Stack[A]
+	(as described in the notes on slide 29)
+
+Collections and Generics, slide 29
+	"but the fact that we put [+A] means that the type we're
+	adding my not be an A." Both methods would work as they
+	do without the '+'; see my comment for slide 27, plus
+	description on slide 30.
+
+revisit 08 slide 10!
