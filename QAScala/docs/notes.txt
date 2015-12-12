@@ -1,3 +1,6 @@
+General: setup for course? confirmed? send in notes (below)?
+	sample solutions?
+
 Exercise 2 - Syntax Basics
 	3 - using recursion
 		algorithm should be x^n = x.x^n-1 if n is odd and +ve
@@ -28,4 +31,6 @@ Collections and Generics, slide 29
 	do without the '+'; see my comment for slide 27, plus
 	description on slide 30.
 
-revisit 08 slide 10!
+Collections and Functional Programming, slide 19
+	for(i <= 0 to 2; ...)
+	should be: for(i <- 0 to 2; ...

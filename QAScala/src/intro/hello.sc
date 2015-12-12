@@ -1,5 +1,8 @@
 package intro
 
 object hello {
-  println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
+	val welcome = "Welcome to hello Scala world"
+                                                  //> welcome  : String = Welcome to hello Scala world
+  println(welcome)                                //> Welcome to hello Scala world
+  welcome.groupBy(c => c)
 }
