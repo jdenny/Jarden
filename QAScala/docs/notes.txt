@@ -5,6 +5,7 @@ Exercise 2 - Syntax Basics
 	3 - using recursion
 		algorithm should be x^n = x.x^n-1 if n is odd and +ve
 		not x^n = n.x^n-1
+
 OO Programming - slide 11, Companion Objects & Singletons
 	"Objects are singletons, and members of objects are
 	implicitly static"
@@ -34,3 +35,14 @@ Collections and Generics, slide 29
 Collections and Functional Programming, slide 19
 	for(i <= 0 to 2; ...)
 	should be: for(i <- 0 to 2; ...
+
+Pattern Matching, slide 4
+	1st sample gives compilation warning, as default case
+	cannot be reached
+	
+Pattern Matching, slide 6
+	"case constructors create objects and compare them with
+	the argument" - what does this mean?
+	
+Exercise 7 - Pattern Matching
+	not sure how to use pattern matching to solve this problem	
