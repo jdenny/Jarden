@@ -104,39 +104,86 @@ object simpleList2 {
 			builder.toString()
 		}
 		def drop(n: Int) = {
+			@scala.annotation.tailrec
 			def _drop[A](list: JList[A], n: Int): JList[A] = list match {
 				case JNil => JNil
-				case _ if n > 0 => _drop(list.asInstanceOf[JCons[A]].tail, n - 1)
+				case jCons: JCons[A] if n > 0 => _drop(jCons.tail, n - 1)
 				case _ => list
 			}
 			_drop(this, n)
 		}
-		def append[B>:A](list2: JList[B]): JList[B] = {
-			def _append(list1: JList[A], list2: JList[B]): JList[B] = list1 match {
-				case JNil => list2
-				case thisAsCons: JCons[A] => _append(
-						thisAsCons.tail, new JCons(thisAsCons.head, list2))
+		/**
+		 * from this: (1, ^2), (2, ^3), (3, Nil)
+		 * and that: (4, ^5), (5, Nil)
+		 * produce: (1, ^2), (2, ^3), (3, ^4), (4, ^5), (5, Nil)
+		 */
+		def append[B>:A](that: JList[B]): JList[B] = {
+			that match {
+				case JNil => this
+				case thatAsCons: JCons[B] => {
+					def _makeTail(next: JList[B]): JCons[B] = next match {
+						case JNil => thatAsCons
+						case jCons: JCons[A] => new JCons(jCons.head, _makeTail(jCons.tail))
+					}
+					_makeTail(this)
+				}
 			}
-			_append(this, list2)
 		}
+		/**
+		 * From this: (1, ^2), (2, ^3), (3, Nil)
+		 * Produce: (1, Nil), (2, ^1), (3, ^2)
+		 * and return ^3
+		 */
 		def reverse(): JList[A] = {
-			def _reverse(jCons: JCons[A]): JCons[A] = {
-				jCons // this bit needs some work!
+			@scala.annotation.tailrec
+			def _reverse(current: JCons[A],
+					next: JList[A]): JCons[A] = next match {
+				case JNil => current
+				case jCons: JCons[A] =>
+					_reverse(new JCons[A](jCons.head, current), jCons.tail)
 			}
 			this match {
-				case JNil => JNil
-				case jCons: JCons[A] => _reverse(jCons)
+				case JNil => JNil // i.e. this
+				case jCons: JCons[A] =>
+					_reverse(new JCons[A](jCons.head, JNil), jCons.tail)
 			}
 		}
-		private def getLast: A = {
-			def _getLast(jCons: JCons[A]): A = jCons.tail match {
-				case JNil => jCons.head
-				case jCons2: JCons[A] => _getLast(jCons2)
+		def map[B](f: (A) => B): JList[B] = {
+			def _map[B](f: (A) => B, jList: JList[A]): JList[B] = jList match {
+				case JNil => JNil
+				case jCons: JCons[A] => {
+					new JCons[B](f(jCons.head), _map(f, jCons.tail))
+				}
 			}
-			this match {
-				case JNil => throw new IllegalStateException("no elements")
-				case _ => _getLast(this.asInstanceOf[JCons[A]])
+			_map(f, this)
+		}
+		/**
+		 * Return new list where each element matches predicate p.
+		 */
+		def filter(p: (A) => Boolean): JList[A] = {
+			@scala.annotation.tailrec
+			def getNextMatch(p: (A) => Boolean, jList: JList[A]): JList[A] = jList match {
+				case jCons: JCons[A] if p(jCons.head) => jCons
+				case JNil => JNil
+				case jCons: JCons[A] => getNextMatch(p, jCons.tail)
 			}
+			def _filter(p: (A) => Boolean, jList: JList[A]): JList[A] =
+					getNextMatch(p, jList) match {
+				case JNil => JNil
+				case jCons: JCons[A] =>
+					new JCons[A](jCons.head, _filter(p, jCons.tail))
+			}
+			_filter(p, this)
+		}
+		/**
+		 * Return new list containing the first n items of this list
+		 */
+		def take(n: Int): JList[A] = {
+			def _take(n: Int, jList: JList[A]): JList[A] = jList match {
+				case jCons: JCons[A] if n > 0 => new JCons(jCons.head, _take(n-1, jCons.tail))
+				case _ => JNil // stop when n runs out or we reach JNil
+			}
+			_take(n, this)
 		}
 	}
 	case object JNil extends JList[Nothing]
@@ -153,9 +200,29 @@ object simpleList2 {
 		}
 	}
 	val jlist4 = JList(1, 2, 3, 4)
+	val jlist56 = JList(5, 6)
 	println("jlist4=" + jlist4)
 	println("jlist4.drop(2)=" + jlist4.drop(2))
+	assert(JList() == jlist4.drop(6))
+	assert(jlist4 == jlist4.drop(0))
+	assert(jlist4 == jlist4.drop(-1))
+	assert(JList(3, 4) == jlist4.drop(2))
+	assert(JList() == JList().append(JList()))
+	assert(JList(5, 6) == JList().append(jlist56))
+	assert(JList(5, 6) == jlist56.append(JList()))
+	assert(JList(1, 5, 6) == JList(1).append(jlist56))
+	assert(JList(1, 2, 5, 6) == JList(1, 2).append(jlist56))
+	assert(JList(1, 2, 3, 4, 5, 6) == jlist4.append(jlist56))
 	println("jlist4.appended=" + jlist4.append(JList(5, 6)))
+	println("jlist4.reverse=" + jlist4.reverse)
+	println("jlist4=" + jlist4)
+	assert(JList(2, 4, 6, 8) == jlist4.map(_ * 2))
+	println("jlist4.map(\"I\" + _)=" + jlist4.map("I" + _))
+	assert(JList("I1", "I2", "I3", "I4") == jlist4.map("I" + _))
+	println("jlist4 evens=" + jlist4.filter(x => x % 2 == 0))
+	assert(JList(2, 4) == jlist4.filter(x => x % 2 == 0))
+	println("jlist4.take(3)=" + jlist4.take(3))
+	assert(JList(1, 2, 3) == jlist4.take(3))
 	
 	println("end of simpleList")
 }
