@@ -1,0 +1,10 @@
+ask students to define a for loop to print 7 times table
+do together on my repl; make it def to print n times table
+
+show ForDemo
+
+show DefVsValDemo; students guess order of messages
+
+if randVal had been lazy val randVal ...?
+
+show 1st part of DemoOps; what defs are required in IRap?

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/akka-2.3.6/lib/akka/akka-actor_2.11-2.3.6.jar"/>
+	<classpathentry kind="lib" path="C:/akka-2.3.6/lib/config-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/akka-2.3.6/lib/akka/akka-remote_2.11-2.3.6.jar"/>
+	<classpathentry kind="lib" path="C:/akka-2.3.6/lib/akka/protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/akka-2.3.6/lib/akka/netty-3.8.0.Final.jar"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

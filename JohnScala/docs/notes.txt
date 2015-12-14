@@ -1,0 +1,39 @@
+can we use Junit and Logging with Scala?
+
+functional programming
+----------------------
+try to avoid var and while; for java, use final to have same effect as val
+
+run scala program outside eclipse
+---------------------------------
+export bin to java jar file, e.g. src.temp.Temp2.scala
+in command window:
+	java -cp "Temp2.jar;/Program Files/eclipse-4.4/plugins/org.scala-lang.scala-library_2.11.6.v20150224-172222-092690e7bf.jar"
+	temp.Temp2
+Notes
+	to find the classpath above, run the program, Debug perspective,
+	right-click "terminated...javaw.exe", properties
+
+ooscala.pdf
+-----------
+functional & object-oriented
+runs on JVM
+interacts with Java
+
+declare some fractions, e.g.
+	f2d3 = 2/3, f5d7 = 5/7 etc
+
+show results of expressions, e.g.
+	f2d3 + f5d7 / f3d4
+
+process a collection of fractions, e.g. multiply by 3/4
+
+provide a parser? so users can type in:
+	4/5 + 7/9 - 23/7
+
+Up to Using Eclipse IDE (slide 9a)
+
+"Setting up Eclipse for the programme"
+Create and run hello world; open Scala REPL; use REPL from now
+
+ 
