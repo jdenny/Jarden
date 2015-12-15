@@ -87,21 +87,18 @@ object expressionEvaluation {
 
 object simpleList2 {
 	sealed trait JList[+A] {
-		override def toString() = {
-			val builder = new StringBuilder("JList(")
-			def _toString(jl: JList[A]): Unit = {
-				if (jl == JNil) {
-					val end = builder.size
-					builder.replace(end - 2, end, ")")
-				}
-				else {
-					val jcon = jl.asInstanceOf[JCons[A]]
-					builder ++= (jcon.head + ", ")
-					_toString(jcon.tail)
+		override def toString = {
+			def _toString(list: JList[A], firstElem: Boolean): String = list match {
+				case JNil => ")"
+				case cons: JCons[A] => {
+					val prefix = if (firstElem) "JList(" else ", "
+					prefix + cons.head + _toString(cons.tail, false)
 				}
 			}
-			_toString(this)
-			builder.toString()
+			this match {
+				case JNil => "JList()"
+				case cons: JCons[A] => _toString(this, true)
+			}
 		}
 		def drop(n: Int) = {
 			@scala.annotation.tailrec
@@ -149,31 +146,31 @@ object simpleList2 {
 			}
 		}
 		def map[B](f: (A) => B): JList[B] = {
-			def _map[B](f: (A) => B, jList: JList[A]): JList[B] = jList match {
+			def _map(jList: JList[A]): JList[B] = jList match {
 				case JNil => JNil
 				case jCons: JCons[A] => {
-					new JCons[B](f(jCons.head), _map(f, jCons.tail))
+					new JCons[B](f(jCons.head), _map(jCons.tail))
 				}
 			}
-			_map(f, this)
+			_map(this)
 		}
 		/**
 		 * Return new list where each element matches predicate p.
 		 */
 		def filter(p: (A) => Boolean): JList[A] = {
 			@scala.annotation.tailrec
-			def getNextMatch(p: (A) => Boolean, jList: JList[A]): JList[A] = jList match {
+			def getNextMatch(jList: JList[A]): JList[A] = jList match {
 				case jCons: JCons[A] if p(jCons.head) => jCons
 				case JNil => JNil
-				case jCons: JCons[A] => getNextMatch(p, jCons.tail)
+				case jCons: JCons[A] => getNextMatch(jCons.tail)
 			}
-			def _filter(p: (A) => Boolean, jList: JList[A]): JList[A] =
-					getNextMatch(p, jList) match {
+			def _filter(jList: JList[A]): JList[A] =
+					getNextMatch(jList) match {
 				case JNil => JNil
 				case jCons: JCons[A] =>
-					new JCons[A](jCons.head, _filter(p, jCons.tail))
+					new JCons[A](jCons.head, _filter(jCons.tail))
 			}
-			_filter(p, this)
+			_filter(this)
 		}
 		/**
 		 * Return new list containing the first n items of this list
@@ -221,8 +218,14 @@ object simpleList2 {
 	assert(JList("I1", "I2", "I3", "I4") == jlist4.map("I" + _))
 	println("jlist4 evens=" + jlist4.filter(x => x % 2 == 0))
 	assert(JList(2, 4) == jlist4.filter(x => x % 2 == 0))
+	val evens = (x: Int) => x % 2 == 0
+	assert(JList(2, 4, 6) == JList(1, 2, 3, 4, 5, 6).filter(evens))
 	println("jlist4.take(3)=" + jlist4.take(3))
 	assert(JList(1, 2, 3) == jlist4.take(3))
+	println("jlist4.take(-1)=" + jlist4.take(-1))
+	println("JNil=" + JNil)
+	assert(JList() == jlist4.take(-1))
+	assert(jlist4 == jlist4.take(5))
 	
 	println("end of simpleList")
 }
