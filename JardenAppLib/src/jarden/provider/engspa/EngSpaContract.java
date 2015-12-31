@@ -70,7 +70,7 @@ public final class EngSpaContract {
 	
 	public enum WordType {
 		noun, verb, adjective, adverb, number,
-		pronoun, preposition, phrase;
+		pronoun, preposition, conjunction, phrase;
 	}
 	
 	public enum Qualifier {
@@ -80,9 +80,10 @@ public final class EngSpaContract {
 	}
 	
 	public enum Attribute {
-		animal, body, building, clothing, colour, drink, fact, food, home,
-		language, mineral, money, music, n_a, permanent, person, place,
-		size, temporary, time, transport, weather;
+		animal, body, building, clothing, colour, culture, drink, fact, food,
+		hobby, home, interrogative, language, mineral, money, music, n_a,
+		permanent, person, place, size, sport, technology, temporary, time,
+		transport, weather;
 	}
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;

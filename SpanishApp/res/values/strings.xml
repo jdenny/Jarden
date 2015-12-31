@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Spanish</string>
+    <string name="app_name">Spanish GCSE Revision</string>
 	<string name="cancelStr">Cancel</string>
     <string name="conjugateStr">Conjugate</string>
     <string name="correctQueryStr">Correct?</string>

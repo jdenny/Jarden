@@ -111,3 +111,9 @@ twist, to turn,torcer,verb,transIntrans,n_a,6
 type,escribir a máquina, mecanografiar,verb,transIntrans,n_a,6
 use,usar, utilizar,verb,transIntrans,n_a,6
 worry,preocuparse,verb,transIntrans,n_a,6
+
+(to) turn/switch off apagar
+(to) turn/switch on encender
+book (of tickets) carné (m)
+
+department store almacenes (mpl)

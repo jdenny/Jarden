@@ -329,9 +329,14 @@ public class VerbUtils {
 		{"f", "cae"}, {"no", "caigas"}
 	};
 	
-	private static String[][] choquarPreterite = { {"yo", "choqué"} };
+	private static String[][] cargarPreterite = { {"yo", "cargué"} };
+	private static Object[][] cargarTenses = {
+		{"r", cargarPreterite}, {"no", "cargues"}
+	};
+	
+	private static String[][] chocarPreterite = { {"yo", "choqué"} };
 	private static Object[][] chocarTenses = {
-		{"r", choquarPreterite}, {"no", "choques"}
+		{"r", chocarPreterite}, {"no", "choques"}
 	};
 	
 	private static String[][] conocerPresent = {
@@ -455,6 +460,13 @@ public class VerbUtils {
 		{"si", "encuentra"}, {"no", "encuentres"}
 	};
 	
+	private static String[][] ejercerPresent = {
+		{"yo", "ejerzo"}
+	};
+	private static Object[][] ejercerTenses = {
+		{"p", ejercerPresent}, {"no", "ejerzas"}
+	};
+
 	private static String[][] entenderPresent = {
 		{"yo", "entiendo"}, {"tu", "entiendes"},
 		{"el", "entiende"}, {"e", "entienden"}
@@ -627,6 +639,13 @@ public class VerbUtils {
 		{"si", "pierde"}, {"no", "pierdas"}
 	};
 
+	private static String[][] pescarPreterite = {
+		{"yo", "pesqué"}
+	};
+	private static Object[][] pescarTenses = {
+		{"r", pescarPreterite}, {"no", "pesques"}
+	};
+
 	private static String[][] poderPresent = {
 		{"yo", "puedo"}, {"tu", "puedes"}, {"el", "puede"}, {"e", "pueden"}
 	};
@@ -702,6 +721,19 @@ public class VerbUtils {
 	private static Object[][] reirTenses = {
 		{"p", reirPresent}, {"r", reirPreterite},
 		{"f", "reir"}, {"si", "ríe"}, {"no", "rías"}
+	};
+
+	private static String[][] renirPresent = {
+		{"yo", "riño"}, {"tu", "riñes"}, {"el", "riñe"},
+		{"e", "riñen"}
+	};
+	private static String[][] renirPreterite = {
+		{"el", "riñó"}, {"e", "riñeron"}
+
+	};
+	private static Object[][] renirTenses = {
+		{"p", renirPresent}, {"r", renirPreterite},
+		{"si", "riñe"}, {"no", "riñas"}
 	};
 
 	private static String[][] saberPresent = {
@@ -848,8 +880,8 @@ public class VerbUtils {
 	};
 
 	private static Object[][] irregSpaVerbs = {
-		{"agradecer", agradecerTenses},
-		{"alcanzar", alcanzarTenses}, {"caer", caerTenses},
+		{"agradecer", agradecerTenses}, {"alcanzar", alcanzarTenses},
+		{"caer", caerTenses}, {"cargar", cargarTenses},
 		{"chocar", chocarTenses}, {"conocer", conocerTenses},
 		{"contar", contarTenses}, {"continuar", continuarTenses},
 		{"costar", costarTenses},
@@ -857,7 +889,7 @@ public class VerbUtils {
 		{"decir", decirTenses}, {"despertar", despertarTenses},
 		{"despedir", despedirTenses}, {"dirigir", dirigirTenses},
 		{"doler", dolerTenses}, {"dormir", dormirTenses},
-		{"descargar", descargarTenses},
+		{"descargar", descargarTenses},{"ejercer", ejercerTenses},
 		{"encontrar", encontrarTenses}, {"estar", estarTenses},
 		{"entender", entenderTenses}, {"enviar", enviarTenses},
 		{"haber", haberTenses}, {"hacer", hacerTenses},
@@ -869,10 +901,11 @@ public class VerbUtils {
 		{"oír", oirTenses}, {"padecer", padecerTenses},
 		{"parecer", parecerTenses}, {"pedir", pedirTenses},
 		{"pensar", pensarTenses}, {"perder", perderTenses},
+		{"pescar", pescarTenses},
 		{"poder", poderTenses}, {"poner", ponerTenses},
 		{"prevenir", prevenirTenses}, {"quebrar", quebrarTenses},
 		{"querer", quererTenses}, {"recordar", recordarTenses},
-		{"reír", reirTenses},
+		{"reír", reirTenses},{"reñir", renirTenses},
 		{"saber", saberTenses}, {"salir", salirTenses},
 		{"seguir", seguirTenses}, {"sentar", sentarTenses},
 		{"ser", serTenses}, {"servir", servirTenses},
