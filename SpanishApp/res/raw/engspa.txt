@@ -751,9 +751,9 @@ serious,serio,adjective,n_a,n_a,1
 short,corto,adjective,n_a,n_a,1
 shy,tímido,adjective,n_a,n_a,1
 silent,silencioso,adjective,n_a,n_a,1
-silly,,stupid,estúpido,adjective,n_a,n_a,1
+stupid,estúpido,adjective,n_a,n_a,1
 small,pequeño,adjective,n_a,n_a,1
-sought,after,buscado,adjective,n_a,n_a,1
+sought after,buscado,adjective,n_a,n_a,1
 strict,severo,adjective,n_a,n_a,1
 strong,fuerte,adjective,n_a,n_a,1
 thin,delgado,adjective,n_a,n_a,1
@@ -812,7 +812,7 @@ opposite,enfrente de,preposition,n_a,n_a,1
 outside,afuera,preposition,n_a,n_a,1
 through,a través de,preposition,n_a,n_a,1
 under,bajo,preposition,n_a,n_a,1
-until hasta,preposition,n_a,n_a,1
+until,hasta,preposition,n_a,n_a,1
 with,con,preposition,n_a,n_a,1
 without,sin,preposition,n_a,n_a,1
 twenty-one,veintiuno,number,n_a,n_a,1
@@ -969,7 +969,7 @@ usually,normalmente,adverb,n_a,n_a,1
 what a shame,qué lástima,phrase,n_a,n_a,1
 as,como,adverb,n_a,n_a,1
 everybody,todos,pronoun,n_a,n_a,1
-figure,cifra,noun,feminine,n_a,person,1
+figure,cifra,noun,feminine,person,1
 for example,por ejemplo,phrase,n_a,n_a,1
 if,si,conjunction,n_a,n_a,1
 middle,medio,noun,masculine,n_a,1
@@ -984,10 +984,10 @@ someone,alguien,pronoun,n_a,person,1
 something,algo,pronoun,n_a,n_a,1
 that,eso,pronoun,n_a,n_a,1
 those,esos,pronoun,n_a,n_a,1
-thing,cosa,noun,feminine,n_a,n_a,1
+thing,cosa,noun,feminine,n_a,1
 this,esto,pronoun,n_a,n_a,1
 these,estos,pronoun,n_a,n_a,1
-time,vez,noun,feminine,n_a,n_a,1
+time,vez,noun,feminine,n_a,1
 type,tipo,noun,masculine,n_a,1
 way,manera,noun,feminine,n_a,1
 yes,sí,adjective,n_a,n_a,1
@@ -1029,7 +1029,7 @@ old fashioned,anticuado,adjective,n_a,clothing,1
 pants,bragas,phrase,n_a,clothing,1
 perfume,perfume,noun,masculine,clothing,1
 poloshirt,polo,noun,masculine,clothing,1
-ring anillo,noun,masculine,clothing,1
+ring,anillo,noun,masculine,clothing,1
 scarf,bufanda,noun,feminine,clothing,1
 shoe shop,zapatería,noun,feminine,building,1
 shorts,pantalón corto,noun,masculine,clothing,1
@@ -1079,7 +1079,7 @@ chair,silla,noun,feminine,home,1
 character,carácter,noun,masculine,person,1
 charming,encantador,adjective,n_a,person,1
 chatty,hablador,adjective,n_a,person,1
-child,niño,noun,masculine,n_a,person,1
+child,niño,noun,masculine,person,1
 comfortable,cómodo,adjective,n_a,home,1
 cousin,primo,noun,masculine,person,1
 curly,rizado,adjective,n_a,person,1
@@ -1173,14 +1173,14 @@ telephone number,número de teléfono,phrase,n_a,n_a,1
 terraced house,casa adosada,phrase,n_a,n_a,1
 thin,flaco,adjective,n_a,person,1
 slim,delgado,adjective,n_a,person,1
-tidy,ordenado,adjective,n_aperson,1
+tidy,ordenado,adjective,n_a,person,1
 annoy,molestar,verb,transitive,n_a,1
 fight,pelear,verb,transIntrans,n_a,1
 quarrel,reñir,verb,intransitive,n_a,1
-to babysit,hacer de canguro,phrase,n_a,1
+to babysit,hacer de canguro,phrase,n_a,n_a,1
 care,cuidar,verb,transIntrans,n_a,1
 celebrate,celebrar,verb,transIntrans,n_a,1
-to get on well with,llevarse bien con,phrase,n_a,1
+to get on well with,llevarse bien con,phrase,n_a,n_a,1
 respect,respetar,verb,transitive,n_a,1
 separate,separar,verb,transitive,n_a,1
 tortoise,tortuga,noun,feminine,animal,1
@@ -1289,9 +1289,9 @@ romantic,romántico,adjective,n_a,n_a,1
 a romantic film,una película romántica,phrase,n_a,culture,1
 rugby,rugby,noun,masculine,sport,1
 sailing,vela,noun,feminine,sport,1
-saxophone,saxofón,,noun,masculine,music,1
+saxophone,saxofón,noun,masculine,music,1
 science fiction film,película de ciencia ficción,phrase,n_a,culture,1
-series,serie,noun,feminine,n_a,culture,1
+series,serie,noun,feminine,culture,1
 show,espectáculo,noun,masculine,culture,1
 singer,cantante,noun,masculine,person,1
 skate boarding,monopatinaje,noun,masculine,sport,1
@@ -1320,7 +1320,6 @@ violin,violin,noun,masculine,music,1
 volleyball,vóleibol,noun,masculine,sport,1
 water skiing,esquí acuático,noun,masculine,sport,1
 wedding,boda,noun,feminine,culture,1
-windsurfing,windsurf
 youth club,club de jóvenes,noun,masculine,building,1
 attend,asistir,verb,transitive,n_a,1
 to be a member of,ser miembro de,phrase,n_a,n_a,1

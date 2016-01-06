@@ -13,6 +13,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -20,7 +21,7 @@ import android.util.Log;
 
 public class EngSpaSQLite extends SQLiteOpenHelper {
 	private final static String DB_NAME = "engspa.db";
-	private final static int DB_VERSION = 25; // updated 23 Nov 2015
+	private final static int DB_VERSION = 26; // updated 4 Jan 2016
 	private static final int DATA_FILE_ID = // R.raw.engspatest;
 									R.raw.engspa;
 
@@ -41,11 +42,12 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 		EngSpaContract.QUESTION_STYLE + " TEXT NOT NULL);";
 	private final static String CREATE_USER_WORD_TABLE =
 		"CREATE TABLE " + EngSpaContract.USER_WORD_TABLE + " (" +
-		EngSpaContract.USER_ID +   " INTEGER NOT NULL PRIMARY KEY, " +
+		EngSpaContract.USER_ID +   " INTEGER NOT NULL, " +
 		EngSpaContract.WORD_ID +   " INTEGER NOT NULL, " +
 		EngSpaContract.CONSEC_RIGHT_CT +  " INTEGER NOT NULL, " +
 		EngSpaContract.WRONG_CT +  " INTEGER NOT NULL, " +
-		EngSpaContract.LEVELS_WRONG_CT + " INTEGER NOT NULL);";
+		EngSpaContract.LEVELS_WRONG_CT + " INTEGER NOT NULL, PRIMARY KEY (" +
+		EngSpaContract.USER_ID + "," + EngSpaContract.WORD_ID + ") );";
 	private final static String DROP_TABLE =
 			"DROP TABLE IF EXISTS " + EngSpaContract.TABLE;
 	private final static String DROP_USER_TABLE =
@@ -62,8 +64,7 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 		this.TAG = debugTag;
 	}
 
-	// methods from SQLiteOpenHelper
-	@Override
+	@Override // SQLiteOpenHelper
 	public void onCreate(SQLiteDatabase engSpaDB) {
 		Log.i(this.TAG, "EngSpaSQLite.onCreate()");
 		engSpaDB.execSQL(CREATE_TABLE);
@@ -71,9 +72,13 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 		engSpaDB.execSQL(CREATE_USER_WORD_TABLE);
 		populateDatabase(engSpaDB);
 	}
+	
+	public long getRowCount(String tableName) {
+		return DatabaseUtils.queryNumEntries(getReadableDatabase(), tableName);
+	}
 
 	// TODO: preserve data from user table across upgrades
-	@Override
+	@Override // SQLiteOpenHelper
 	public void onUpgrade(SQLiteDatabase engSpaDB, int oldVersion, int newVersion) {
 		Log.i(this.TAG,
 				"EngSpaSQLite.onUpgrade(oldVersion=" + oldVersion +
@@ -83,7 +88,6 @@ public class EngSpaSQLite extends SQLiteOpenHelper {
 		engSpaDB.execSQL(DROP_USER_WORD_TABLE);
 		onCreate(engSpaDB);
 	}
-	// end of methods from SQLiteOpenHelper
 	
 	private int populateDatabase(SQLiteDatabase engSpaDB) {
 		Resources resources = context.getResources();

@@ -2,13 +2,13 @@ package com.jardenconsulting.spanishapp;
 
 import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.Attribute;
-import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
-import jarden.provider.engspa.EngSpaContract.WordType;
 import jarden.engspa.EngSpa;
-import jarden.engspa.EngSpaQuiz;
-import jarden.engspa.EngSpaQuiz.QuestionType;
+import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz2;
+import jarden.engspa.EngSpaQuiz2.QuizEventListener;
+import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 
@@ -22,15 +22,11 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,11 +38,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
-		OnEditorActionListener, OnInitListener, LoaderCallbacks<Cursor> {
+		OnEditorActionListener, OnInitListener,
+		QuizEventListener /*!!, LoaderCallbacks<Cursor>*/ {
 	public final static int WORD_LOADER_ID = 1;
 	private final static int PHRASE_ACTIVITY_CODE = 1002; 
 
@@ -64,13 +60,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private String responseIfCorrect;
 	private TextToSpeech textToSpeech;
 	private Random random = new Random();
-	private EngSpaQuiz engSpaQuiz;
+	private EngSpaQuiz2 engSpaQuiz;
 	private EngSpaUser engSpaUser;
 	private QuestionStyle currentQuestionStyle;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
 	private Button repeatButton;
 	private ImageButton micButton;
+	private EngSpaDAO engSpaDAO;
 	
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,14 +75,15 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
-		MainActivity mainActivity = (MainActivity) getActivity();
-		this.engSpaUser = loadUserFromDB();
-		if (this.engSpaUser == null) { // i.e. no user yet on database
-			mainActivity.showUserDialog();
-		}
-		if (savedInstanceState == null) { // only check for dictionary updates
-				// when app is opened, not restarted
-			mainActivity.checkDataFileVersion();
+		if (savedInstanceState == null) { // i.e. app first opened, not restarted
+			MainActivity mainActivity = (MainActivity) getActivity();
+			this.engSpaDAO = new EngSpaSQLite2(mainActivity, MainActivity.TAG);
+			this.engSpaUser = engSpaDAO.getUser();
+			if (this.engSpaUser == null) { // i.e. no user yet on database
+				mainActivity.showUserDialog();
+			} else {
+				mainActivity.checkDataFileVersion();
+			}
 		}
 	}
 	@Override // Fragment
@@ -126,38 +124,21 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return rootView;
 	}
 	public void loadDB() {
-		getActivity().getSupportLoaderManager().initLoader(
-				WORD_LOADER_ID, null, this);
+		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.loadDB()");
+		//!! getActivity().getSupportLoaderManager().initLoader(WORD_LOADER_ID, null, this);
+		
+		this.engSpaQuiz = new EngSpaQuiz2(engSpaDAO, this.engSpaUser);
+		this.engSpaQuiz.setQuizEventListener(this);
+		showUserValues();
+		nextQuestion();
 	}
 	
-	private EngSpaUser loadUserFromDB() {
-		ContentResolver contentResolver = getActivity().getContentResolver();
-		String selection = null;
-		String sortOrder = null;
-		Cursor cursor = contentResolver.query(
-				EngSpaContract.CONTENT_URI_USER,
-				EngSpaContract.PROJECTION_ALL_USER_FIELDS,
-				selection, null, sortOrder);
-		if (cursor.moveToFirst()) {
-			int userId = cursor.getInt(0);
-			String userName = cursor.getString(1);
-			int userLevel = cursor.getInt(2);
-			String questionStyleStr = cursor.getString(3);
-			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
-			EngSpaUser user = new EngSpaUser(userId, userName, userLevel,
-					questionStyle);
-			Log.i(MainActivity.TAG, "retrieved from database: " + user);
-			return user;
-		} else return null;
-	}
-
 	/*
 	 * part 1 of next question: set up business model, i.e. attributes
 	 * which are not part of UI
 	 */
 	private void nextQuestion() {
-		QuestionType questionType = QuestionType.WORD;
-		String spanish = engSpaQuiz.getNextQuestion(questionType);
+		String spanish = engSpaQuiz.getNextQuestion();
 		String english = engSpaQuiz.getEnglish();
 		
 		QuestionStyle questionStyle = this.engSpaUser.getQuestionStyle();
@@ -214,7 +195,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.questionTextView.setText(this.question);
 		}
 	}
-	public EngSpaQuiz getEngSpaQuiz() {
+	public EngSpaQuiz2 getEngSpaQuiz() {
 		return this.engSpaQuiz;
 	}
 	private void speakQuestion() {
@@ -320,7 +301,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		String suppliedAnswer = getSuppliedAnswer().trim();
 		if (suppliedAnswer.length() == 0) {
 			showSelfMarkLayout();
-			this.answerEditText.setText(this.correctAnswer);
+			this.answerEditText.setText(this.correctAnswer); // this is null on restart !!
 			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
 				if (this.currentQuestionStyle.spaAnswer) {
@@ -386,15 +367,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * enough questions, or set by user invoking options menu item
 	 * UserDialog at any time.
 	 * EngSpaQuiz ->
-	 * 		MainActivity.onNewLevel() [I/F QuizEventListener] ->
-	 * 			EngSpaFragment.onNewLevel()
+	 * 		EngSpaFragment.onNewLevel() [I/F QuizEventListener]
 	 * UserDialog ->
 	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
 	 *			EngSpaQuiz.setUserLevel()
 	 * 			EngSpaFragment.onNewLevel()
 	 */
 	private void showStats() {
-		int owct = engSpaQuiz.getOutstandingWordCount();
+		int owct = engSpaQuiz.getCurrentWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
 		userLevelTextView.setText(Integer.toString(this.engSpaUser.getUserLevel()));
 		this.currentCtTextView.setText(Integer.toString(owct));
@@ -534,6 +514,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		showUserValues();
 	}
 
+	/*!!
 	@Override // LoaderCallbacks<Cursor>
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreateLoader()");
@@ -570,6 +551,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 						wordType, qualifier, attribute, level));
 			}
 			cursor.close();
+			if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
+					"EngSpaFragment.onLoadFinished(): words added to database: " + engSpaList.size());
 			this.engSpaQuiz = new EngSpaQuiz(engSpaList, this.engSpaUser.getUserLevel());
 			this.engSpaQuiz.setQuizEventListener((MainActivity) getActivity());
 			showUserValues();
@@ -581,6 +564,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onLoaderReset(Loader<Cursor> loader) {
 		Log.w(MainActivity.TAG, "EngSpaFragment.onLoaderReset()");
 	}
+	*/
 
 	private void showUserValues() {
 		userNameTextView.setText(engSpaUser.getUserName());
@@ -589,5 +573,43 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	public EngSpaUser getEngSpaUser() {
 		return this.engSpaUser;
+	}
+	public EngSpaDAO getEngSpaDAO() {
+		return this.engSpaDAO;
+	}
+	public boolean setUser(String userName, int userLevel,
+			QuestionStyle questionStyle) {
+		int maxUserLevel = engSpaDAO.getMaxUserLevel();
+		if (userLevel > maxUserLevel) {
+			userLevel = maxUserLevel;
+			this.statusTextView.setText("userLevel set to maximum");
+		}
+		if (engSpaUser != null &&
+				engSpaUser.getUserName().equals(userName) &&
+				engSpaUser.getUserLevel() == userLevel &&
+				engSpaUser.getQuestionStyle() == questionStyle) {
+			this.statusTextView.setText("no changes made to user");
+			return false;
+		}
+		boolean newUser = (engSpaUser == null);
+		boolean newLevel = !newUser && (engSpaUser.getUserLevel() != userLevel);
+		if (newUser) {
+			this.engSpaUser = new EngSpaUser(userName,
+					userLevel, questionStyle);
+			engSpaDAO.insertUser(engSpaUser);
+		} else {
+			engSpaUser.setUserName(userName);
+			engSpaUser.setUserLevel(userLevel);
+			engSpaUser.setQuestionStyle(questionStyle);
+			engSpaDAO.updateUser(engSpaUser);
+		}
+		if (newLevel) {
+			getEngSpaQuiz().setUserLevel(userLevel);
+			onUserUpdated();
+		} else {
+			MainActivity mainActivity = (MainActivity) getActivity();
+			mainActivity.checkDataFileVersion();
+		}
+		return true;
 	}
 }

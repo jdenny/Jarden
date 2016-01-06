@@ -12,11 +12,4 @@
         android:title="@string/userSettingsStr"
         app:showAsAction="never" />
     
-    <!-- 
-    <group android:id="@+id/group" android:checkableBehavior="all">
-        <item android:id="@+id/selfMark"
-            android:title="@string/selfMarkStr" />
-    </group>
-     -->
-
 </menu>

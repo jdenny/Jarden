@@ -33,25 +33,23 @@ public class EngSpa {
 	}
 	/**
 	 * Record result of answering this question, right or wrong.
-	 * Return true if word considered passed:
-	 *  if right first time then passed;
-	 *	if wrong once, need 2 consecutive rights;
-	 *	if wrong more than once, need 3 consecutive rights.
+	 * Return true if word considered passed; see {@link #isPassed()}
 	 */
 	public boolean addResult(boolean correct) {
 		if (correct) {
 			++consecutiveRightCt;
-			return isPassed();
-		}
-		else {
+		} else {
 			++wrongCt;
 			consecutiveRightCt = 0;
-			return false;
 		}
+		return isPassed();
 	}
 	/**
 	 * Return true if user has answered correctly enough times,
-	 * else false.
+	 * else false:<br>
+	 *  if right first time then passed;<br>
+	 *	if wrong once, need 2 consecutive rights;<br>
+	 *	if wrong more than once, need 3 consecutive rights.
 	 */
 	public boolean isPassed() {
 		return ((levelsWrongCt + wrongCt) == 0)?(consecutiveRightCt >= 1):
@@ -61,6 +59,13 @@ public class EngSpa {
 	public boolean isNeedRevision() {
 		return levelsWrongCt > 0;
 	}
+	/**
+	 * if answered wrongly, carried to next level;
+	 * if answer wrongly again, carried to next 2 levels (max of two);
+	 * i.e. need to answer correctly first time to say okay at this level.
+	 * @param userLevel
+	 * @return
+	 */
 	public boolean onIncrementingLevel(int userLevel) {
 		if (wrongCt > 0) {
 			if (levelsWrongCt < 2) ++levelsWrongCt;
@@ -69,7 +74,7 @@ public class EngSpa {
 		}
 		wrongCt = 0;
 		consecutiveRightCt = 0;
-		return wrongCt > 0;
+		return isNeedRevision();
 	}
 	public String toString() {
 		return english + ":" + spanish + "(w=" + wrongCt +

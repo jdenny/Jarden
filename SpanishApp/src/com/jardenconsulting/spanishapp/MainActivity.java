@@ -3,12 +3,11 @@ package com.jardenconsulting.spanishapp;
 import java.io.IOException;
 import java.util.List;
 
-import jarden.engspa.EngSpaQuiz;
-import jarden.engspa.EngSpaQuiz.QuizEventListener;
+import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
-import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.quiz.QuizCache;
 
@@ -19,22 +18,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+/*
+ * TODO: add a flow control method:
+	create engSpaFragment to set up engSpaDAO & engSpaUser
+	get engSpaUser from engSpaFragment
+	if engSpaUser is null:
+		showUserDialog
+		pass engSpaUser to engSpaFragment to save on DB
+	if can access updated engspa.txt on web site:
+		showConfirmUpdateDBDialog
+		if confirm:
+			call engSpaFragment to update DB
+	call engSpaFragment to create engSpaQuiz
+ */
 public class MainActivity extends AppCompatActivity
 		implements UserSettingsListener,
-		NewDBDataDialog.UpdateDBListener, QuizEventListener {
+		NewDBDataDialog.UpdateDBListener /*!!, QuizEventListener*/ {
     public static final String TAG = "SpanishMain";
     private static final String DATA_VERSION = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
@@ -87,6 +96,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	public void showUserDialog() {
 		if (this.userDialog == null) this.userDialog = new UserDialog();
 		this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
@@ -160,11 +170,13 @@ public class MainActivity extends AppCompatActivity
 						List<String> engSpaLines = MyHttpClient.getPageLines(
 								QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1", "iso-8859-1");
 						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
-						ContentResolver contentResolver = getContentResolver();
-						int rowCt = contentResolver.delete(EngSpaContract.CONTENT_URI_ENGSPA, null, null);
-						Log.i(TAG, "rows deleted from database: " + rowCt);
-						rowCt = contentResolver.bulkInsert(EngSpaContract.CONTENT_URI_ENGSPA, contentValues);
-						Log.i(TAG, "rows inserted to database: " + rowCt);
+						//!! ContentResolver contentResolver = getContentResolver();
+						//!! int rowCt = contentResolver.delete(EngSpaContract.CONTENT_URI_ENGSPA, null, null);
+						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
+						/*!! int rowCt =*/ engSpaDAO.newDictionary(contentValues);
+						//!! Log.i(TAG, "rows deleted from database: " + rowCt);
+						//!! rowCt = contentResolver.bulkInsert(EngSpaContract.CONTENT_URI_ENGSPA, contentValues);
+						//!! Log.i(TAG, "rows inserted to database: " + rowCt);
 						SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putLong(DATA_VERSION, dateEngSpaFileModified);
@@ -186,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 		} else endOfUpdate();
 	}
 	
-	public EngSpaQuiz getEngSpaQuiz() {
+	public EngSpaQuiz2 getEngSpaQuiz() {
 		return this.engSpaFragment.getEngSpaQuiz();
 	}
 	public void showEngSpaFragment() {
@@ -227,6 +239,8 @@ public class MainActivity extends AppCompatActivity
 			this.statusTextView.setText("invalid userLevel supplied");
 			return;
 		}
+		this.engSpaFragment.setUser(userName, userLevel, questionStyle);
+		/*!!
 		if (this.engSpaFragment == null) {
 			userLevel = 1;
 		} else {
@@ -246,27 +260,27 @@ public class MainActivity extends AppCompatActivity
 		}
 		boolean newUser = (engSpaUser == null);
 		boolean newLevel = !newUser && (engSpaUser.getUserLevel() != userLevel);
-		String uriStr;
+		//!! String uriStr;
 		if (newUser) {
-			uriStr = EngSpaContract.CONTENT_URI_USER_STR;
+			//!! uriStr = EngSpaContract.CONTENT_URI_USER_STR;
 			engSpaUser = new EngSpaUser(userName,
 					userLevel, questionStyle);
 		} else {
-			uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" +
-					engSpaUser.getUserId();
+			//!! uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" + engSpaUser.getUserId();
 			engSpaUser.setUserName(userName);
 			engSpaUser.setUserLevel(userLevel);
 			engSpaUser.setQuestionStyle(questionStyle);
 		}
-		Uri userUri = Uri.parse(uriStr);
+		//!! Uri userUri = Uri.parse(uriStr);
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(EngSpaContract.NAME, engSpaUser.getUserName());
 		contentValues.put(EngSpaContract.LEVEL, engSpaUser.getUserLevel());
 		contentValues.put(EngSpaContract.QUESTION_STYLE,
 				engSpaUser.getQuestionStyle().name());
-		ContentResolver contentResolver = getContentResolver();
+		//!! ContentResolver contentResolver = getContentResolver();
 		String message;
 		if (newUser) {
+			
 			userUri = contentResolver.insert(userUri, contentValues);
 			message = "row inserted: " + userUri.getPath();
 		} else {
@@ -278,7 +292,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		if (newUser) {
-			showEngSpaFragment();
+			// showEngSpaFragment(); // TODO: surely this already shown?
 		} else {
 			if (newLevel) {
 				getEngSpaQuiz().setUserLevel(userLevel);
@@ -286,6 +300,7 @@ public class MainActivity extends AppCompatActivity
 			// Note: wouldn't have reached this point if user hadn't been updated
 			this.engSpaFragment.onUserUpdated();
 		}
+		*/
 	}
 	@Override // UserSettingsListener
 	public EngSpaUser getEngSpaUser() {
@@ -297,6 +312,7 @@ public class MainActivity extends AppCompatActivity
 	 * the next level. Update EngSpaUser on the database, and
 	 * inform EngSpaFragment.
 	 */
+	/*!!
 	@Override // QuizEventListener
 	public void onNewLevel(int userLevel) {
 		EngSpaUser engSpaUser = this.engSpaFragment.getEngSpaUser();
@@ -314,6 +330,7 @@ public class MainActivity extends AppCompatActivity
 		engSpaUser.setUserLevel(userLevel);
 		this.engSpaFragment.onNewLevel(userLevel);
 	}
+	*/
 	public void setStatus(String status) {
 		this.statusTextView.setText(status);
 	}

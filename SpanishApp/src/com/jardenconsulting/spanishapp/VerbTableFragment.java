@@ -1,7 +1,7 @@
 package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpa;
-import jarden.engspa.EngSpaQuiz;
+import jarden.engspa.EngSpaQuiz2;
 import jarden.engspa.VerbUtils;
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
@@ -26,7 +26,7 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	private EditText englishVerbEditText;
 	private ListView conjugationListView;
 	private TextView statusTextView;
-	private EngSpaQuiz engSpaQuiz;
+	private EngSpaQuiz2 engSpaQuiz;
 	private ArrayAdapter<String> conjugateListAdapter;
 
 	@Override
@@ -63,11 +63,12 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 		}
 		String verb = this.spanishVerbEditText.getText().toString().trim();
 		if (verb.length() > 0) {
-			engSpa = engSpaQuiz.spa2Eng(verb);
+			// TODO: sort out may have more than 1 match
+			engSpa = engSpaQuiz.spa2Eng(verb).get(0);
 		} else {
 			verb = this.englishVerbEditText.getText().toString().trim();
 			if (verb.length() > 0) {
-				engSpa = engSpaQuiz.eng2Spa(verb);
+				engSpa = engSpaQuiz.eng2Spa(verb).get(0);
 			} else {
 				this.statusTextView.setText("please supply Spanish or English verb");
 				return;
