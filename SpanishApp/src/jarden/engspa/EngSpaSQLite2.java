@@ -306,7 +306,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			"); about to get words from " + firstId + " to " + (lastId-1));
 		Cursor cursor = null;
 		try {
-			cursor = getCursor(sql, null);
+			cursor = getCursor(sql, null); // TODO: it properly!
 			List<EngSpa> wordList = new LinkedList<EngSpa>();
 			while (cursor.moveToNext()) {
 				wordList.add(engSpaFromCursor(cursor));
@@ -343,12 +343,16 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	@Override // EngSpaDAO
 	public EngSpa getWordById(int id) {
-		String sql = "select * from " + TABLE +
-				" where _id = " + id;
 		if (BuildConfig.DEBUG) Log.d(TAG, "about to get word " + id);
 		Cursor cursor = null;
 		try {
-			cursor = getCursor(sql, null);
+			cursor = getCursor(PROJECTION_ALL_FIELDS,
+					BaseColumns._ID + "=?", // selection
+					new String[] { Integer.toString(id)}, // selectionArgs
+					null, // groupBy
+					null, // having,
+					null); // orderBy
+
 			if (cursor.moveToFirst()) {
 				return engSpaFromCursor(cursor);
 			} else {
@@ -404,7 +408,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				int wrongCt = cursor.getInt(3);
 				int levelsWrongCt = cursor.getInt(4);
 				UserWord userWord = new UserWord(
-						userId, wordId, consecRightCt, wrongCt, levelsWrongCt);
+						userId, wordId, wrongCt, consecRightCt, levelsWrongCt);
 				userWordList.add(userWord);
 			}
 			if (BuildConfig.DEBUG) Log.d(TAG, "getUserWordList got " + userWordList.size() + " words");
@@ -449,14 +453,42 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 
 	@Override // EngSpaDAO
 	public List<EngSpa> getSpanishWord(String spanish) {
-		// TODO Auto-generated method stub
-		return null;
+		Cursor cursor = null;
+		try {
+			cursor = getCursor(PROJECTION_ALL_FIELDS,
+					SPANISH + "=?", // selection
+					new String[] { spanish}, // selectionArgs
+					null, // groupBy
+					null, // having,
+					null); // orderBy
+			List<EngSpa> matchList = new ArrayList<EngSpa>();
+			while (cursor.moveToNext()) {
+				matchList.add(engSpaFromCursor(cursor));
+			}
+			return matchList;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 
 	@Override // EngSpaDAO
 	public List<EngSpa> getEnglishWord(String english) {
-		// TODO Auto-generated method stub
-		return null;
+		Cursor cursor = null;
+		try {
+			cursor = getCursor(PROJECTION_ALL_FIELDS,
+					ENGLISH + "=?", // selection
+					new String[] { english}, // selectionArgs
+					null, // groupBy
+					null, // having,
+					null); // orderBy
+			List<EngSpa> matchList = new ArrayList<EngSpa>();
+			while (cursor.moveToNext()) {
+				matchList.add(engSpaFromCursor(cursor));
+			}
+			return matchList;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
 	}
 
 	@Override // EngSpaDAO

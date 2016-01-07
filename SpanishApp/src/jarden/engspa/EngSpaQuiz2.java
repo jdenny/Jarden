@@ -12,7 +12,8 @@ import jarden.quiz.Quiz;
 
 /*
  * TODO: maybe make this more like Quiz, where the UI holds the level
- * and passes it to us.
+ * and passes it to us. Also note that Quiz already has
+ * questionStyle & answerStyle: printed or spoken; see EngSpaFragment.currentQuestionStyle
  */
 public class EngSpaQuiz2 extends Quiz {
 	static public interface QuizEventListener {
@@ -31,29 +32,18 @@ public class EngSpaQuiz2 extends Quiz {
 	private static final int tenseSize;
 	private static final int personSize;
 	
-	/*!!
-	// NOTE: a word could be in all 4 lists
-	private List<EngSpa> engSpaList; // all words
-	private List<EngSpa> availableWordList; // difficulty <= userLevel
-	 */
-	private List<EngSpa> currentWordList; // difficulty == userLevel or
-					// difficulty < userLevel and word needs to be revised
-	private List<EngSpa> failedWordList; // words wrong at this userLevel
+	private List<EngSpa> currentWordList; // difficulty == userLevel
+	// words wrong at this userLevel or carried over from previous levels
+	private List<EngSpa> failedWordList;
 	
-	/*!!
-	private HashMap<String, EngSpa> eng2SpaMap; // map from English to EngSpa
-	private HashMap<String, EngSpa> spa2EngMap; // map from Spanish to EngSpa
-	 */
 	private EngSpaUser engSpaUser;
-	private int availableIndex, currentIndex, failedIndex;
 	private int questionSequenceCt;
-	private boolean noShuffle; // for testing purposes
 	// cache of last 3 questions asked:
 	private static final int RECENTS_CT = 3;
 	private EngSpa[] recentWords = new EngSpa[RECENTS_CT];
 	private EngSpa currentWord;
 	private QuizEventListener quizEventListener;
-	private int outstandingWordCount = -1;
+	//! private int outstandingWordCount = -1;
 	private EngSpaDAO engSpaDAO;
 	private char sequenceChar; // P=passed, C=current, F=failed
 	
@@ -64,19 +54,6 @@ public class EngSpaQuiz2 extends Quiz {
 		personSize = persons.length;
 	}
 	
-	/*!!
-	public EngSpaQuiz2(List<EngSpa> engSpaList, int userLevel) {
-		this(engSpaList, userLevel, false);
-	}
-	// for testing purposes, allow user to specify no shuffle
-	public EngSpaQuiz2(List<EngSpa> engSpaList, int userLevel,
-			boolean noShuffle) {
-		this.engSpaList = engSpaList;
-		this.noShuffle = noShuffle;
-		this.recentWords = new EngSpa[3];
-		setUserLevel(userLevel);
-	}
-	*/
 	public EngSpaQuiz2(EngSpaDAO engSpaDAO, EngSpaUser engSpaUser) {
 		this.engSpaUser = engSpaUser;
 		this.engSpaDAO = engSpaDAO;
@@ -97,21 +74,6 @@ public class EngSpaQuiz2 extends Quiz {
 		boolean levelIncremented =
 				(newUserLevel <= engSpaDAO.getMaxUserLevel());
 		if (levelIncremented) {
-			/*!!
-			for (EngSpa word: currentWordList) {
-				word.onIncrementingLevel(newUserLevel);
-			}
-			for (EngSpa word: failedWordList) {
-				word.onIncrementingLevel(newUserLevel);
-			}
-			*/
-			/* TODO:
-			 getFailList;
-			 for each word:
-			  	onIncrementingLevel
-			  	if needRevision updateonDB
-			  	else delete
-			 */
 			List<UserWord> failedList = engSpaDAO.getUserWordList(engSpaUser.getUserId());
 			for (UserWord userWord: failedList) {
 				if (userWord.onIncrementingLevel(newUserLevel)) {
@@ -138,28 +100,6 @@ public class EngSpaQuiz2 extends Quiz {
 		this.engSpaDAO.updateUser(engSpaUser);
 		this.currentWordList = this.engSpaDAO.getCurrentWordList(level);
 		this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
-		/*!!
-		this.availableWordList = new ArrayList<EngSpa>();
-		// LinkedLists, because we add and remove elements randomly:
-		this.currentLevelWordList = new LinkedList<EngSpa>();
-		this.failedWordList = new LinkedList<EngSpa>();
-		failedIndex = availableIndex = currentIndex = -1;
-
-		for (int i = 0; i < userLevel * WORDS_PER_LEVEL; i++) {
-			EngSpa word = engSpaList.get(i);
-			availableWordList.add(word);
-			if (i >= (userLevel - 1) * WORDS_PER_LEVEL || word.isNeedRevision()) {
-				currentLevelWordList.add(word);
-			}
-		}
-		calculateOutstandingWordCount();
-		if (!noShuffle) { // lo siento por la doble negación!
-			Collections.shuffle(availableWordList);
-			if (currentLevelWordList.size() > 0) {
-				Collections.shuffle(currentLevelWordList);
-			}
-		}
-		*/
 	}
 	
 	/*
@@ -189,33 +129,21 @@ public class EngSpaQuiz2 extends Quiz {
 			this.sequenceChar = QUESTION_SEQUENCE[questionSequenceCt];
 			incrementQuestionSequenceCt();
 			if (sequenceChar == 'C' && this.currentWordList.size() > 0) {
-				this.currentWord = this.currentWordList.get(0);
-			} else if (sequenceChar == 'F') {
-				this.currentWord = getNextFailedWord();
-			} else {
+				this.currentWord = this.currentWordList.remove(0);
+			} else if (sequenceChar == 'P') {
 				this.currentWord = getPassedWord();
+			} else {
+				this.currentWord = getNextFailedWord();
 			}
 		}
 		if (currentWord == null) {
-			// running out of words, so use recently used one
-			if (this.failedWordList.size() > 0) {
-				currentWord = failedWordList.get(0);
-			} else {
-				currentWord = currentWordList.get(0);
-			}
+			// running out of words; this can only happen at level 1
+			// (so no passed words) and when currentWordList is empty
+			// and when words in failed list are also in recents
+			this.sequenceChar = 'F';
+			this.currentWord = failedWordList.get(0);
 		}
 
-		/*!!
-		else if (currentLevelWordList.size() > 0) {
-			this.currentWord = getNextCurrentLevelWord();
-		} else this.currentWord = null;
-		if (this.currentWord == null) {
-			// 'F' but no fails left, or only recently asked fails
-			// or 'C' but no current words left
-			this.currentWord = getNextAvailableWord();
-		}
-		*/
-		
 		recentWords[0] = recentWords[1];
 		recentWords[1] = recentWords[2];
 		recentWords[2] = currentWord;
@@ -226,8 +154,8 @@ public class EngSpaQuiz2 extends Quiz {
 		WordType wordType = currentWord.getWordType();
 		if (wordType == WordType.verb) {
 			// choose tense based on user level:
-			int userLevel = this.engSpaUser.getUserLevel();
-			int verbLevel = (userLevel>tenseSize?tenseSize:userLevel);
+			int verbLevel = this.engSpaUser.getUserLevel() / 3;
+			if (verbLevel > tenseSize) verbLevel = tenseSize;
 			Tense tense = tenses[random.nextInt(verbLevel)];
 			Person person = persons[random.nextInt(personSize)];
 			String spaVerb = VerbUtils.conjugateSpanishVerb(
@@ -275,16 +203,6 @@ public class EngSpaQuiz2 extends Quiz {
 			this.questionSequenceCt = 0;
 		}
 	}
-	/*!!
-	private void calculateOutstandingWordCount() {
-		this.outstandingWordCount = 0;
-		for (EngSpa es: this.currentLevelWordList) {
-			if (!es.isPassed()) {
-				++outstandingWordCount;
-			}
-		}
-	}
-	*/
 	/**
 	 * @return count of number of words in currentWordList where
 	 * word.isPassed() is false. Notes: currentWordList is list
@@ -315,31 +233,10 @@ public class EngSpaQuiz2 extends Quiz {
 	 */
 	public void setCorrect(boolean correct) {
 		boolean passed = currentWord.addResult(correct);
-		if (this.sequenceChar == 'C') {
-			if (!correct) addToFailed();
-			this.currentWordList.remove(0);
-		} else if (this.sequenceChar == 'F') {
-			if (passed) {
-				this.failedWordList.remove(currentWord);
-				// note: don't need to update DB until onIncrementingLevel
-			}
-		} else { // must be 'P'
-			if (!correct) addToFailed();
+		if (!correct) addToFailed();
+		if (this.sequenceChar == 'F' && passed) {
+			this.failedWordList.remove(currentWord);
 		}
-		/*!! calculateOutstandingWordCount();
-		if (correct) {
-			if (passed) {
-				this.failedWordList.remove(currentWord); // remove from failed list if it is in there
-				if ((this.failedWordList.size() == 0) && (this.outstandingWordCount == 0)) {
-					incrementUserLevel();
-				}
-			}
-		} else { // i.e. wrong answer
-			if (!findEngSpaInList(this.currentWord, this.failedWordList)) {
-				this.failedWordList.add(this.currentWord);
-			}
-		}
-		*/
 	}
 	private void addToFailed() {
 		UserWord userWord = new UserWord(
@@ -348,89 +245,24 @@ public class EngSpaQuiz2 extends Quiz {
 				currentWord.getWrongCt(),
 				currentWord.getConsecutiveRightCt(),
 				currentWord.getLevelsWrongCt());
-		for (EngSpa es2: failedWordList) {
-			if (es2 == this.currentWord) {
-				engSpaDAO.updateUserWord(userWord);
-				return;
-			}
+		if (failedWordList.contains(this.currentWord)) {
+			engSpaDAO.updateUserWord(userWord);
+		} else {
+			this.failedWordList.add(currentWord);
+			engSpaDAO.insertUserWord(userWord);
 		}
-		this.failedWordList.add(currentWord);
-		engSpaDAO.insertUserWord(userWord);
 	}
-	/*!!
-	private static boolean findEngSpaInList(EngSpa es, List<EngSpa> historyList) {
-		for (EngSpa es2: historyList) {
-			if (es == es2) {
-				return true;
-			}
-		}
-		return false;
-	}
-	*/
 	private EngSpa getPassedWord() {
+		// TODO: check not recently used
 		return engSpaDAO.getRandomPassedWord(engSpaUser.getUserLevel());
 	}
-	/*!!
-	private EngSpa getNextAvailableWord() {
-		EngSpa es;
-		// in case can't find one not used recently:
-		int oldIndex = this.availableIndex;
-		int availableWordListSize = availableWordList.size();
-		// for loop is to make sure we don't iterate forever
-		for (int i = 0; i < availableWordListSize; i++) {
-			if (++this.availableIndex >= availableWordListSize) {
-				availableIndex = 0;
-			}
-			es = this.availableWordList.get(availableIndex);
-			if (!isRecentWord(es)) return es;
-		}
-		// failed to find a word that hasn't been used recently
-		// so let's fall back on next one whatever:
-		this.availableIndex = oldIndex + 1;
-		if (availableIndex >= availableWordListSize) {
-			availableIndex = 0;
-		}
-		return this.availableWordList.get(availableIndex);
-	}
-	*/
-	/*!!
-	private EngSpa getNextCurrentLevelWord() {
-		EngSpa es;
-		int oldIndex = this.currentIndex;
-		int currentLevelWordListSize = currentLevelWordList.size();
-		for (int i = 0; i < currentLevelWordListSize; i++) {
-			if (++this.currentIndex >= currentLevelWordListSize) {
-				currentIndex = 0;
-			}
-			es = this.currentLevelWordList.get(currentIndex);
-			if (!isRecentWord(es)) return es;
-		}
-		this.currentIndex = oldIndex + 1;
-		if (currentIndex >= currentLevelWordListSize) {
-			currentIndex = 0;
-		}
-		return this.availableWordList.get(currentIndex);
-	}
-	*/
+	/*
+	 * Return first word in failed list that is not also in recent list.
+	 */
 	private EngSpa getNextFailedWord() {
-		// TODO: consider having no failedIndex, but rather always
-		// start from beginning of failedWordList
-		EngSpa es;
-		int oldIndex = this.failedIndex;
-		int failedWordListSize = failedWordList.size();
-		// for loop is to make sure we don't iterate forever
-		for (int i = 0; i < failedWordListSize; i++) {
-			if (++this.failedIndex >= failedWordListSize) {
-				failedIndex = 0;
-			}
-			es = this.failedWordList.get(failedIndex);
+		for (EngSpa es: failedWordList) {
 			if (!isRecentWord(es)) return es;
 		}
-		// behaviour different from the above 2 cases, in that
-		// there may no words in this list;
-		// if all the failed words used recently, then don't worry
-		// about showing one this time round
-		this.failedIndex = oldIndex; // leave everything as it was
 		return null;
 	}
 	private boolean isRecentWord(EngSpa word) {
@@ -446,36 +278,14 @@ public class EngSpaQuiz2 extends Quiz {
 		return english;
 	}
 	public List<EngSpa> eng2Spa(String eng) {
-		/*!!
-		if (this.eng2SpaMap == null) {
-			// i.e. lazy initialisation of map;
-			// not used by main part of SpanishApp
-			eng2SpaMap = new HashMap<String, EngSpa>();
-			for (EngSpa engSpa: engSpaList) {
-				eng2SpaMap.put(engSpa.getEnglish(), engSpa);
-			}
-		}
-		return eng2SpaMap.get(eng);
-		*/
 		return this.engSpaDAO.getEnglishWord(eng);
 	}
 	public List<EngSpa> spa2Eng(String spa) {
-		/*!!
-		if (this.spa2EngMap == null) {
-			// i.e. lazy initialisation of map;
-			// not used by main part of SpanishApp
-			spa2EngMap = new HashMap<String, EngSpa>();
-			for (EngSpa engSpa: engSpaList) {
-				spa2EngMap.put(engSpa.getSpanish(), engSpa);
-			}
-		}
-		return spa2EngMap.get(spa);
-		*/
 		return this.engSpaDAO.getSpanishWord(spa);
 	}
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
-		StringBuilder sb = new StringBuilder("Fails: "); 
+		StringBuilder sb = new StringBuilder("EngSpaQuiz2 fails: "); 
 		for (EngSpa word: this.failedWordList) {
 			sb.append(word + ",");
 		}

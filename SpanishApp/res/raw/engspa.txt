@@ -1,11 +1,13 @@
 hello,hola,phrase,n_a,n_a,1
 boy,chico,noun,masculine,person,1
+goodbye,adiós,phrase,n_a,n_a,1
 girl,chica,noun,feminine,person,1
 my name is,me llamo,phrase,n_a,n_a,1
 I am well,estoy bien,phrase,n_a,n_a,1
 I am not well,estoy mal,phrase,n_a,n_a,1
 please,por favor,adverb,n_a,n_a,1
 thank you,gracias,phrase,n_a,n_a,1
+my pleasure,mucho gusto,phrase,n_a,n_a,1
 one,uno,number,n_a,n_a,1
 two,dos,number,n_a,n_a,1
 three,tres,number,n_a,n_a,1
@@ -23,7 +25,6 @@ ten,diez,number,n_a,n_a,1
 mouse,ratón,noun,masculine,animal,1
 rat,rata,noun,feminine,animal,1
 cow,vaca,noun,feminine,animal,1
-my pleasure,mucho gusto,phrase,n_a,n_a,1
 house,casa,noun,feminine,building,1
 horse,caballo,noun,masculine,animal,1
 bird,pájaro,noun,masculine,animal,1
@@ -33,7 +34,6 @@ good morning,buenos días,phrase,n_a,n_a,1
 good afternoon,buenas tardes,phrase,n_a,n_a,1
 how are you,qué tal,phrase,n_a,n_a,1
 well,bien,adjective,n_a,n_a,1
-goodbye,adiós,phrase,n_a,n_a,1
 goodnight,buenas noches,phrase,n_a,n_a,1
 see you later,hasta luego,phrase,n_a,n_a,1
 colour,color,noun,masculine,colour,1

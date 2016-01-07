@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /*
  * TODO: add a flow control method:
@@ -43,7 +44,7 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity
 		implements UserSettingsListener,
-		NewDBDataDialog.UpdateDBListener /*!!, QuizEventListener*/ {
+		NewDBDataDialog.UpdateDBListener {
     public static final String TAG = "SpanishMain";
     private static final String DATA_VERSION = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
@@ -170,13 +171,10 @@ public class MainActivity extends AppCompatActivity
 						List<String> engSpaLines = MyHttpClient.getPageLines(
 								QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1", "iso-8859-1");
 						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
-						//!! ContentResolver contentResolver = getContentResolver();
-						//!! int rowCt = contentResolver.delete(EngSpaContract.CONTENT_URI_ENGSPA, null, null);
 						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
-						/*!! int rowCt =*/ engSpaDAO.newDictionary(contentValues);
-						//!! Log.i(TAG, "rows deleted from database: " + rowCt);
-						//!! rowCt = contentResolver.bulkInsert(EngSpaContract.CONTENT_URI_ENGSPA, contentValues);
-						//!! Log.i(TAG, "rows inserted to database: " + rowCt);
+						int rowCt = engSpaDAO.newDictionary(contentValues);
+						Toast.makeText(MainActivity.this, rowCt + " entries added to dictionary",
+								Toast.LENGTH_LONG).show();
 						SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putLong(DATA_VERSION, dateEngSpaFileModified);
@@ -218,13 +216,6 @@ public class MainActivity extends AppCompatActivity
 	 * Called on completion of UserDialog, which was called either
 	 * because there is no EngSpaUser yet defined, or because the
 	 * user chose to update it.
-	 * 		if new user
-	 * 			create on database
-	 * 			save in this.engSpaUser
-	 * 			showEngSpaFragment
-	 * 		else
-	 * 			update on database
-	 * 			update this.engSpaUser
 	 */
 	@Override // UserSettingsListener
 	public void onUpdateUser(String userName, int userLevel, QuestionStyle questionStyle) {
@@ -240,97 +231,12 @@ public class MainActivity extends AppCompatActivity
 			return;
 		}
 		this.engSpaFragment.setUser(userName, userLevel, questionStyle);
-		/*!!
-		if (this.engSpaFragment == null) {
-			userLevel = 1;
-		} else {
-			int maxUserLevel = this.engSpaFragment.getEngSpaQuiz().getMaxUserLevel();
-			if (userLevel > maxUserLevel) {
-				userLevel = maxUserLevel;
-				this.statusTextView.setText("userLevel set to maximum");
-			}
-		}
-		EngSpaUser engSpaUser = this.engSpaFragment.getEngSpaUser();
-		if (engSpaUser != null &&
-				engSpaUser.getUserName().equals(userName) &&
-				engSpaUser.getUserLevel() == userLevel &&
-				engSpaUser.getQuestionStyle() == questionStyle) {
-			this.statusTextView.setText("no changes made to user");
-			return;
-		}
-		boolean newUser = (engSpaUser == null);
-		boolean newLevel = !newUser && (engSpaUser.getUserLevel() != userLevel);
-		//!! String uriStr;
-		if (newUser) {
-			//!! uriStr = EngSpaContract.CONTENT_URI_USER_STR;
-			engSpaUser = new EngSpaUser(userName,
-					userLevel, questionStyle);
-		} else {
-			//!! uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" + engSpaUser.getUserId();
-			engSpaUser.setUserName(userName);
-			engSpaUser.setUserLevel(userLevel);
-			engSpaUser.setQuestionStyle(questionStyle);
-		}
-		//!! Uri userUri = Uri.parse(uriStr);
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(EngSpaContract.NAME, engSpaUser.getUserName());
-		contentValues.put(EngSpaContract.LEVEL, engSpaUser.getUserLevel());
-		contentValues.put(EngSpaContract.QUESTION_STYLE,
-				engSpaUser.getQuestionStyle().name());
-		//!! ContentResolver contentResolver = getContentResolver();
-		String message;
-		if (newUser) {
-			
-			userUri = contentResolver.insert(userUri, contentValues);
-			message = "row inserted: " + userUri.getPath();
-		} else {
-			int rows = contentResolver.update(userUri, contentValues, null, null);
-			message = rows + " row updated";
-		}
-		if (BuildConfig.DEBUG) {
-			Log.d(TAG, message);
-		}
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-		if (newUser) {
-			// showEngSpaFragment(); // TODO: surely this already shown?
-		} else {
-			if (newLevel) {
-				getEngSpaQuiz().setUserLevel(userLevel);
-			}
-			// Note: wouldn't have reached this point if user hadn't been updated
-			this.engSpaFragment.onUserUpdated();
-		}
-		*/
 	}
 	@Override // UserSettingsListener
 	public EngSpaUser getEngSpaUser() {
 		return this.engSpaFragment.getEngSpaUser();
 	}
 	
-	/**
-	 * Notification from EngSpaQuiz that the user has moved up to
-	 * the next level. Update EngSpaUser on the database, and
-	 * inform EngSpaFragment.
-	 */
-	/*!!
-	@Override // QuizEventListener
-	public void onNewLevel(int userLevel) {
-		EngSpaUser engSpaUser = this.engSpaFragment.getEngSpaUser();
-		String uriStr = EngSpaContract.CONTENT_URI_USER_STR + "/" +
-				engSpaUser.getUserId();
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(EngSpaContract.LEVEL, userLevel);
-		int rows = getContentResolver().update(
-				Uri.parse(uriStr), contentValues, null, null);
-		String message = rows + " row updated";
-		if (BuildConfig.DEBUG) {
-			Log.d(TAG, message);
-		}
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-		engSpaUser.setUserLevel(userLevel);
-		this.engSpaFragment.onNewLevel(userLevel);
-	}
-	*/
 	public void setStatus(String status) {
 		this.statusTextView.setText(status);
 	}

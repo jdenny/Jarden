@@ -1,10 +1,8 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
-import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz2;
 import jarden.engspa.EngSpaQuiz2.QuizEventListener;
@@ -13,14 +11,11 @@ import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -41,8 +36,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
-		OnEditorActionListener, OnInitListener,
-		QuizEventListener /*!!, LoaderCallbacks<Cursor>*/ {
+		OnEditorActionListener, OnInitListener, QuizEventListener {
 	public final static int WORD_LOADER_ID = 1;
 	private final static int PHRASE_ACTIVITY_CODE = 1002; 
 
@@ -125,8 +119,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	public void loadDB() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.loadDB()");
-		//!! getActivity().getSupportLoaderManager().initLoader(WORD_LOADER_ID, null, this);
-		
 		this.engSpaQuiz = new EngSpaQuiz2(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
 		showUserValues();
@@ -362,17 +354,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		return builder.toString();
 	}
-	/*
-	 * userLevel can be incremented by EngSpaQuiz when user answered
-	 * enough questions, or set by user invoking options menu item
-	 * UserDialog at any time.
-	 * EngSpaQuiz ->
-	 * 		EngSpaFragment.onNewLevel() [I/F QuizEventListener]
-	 * UserDialog ->
-	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
-	 *			EngSpaQuiz.setUserLevel()
-	 * 			EngSpaFragment.onNewLevel()
-	 */
 	private void showStats() {
 		int owct = engSpaQuiz.getCurrentWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
@@ -417,57 +398,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onDestroy() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onDestroy()");
 		super.onDestroy();
-		/*
-		 * At one point I was going to save the state of a session: the 3 fields
-		 * in EngSpa that control the level, so that user could interrupt game,
-		 * do something else, then resume where he left off. I decided not to
-		 * bother, because:
-		 * 		I'd have to save all the currents and fails - as below
-		 * 		I'd have to restore the same in populateDictionary() - not done
-		 * 		if the user gets interrupted, the data is saved anyway by Android
-		 * 		he will only lose the data if he exits the game using the back
-		 * 		button, and even then the level will be saved.
-		 * So it makes sense to have few words per level.
-		 */
-		boolean saveWordList = false; // in the original design, would be
-						// set true whenever the user answered a question
-		if (saveWordList) {
-			List<EngSpa> currentWordList = engSpaQuiz.getCurrentWordList();
-			List<EngSpa> failedWordList = engSpaQuiz.getFailedWordList();
-			ContentValues[] valuesArray =
-					new ContentValues[currentWordList.size() +
-					failedWordList.size()];
-			int listIndex = 0;
-			for (EngSpa es: currentWordList) {
-				valuesArray[listIndex++] = populateContentValues(es);
-			}
-			for (EngSpa es: failedWordList) {
-				valuesArray[listIndex++] = populateContentValues(es);
-			}
-			int rows;
-			ContentResolver contentResolver = getActivity().getContentResolver();
-			rows = contentResolver.delete(EngSpaContract.CONTENT_URI_USER_WORD,
-					null, null);
-			if (BuildConfig.DEBUG) {
-				Log.d(MainActivity.TAG, rows + " rows deleted from table userWord");
-			}
-			rows = contentResolver.bulkInsert(
-					EngSpaContract.CONTENT_URI_USER_WORD, valuesArray);
-			if (BuildConfig.DEBUG) {
-				Log.d(MainActivity.TAG, rows +
-						" rows inserted into table userWord");
-			}
-		}
-	}
-	private ContentValues populateContentValues(EngSpa es) {
-		ContentValues contentValues = new ContentValues();
-		int userId = this.engSpaUser.getUserId();
-		contentValues.put(EngSpaContract.USER_ID, userId);
-		contentValues.put(EngSpaContract.WORD_ID, es.getId());
-		contentValues.put(EngSpaContract.CONSEC_RIGHT_CT, es.getConsecutiveRightCt());
-		contentValues.put(EngSpaContract.WRONG_CT, es.getWrongCt());
-		contentValues.put(EngSpaContract.LEVELS_WRONG_CT, es.getLevelsWrongCt());
-		return contentValues;
 	}
 	@Override // OnInitListener (called when textToSpeech is initialised)
 	public void onInit(int status) {
@@ -498,73 +428,35 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		});
 	}
 
+	/**
+	 * Notification from EngSpaQuiz that the user has moved up to
+	 * the next level.
+	 */
+	@Override // QuizEventListener
 	public void onNewLevel(int userLevel) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
-				"EngSpaFragment.onNewLevel(" + userLevel + ")");
-		userUpdated();
+		onNewLevel();
 	}
-	public void onUserUpdated() {
+	/*
+	 * userLevel can be incremented by EngSpaQuiz when user answered
+	 * enough questions, or set by user invoking options menu item
+	 * UserDialog at any time.
+	 * EngSpaQuiz ->
+	 * 		[updates engSpaUser.level]
+	 * 		EngSpaFragment.onNewLevel() [I/F QuizEventListener]
+	 * 
+	 * UserDialog ->
+	 * 		MainActivity.onUserUpdate() [I/F UserSettingsListener] ->
+	 * 			EngSpaFragment.setUser() ->
+	 * 				EngSpaFragment.onNewLevel() [if level changed]
+	 */
+	private void onNewLevel() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
-				"EngSpaFragment.onUserUpdated()");
-		userUpdated();
-	}
-	private void userUpdated() {
+				"EngSpaFragment.onNewLevel(" +
+				engSpaUser.getUserLevel() + ")");
 		showButtonLayout();
 		nextQuestion();
 		showUserValues();
 	}
-
-	/*!!
-	@Override // LoaderCallbacks<Cursor>
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreateLoader()");
-		String selection = null;
-		String[] selectionArgs = null;
-		String sortOrder = null;
-		return new CursorLoader(
-				getActivity(),
-				EngSpaContract.CONTENT_URI_ENGSPA,
-				EngSpaContract.PROJECTION_ALL_FIELDS,
-				selection, selectionArgs, sortOrder);
-	}
-
-	@Override // LoaderCallbacks<Cursor>
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onLoadFinished()");
-		if (cursor == null) {
-			Toast.makeText(getActivity(), "no matching entries found!", Toast.LENGTH_LONG).show();
-		} else {
-			ArrayList<EngSpa> engSpaList = new ArrayList<EngSpa>();
-			while (cursor.moveToNext()) {
-				int id = cursor.getInt(0);
-				String english = cursor.getString(1);
-				String spanish = cursor.getString(2);
-				String wordTypeStr = cursor.getString(3);
-				String qualifierStr = cursor.getString(4);
-				String attributeStr = cursor.getString(5);
-				WordType wordType = WordType.valueOf(wordTypeStr);
-				Qualifier qualifier = Qualifier.valueOf(qualifierStr);
-				Attribute attribute = Attribute.valueOf(attributeStr);
-				int level = cursor.getInt(6);
-				// if (wordType == WordType.verb) // hack for testing verbs
-				engSpaList.add(new EngSpa(id, english, spanish,
-						wordType, qualifier, attribute, level));
-			}
-			cursor.close();
-			if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
-					"EngSpaFragment.onLoadFinished(): words added to database: " + engSpaList.size());
-			this.engSpaQuiz = new EngSpaQuiz(engSpaList, this.engSpaUser.getUserLevel());
-			this.engSpaQuiz.setQuizEventListener((MainActivity) getActivity());
-			showUserValues();
-			nextQuestion();
-		}
-	}
-
-	@Override // LoaderCallbacks<Cursor>
-	public void onLoaderReset(Loader<Cursor> loader) {
-		Log.w(MainActivity.TAG, "EngSpaFragment.onLoaderReset()");
-	}
-	*/
 
 	private void showUserValues() {
 		userNameTextView.setText(engSpaUser.getUserName());
@@ -577,6 +469,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public EngSpaDAO getEngSpaDAO() {
 		return this.engSpaDAO;
 	}
+	/**
+	 * Create or update engSpaUser.
+	 * @return false if no changes made
+	 */
 	public boolean setUser(String userName, int userLevel,
 			QuestionStyle questionStyle) {
 		int maxUserLevel = engSpaDAO.getMaxUserLevel();
@@ -605,7 +501,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		if (newLevel) {
 			getEngSpaQuiz().setUserLevel(userLevel);
-			onUserUpdated();
+			onNewLevel();
 		} else {
 			MainActivity mainActivity = (MainActivity) getActivity();
 			mainActivity.checkDataFileVersion();

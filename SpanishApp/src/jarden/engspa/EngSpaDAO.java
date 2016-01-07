@@ -14,8 +14,8 @@ public interface EngSpaDAO {
 	int deleteUser(EngSpaUser engSpaUser); 
 	
 	/**
-	 * delete all existing EngSpa rows and insert new
-	 * rows from contentValues.
+	 * Delete all existing EngSpa rows and insert new rows
+	 * from contentValues. Return number of rows added.
 	 */
 	int newDictionary(ContentValues[] contentValues);
 	List<EngSpa> getCurrentWordList(int userLevel);

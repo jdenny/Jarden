@@ -78,7 +78,7 @@ public class EngSpa {
 	}
 	public String toString() {
 		return english + ":" + spanish + "(w=" + wrongCt +
-				",r=" + consecutiveRightCt + ")";
+			",r=" + consecutiveRightCt + ",l=" + levelsWrongCt + ")";
 	}
 	public int getId() {
 		return id;

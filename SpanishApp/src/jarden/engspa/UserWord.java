@@ -20,7 +20,7 @@ public class UserWord {
 	
 	/**
 	 * if answered wrongly, carried to next level;
-	 * if answer wrongly again, carried to next 2 levels (max of two);
+	 * if answer wrongly again at next level, carried to next 2 levels (max of two);
 	 * i.e. need to answer correctly first time to say okay at this level.
 	 * @param userLevel
 	 * @return true if needs revision at next level
