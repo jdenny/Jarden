@@ -27,7 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /*
  * TODO: add a flow control method:
@@ -122,8 +121,8 @@ public class MainActivity extends AppCompatActivity
 				SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 				long savedVersion = prefs.getLong(DATA_VERSION, 0);
 				try {
-					dateEngSpaFileModified = MyHttpClient.getLastModified(
-							QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1");
+					String urlStr = QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1";
+					dateEngSpaFileModified = MyHttpClient.getLastModified(urlStr);
 					engSpaFileModified = dateEngSpaFileModified > savedVersion;
 				} catch (IOException e) {
 					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
@@ -142,6 +141,8 @@ public class MainActivity extends AppCompatActivity
 	 * if new version of data file, ask user to confirm update
 	 */
 	private void dataFileCheckComplete(boolean updated) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.dataFileCheckComplete(" + updated + ")");
 		if (updated) {
 			DialogFragment dialog = new NewDBDataDialog();
 			dialog.show(getSupportFragmentManager(), "New Dictionary Version");
@@ -172,9 +173,7 @@ public class MainActivity extends AppCompatActivity
 								QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1", "iso-8859-1");
 						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
 						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
-						int rowCt = engSpaDAO.newDictionary(contentValues);
-						Toast.makeText(MainActivity.this, rowCt + " entries added to dictionary",
-								Toast.LENGTH_LONG).show();
+						engSpaDAO.newDictionary(contentValues);
 						SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putLong(DATA_VERSION, dateEngSpaFileModified);

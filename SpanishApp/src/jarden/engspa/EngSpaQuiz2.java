@@ -139,7 +139,7 @@ public class EngSpaQuiz2 extends Quiz {
 		if (currentWord == null) {
 			// running out of words; this can only happen at level 1
 			// (so no passed words) and when currentWordList is empty
-			// and when words in failed list are also in recents
+			// and when words in failed list are also in recentWords
 			this.sequenceChar = 'F';
 			this.currentWord = failedWordList.get(0);
 		}
@@ -154,7 +154,7 @@ public class EngSpaQuiz2 extends Quiz {
 		WordType wordType = currentWord.getWordType();
 		if (wordType == WordType.verb) {
 			// choose tense based on user level:
-			int verbLevel = this.engSpaUser.getUserLevel() / 3;
+			int verbLevel = this.engSpaUser.getUserLevel() / 3 + 1;
 			if (verbLevel > tenseSize) verbLevel = tenseSize;
 			Tense tense = tenses[random.nextInt(verbLevel)];
 			Person person = persons[random.nextInt(personSize)];

@@ -477,7 +477,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		try {
 			cursor = getCursor(PROJECTION_ALL_FIELDS,
 					ENGLISH + "=?", // selection
-					new String[] { english}, // selectionArgs
+					new String[] { english }, // selectionArgs
 					null, // groupBy
 					null, // having,
 					null); // orderBy
