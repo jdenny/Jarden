@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import jarden.engspa.EngSpaDAO;
-import jarden.engspa.EngSpaQuiz2;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
@@ -30,11 +30,9 @@ import android.widget.TextView;
 
 /*
  * TODO: add a flow control method:
-	create engSpaFragment to set up engSpaDAO & engSpaUser
-	get engSpaUser from engSpaFragment
-	if engSpaUser is null:
-		showUserDialog
-		pass engSpaUser to engSpaFragment to save on DB
+	new engSpaFragment ->
+		new engSpaDAO; get engSpaUser
+		if no engSpaUser: create new one with default values
 	if can access updated engspa.txt on web site:
 		showConfirmUpdateDBDialog
 		if confirm:
@@ -195,7 +193,7 @@ public class MainActivity extends AppCompatActivity
 		} else endOfUpdate();
 	}
 	
-	public EngSpaQuiz2 getEngSpaQuiz() {
+	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaFragment.getEngSpaQuiz();
 	}
 	public void showEngSpaFragment() {

@@ -30,12 +30,108 @@ horse,caballo,noun,masculine,animal,1
 bird,pájaro,noun,masculine,animal,1
 man,hombre,noun,masculine,person,1
 woman,mujer,noun,feminine,person,1
+child,niño,noun,masculine,person,1
+apple,manzana,noun,feminine,food,1
+bread,pan,noun,masculine,food,1
+be,ser,verb,transIntrans,permanent,1
+water,agua,noun,masculine,drink,1
 good morning,buenos días,phrase,n_a,n_a,1
 good afternoon,buenas tardes,phrase,n_a,n_a,1
 how are you,qué tal,phrase,n_a,n_a,1
 well,bien,adjective,n_a,n_a,1
 goodnight,buenas noches,phrase,n_a,n_a,1
 see you later,hasta luego,phrase,n_a,n_a,1
+yes,sí,adjective,n_a,n_a,1
+no,no,adjective,n_a,n_a,1
+nothing,nada,pronoun,n_a,size,1
+I'm sorry,lo siento,phrase,n_a,n_a,1
+excuse me,perdón,phrase,n_a,n_a,1
+speak,hablar,verb,transIntrans,n_a,1
+Spanish,español,adjective,n_a,language,1
+wine,vino,noun,masculine,drink,1
+book,libro,noun,masculine,n_a,1
+letter,carta,noun,feminine,n_a,1
+write,escribir,verb,transIntrans,n_a,1
+read,leer,verb,transIntrans,n_a,1
+daily,diario,adjective,n_a,time,1
+person,persona,noun,feminine,person,1
+rice,arroz,noun,masculine,food,1
+fish,pescado,noun,masculine,food,1
+egg,huevo,noun,masculine,food,1
+cook,cocinar,verb,transIntrans,food,1
+cheese,queso,noun,masculine,food,1
+fruit,fruta,noun,feminine,food,1
+pasta,pasta,noun,feminine,food,1
+juice,jugo,noun,masculine,drink,1
+orange,naranja,noun,feminine,food,1
+meat,carne,noun,feminine,food,1
+soup,sopa,noun,feminine,food,1
+tomato,tomate,noun,masculine,food,1
+lunch,almuerzo,noun,masculine,food,1
+strawberry,fresa,noun,feminine,food,1
+lemon,limón,noun,masculine,food,1
+food,comida,noun,feminine,food,1
+potato,patata,noun,feminine,food,1
+sauce,salsa,noun,feminine,food,1
+onion,cebolla,noun,feminine,food,1
+dinner,cena,noun,feminine,food,1
+breakfast,desayuno,noun,masculine,food,1
+sugar,azúcar,noun,masculine,food,1
+salt,sal,noun,feminine,food,1
+menu,menú,noun,masculine,food,1
+beer,cerveza,noun,feminine,drink,1
+tea,té,noun,masculine,drink,1
+coffee,café,noun,masculine,drink,1
+sandwich,bocadillo,noun,masculine,food,1
+vegetable,verdura,noun,feminine,food,1
+vegetarian,vegetariano,adjective,n_a,food,1
+duck,pato,noun,masculine,animal,1
+elephant,elefante,noun,masculine,animal,1
+tortoise,tortuga,noun,feminine,animal,1
+pig,cerdo,noun,masculine,animal,1
+bear,oso,noun,masculine,animal,1
+lion,león,noun,masculine,animal,1
+spider,araña,noun,feminine,animal,1
+monkey,mono,noun,masculine,animal,1
+bull,toro,noun,masculine,animal,1
+shirt,camisa,noun,feminine,clothing,1
+trouser,pantálon,noun,masculine,clothing,1
+shoe,zapato,noun,masculine,clothing,1
+hat,sombrero,noun,masculine,clothing,1
+coat,abrigo,noun,masculine,clothing,1
+skirt,falda,noun,feminine,clothing,1
+clothing,ropa,noun,feminine,home,1
+suit,traje,noun,masculine,clothing,1
+glasses,gafas,phrase,n_a,person,1
+sweater,suéter,noun,masculine,clothing,1
+sock,calcetín,noun,masculine,clothing,1
+tie,corbata,noun,feminine,clothing,1
+belt,cinturón,noun,masculine,clothing,1
+dress,vestido,noun,masculine,clothing,1
+how much,cuánto,phrase,n_a,interrogative,1
+how many,cuántos,phrase,n_a,interrogative,1
+how,cómo,adverb,n_a,interrogative,1
+what for,para qué,phrase,n_a,interrogative,1
+what,qué,adverb,n_a,interrogative,1
+when,cuándo,adverb,n_a,interrogative,1
+where,dónde,adverb,n_a,interrogative,1
+which,cuál,adjective,n_a,interrogative,1
+who,quién,pronoun,n_a,interrogative,1
+why,por qué,adverb,n_a,interrogative,1
+question,pregunta,noun,feminine,n_a,1
+walk,caminar,verb,transIntrans,n_a,1
+swim,nadar,verb,intransitive,n_a,1
+see,ver,verb,transIntrans,n_a,1
+sleep,dormir,verb,transIntrans,n_a,1
+have,tener,verb,transIntrans,n_a,1
+run,correr,verb,transIntrans,sport,1
+pay,pagar,verb,transIntrans,n_a,1
+go,ir,verb,transIntrans,n_a,1
+want,querer,verb,transIntrans,n_a,1
+play,tocar,verb,transIntrans,music,1
+hear,oír,verb,transIntrans,n_a,1
+make,hacer,verb,transitive,n_a,1
+can,poder,verb,transIntrans,n_a,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -52,6 +148,17 @@ purple,morado,adjective,n_a,colour,1
 violet,violeta,adjective,n_a,colour,1
 light blue,azul claro,adjective,n_a,colour,1
 dark blue,azul oscuro,adjective,n_a,colour,1
+and,y,conjunction,n_a,n_a,1
+but,pero,conjunction,n_a,n_a,1
+or,o,conjunction,n_a,n_a,1
+if,si,conjunction,n_a,n_a,1
+though,aunque,conjunction,n_a,n_a,1
+as,como,adverb,n_a,n_a,1
+than,que,conjunction,n_a,n_a,1
+because,porque,conjunction,n_a,n_a,1
+nor,ni,conjunction,n_a,n_a,1
+but,sino,conjunction,n_a,n_a,1
+while,mientras,conjunction,n_a,n_a,1
 tall,alto,adjective,n_a,person,1
 short,bajo,adjective,n_a,person,1
 big,grande,adjective,n_a,person,1
@@ -74,6 +181,18 @@ sister,hermana,noun,feminine,person,1
 brother,hermano,noun,masculine,person,1
 grandmother,abuela,noun,feminine,person,1
 grandfather,abuelo,noun,masculine,person,1
+daughter,hija,noun,feminine,person,1
+son,hijo,noun,masculine,person,1
+auntie,tía,noun,feminine,person,1
+uncle,tío,noun,masculine,person,1
+husband,esposo,noun,masculine,person,1
+wife,esposa,noun,feminine,person,1
+mum,mamá,noun,feminine,person,1
+dad,papá,noun,masculine,person,1
+family,familia,noun,feminine,person,1
+cousin,primo,noun,masculine,person,1
+boyfriend,novio,noun,masculine,person,1
+girlfriend,novia,noun,feminine,person,1
 body,cuerpo,noun,masculine,body,1
 head,cabeza,noun,feminine,body,1
 arm,brazo,noun,masculine,body,1
@@ -100,12 +219,7 @@ waist,cintura,noun,feminine,body,1
 tongue,lengua,noun,feminine,body,1
 lip,labio,noun,masculine,body,1
 elbow,codo,noun,masculine,body,1
-shirt,camisa,noun,feminine,clothing,1
 t-shirt,camiseta,noun,feminine,clothing,1
-hat,sombrero,noun,masculine,clothing,1
-coat,abrigo,noun,masculine,clothing,1
-skirt,falda,noun,feminine,clothing,1
-shoe,zapato,noun,masculine,clothing,1
 boot,bota,noun,feminine,clothing,1
 room,habitación,noun,feminine,place,1
 double,doble,adjective,n_a,size,1
@@ -123,9 +237,6 @@ upstairs,arriba,adverb,n_a,home,1
 below,abajo,adverb,n_a,home,1
 corridor,pasillo,noun,masculine,place,1
 serve,sirvir,verb,transIntrans,food,1
-breakfast,desayuno,noun,masculine,food,1
-lunch,almuerzo,noun,masculine,food,1
-dinner,cena,noun,feminine,food,1
 shop,tienda,noun,feminine,building,1
 open,abrir,verb,transitive,n_a,1
 journey,viaje,noun,masculine,transport,1
@@ -134,21 +245,15 @@ car,coche,noun,masculine,transport,1
 dine,cenar,verb,intransitive,food,1
 melon,melón,noun,masculine,food,1
 cherry,cereza,noun,feminine,food,1
-oat(s),avena,noun,feminine,food,1
-apple,manzana,noun,feminine,food,1
+oat,avena,noun,feminine,food,1
 pear,pera,noun,feminine,food,1
-strawberry,fresa,noun,feminine,food,1
-lemon,limón,noun,masculine,food,1
 grapefruit,pomelo,noun,masculine,food,1
 grape,uva,noun,feminine,food,1
 banana,plátano,noun,masculine,food,1
 raspberry,frambuesa,noun,feminine,food,1
 peach,melocotón,noun,masculine,food,1
-potato,patata,noun,feminine,food,1
 carrot,zanahoria,noun,feminine,food,1
-tomato,tomate,noun,masculine,food,1
 cucumber,pepino,noun,masculine,food,1
-onion,cebolla,noun,feminine,food,1
 cauliflower,coliflor,noun,feminine,food,1
 mushroom,champiñón,noun,masculine,food,1
 cabbage,col,noun,feminine,food,1
@@ -163,20 +268,9 @@ sausage,salchicha,noun,feminine,food,1
 ham,jamón,noun,masculine,food,1
 dry sausage,chorizo,noun,masculine,food,1
 steak,filete,noun,masculine,food,1
-fish,pescado,noun,masculine,food,1
-beer,cerveza,noun,feminine,drink,1
-tea,té,noun,masculine,drink,1
-coffee,café,noun,masculine,drink,1
 red wine,vino tinto,noun,masculine,drink,1
 white wine,vino blanco,noun,masculine,drink,1
-wine,vino,noun,masculine,drink,1
-juice,jugo,noun,masculine,drink,1
-bread,pan,noun,masculine,food,1
-egg,huevo,noun,masculine,food,1
 milk,leche,noun,feminine,drink,1
-salt,sal,noun,feminine,food,1
-rice,arroz,noun,masculine,food,1
-soup,sopa,noun,feminine,food,1
 cereal,cereal,noun,masculine,food,1
 potato chip,patata frita,noun,feminine,food,1
 apricot,albaricoque,noun,masculine,food,1
@@ -190,7 +284,6 @@ butter,mantequilla,noun,feminine,food,1
 café,cafetería,noun,feminine,building,1
 cake,pastel,noun,masculine,food,1
 champagne,champán,noun,masculine,drink,1
-cheese,queso,noun,masculine,food,1
 chocolate,chocolate,noun,masculine,food,1
 choice,elección,noun,feminine,n_a,1
 chop,chuleta,noun,feminine,food,1
@@ -201,14 +294,11 @@ dining room,comedor,noun,masculine,food,1
 dish of the day,plato del día,phrase,n_a,food,1
 enjoy your meal,buen provecho,phrase,n_a,food,1
 fixed price menu,menú a precio fijo,phrase,n_a,food,1
-food,comida,noun,feminine,food,1
 food shopping,compra de comestibles,phrase,n_a,food,1
 fork,tenedor,noun,masculine,food,1
-fruit,fruta,noun,feminine,food,1
 fruit pie,tarta de frutas,noun,feminine,food,1
 fruit juice,jugo de fruta,noun,masculine,food,1
 glass,vaso,noun,masculine,drink,1
-sauce,salsa,noun,feminine,food,1
 green bean,judía verde,noun,feminine,food,1
 hamburger,hamburguesa,noun,feminine,food,1
 hot chocolate,chocolate caliente,noun,masculine,drink,1
@@ -225,21 +315,16 @@ salad,ensalada,noun,feminine,food,1
 main course,plato principal,noun,masculine,food,1
 margarine,margarina,noun,feminine,food,1
 meal,comida,noun,feminine,food,1
-meat,carne,noun,feminine,food,1
 meatball,albóndiga,noun,feminine,food,1
-menu,menú,noun,masculine,food,1
 menu of the day,menú del día,phrase,n_a,food,1
 mince,carne picada,noun,feminine,food,1
 mineral water,agua mineral,noun,masculine,drink,1
-water,agua,noun,masculine,drink,1
 mixed,mixto,adjective,n_a,n_a,1
 money,dinero,noun,masculine,n_a,1
 mustard,mostaza,noun,feminine,food,1
 napkin,servilleta,noun,feminine,food,1
 omelette,tortilla,noun,feminine,food,1
-orange,naranja,noun,feminine,food,1
 packet,paquete,noun,masculine,food,1
-pasta,pasta,noun,feminine,food,1
 pâté,paté,noun,masculine,food,1
 pizza,pizza,noun,feminine,food,1
 pineapple,piña,noun,feminine,food,1
@@ -251,7 +336,6 @@ rest day,día de descanso,noun,masculine,time,1
 bread roll,panecillo,noun,masculine,food,1
 savoury,salado,adjective,n_a,food,1
 salad dressing,aliño para ensalada,noun,masculine,food,1
-sandwich,bocadillo,noun,masculine,food,1
 self-service,autoservicio,noun,masculine,food,1
 service,servicio,noun,masculine,food,1
 slice,rebanada,noun,feminine,food,1
@@ -269,11 +353,8 @@ tasty,sabroso,adjective,n_a,food,1
 tea room,salón de té,noun,masculine,building,1
 teaspoon,cucharita,noun,feminine,food,1
 tip,propina,noun,feminine,money,1
-pay,pagar,verb,transIntrans,n_a,1
 tuna,atún,noun,masculine,food,1
 vanilla,vainilla,noun,feminine,food,1
-vegetable,verdura,noun,feminine,food,1
-vegetarian,vegetariano,adjective,n_a,food,1
 vinegar,vinagre,noun,masculine,food,1
 waiter,camarero,noun,masculine,person,1
 yoghurt,yogur,noun,masculine,food,1
@@ -335,7 +416,6 @@ yesterday,ayer,adverb,n_a,time,1
 week,semana,noun,feminine,time,1
 month,mes,noun,masculine,time,1
 season,estación,noun,feminine,time,1
-run,correr,verb,transIntrans,transport,1
 often,a menudo,adverb,n_a,time,1
 always,siempre,adverb,n_a,time,1
 seldom,pocas veces,adverb,n_a,time,1
@@ -349,7 +429,6 @@ America,América,noun,feminine,place,1
 French,francés,adjective,n_a,language,1
 German,alemán,adjective,n_a,language,1
 Italian,italiano,adjective,n_a,language,1
-Spanish,español,adjective,n_a,language,1
 Africa,África,noun,feminine,place,1
 Asia,Asia,noun,feminine,place,1
 Australia,Australia,noun,feminine,place,1
@@ -438,7 +517,6 @@ among,entre,preposition,n_a,place,1
 around,alrededor de,preposition,n_a,place,1
 before,antes,adverb,n_a,time,1
 behind,tras,preposition,n_a,place,1
-below,debajo de,preposition,n_a,place,1
 beneath,bajo,preposition,n_a,place,1
 beside,junto a,preposition,n_a,place,1
 between,entre,preposition,n_a,place,1
@@ -455,7 +533,6 @@ door,puerta,noun,feminine,home,1
 bitter,amargo,adjective,n_a,n_a,1
 sweet,dulce,adjective,n_a,n_a,1
 I am English,soy inglés,phrase,n_a,n_a,1
-uncle,tío,noun,masculine,person,1
 hair,pelo,noun,masculine,body,1
 long,largo,adjective,n_a,n_a,1
 wavy,ondulado,adjective,n_a,n_a,1
@@ -464,7 +541,6 @@ fountain,fuente,noun,feminine,n_a,1
 port,puerto,noun,masculine,place,1
 quite,bastante,adverb,n_a,n_a,1
 milk,leche,noun,feminine,food,1
-auntie,tía,noun,feminine,person,1
 play,jugar,verb,transIntrans,n_a,1
 sport,deporte,noun,masculine,n_a,1
 shower,ducha,noun,feminine,home,1
@@ -494,28 +570,24 @@ dirty,sucio,adjective,n_a,n_a,1
 clean,limpio,adjective,n_a,n_a,1
 ring,anillo,noun,masculine,n_a,1
 seat,asiento,noun,masculine,home,1
-clothing,ropa,noun,feminine,home,1
 place,lugar,noun,masculine,place,1
 listen,escuchar,verb,intransitive,n_a,1
 choose,escoger,verb,transIntrans,n_a,1
 after,después,adverb,n_a,time,1
 subject,asignatura,noun,feminine,n_a,1
 paint,pintar,verb,transitive,n_a,1
-swim,nadar,verb,intransitive,n_a,1
 sea,mar,noun,masculine,n_a,1
 weather,tiempo,noun,masculine,weather,1
 coach,autocar,noun,masculine,transport,1
 bus,autobus,noun,masculine,transport,1
 car,coche,noun,masculine,transport,1
 me too,a mí también,phrase,n_a,n_a,1
-daily,diario,adjective,n_a,time,1
 busy,ocupado,adjective,n_a,n_a,1
 achieve,alcanzar,verb,n_a,n_a,1
 awake,despierto,adjective,n_a,n_a,1
 relaxed,relajado,adjective,n_a,n_a,1
 too,demasiado,adverb,n_a,n_a,1
 low fat,bajos en grasa,phrase,n_a,n_a,1
-sugar,azúcar,noun,masculine,food,1
 dawn,amanecer,noun,masculine,n_a,1
 dawn,amanecer,verb,n_a,n_a,1
 are these things soso,son así estas cosas,phrase,n_a,n_a,1
@@ -571,8 +643,6 @@ ask,preguntar,verb,transIntrans,n_a,1
 avoid,evitar,verb,transIntrans,n_a,1
 bathe,bañarse,verb,transIntrans,n_a,1
 be,estar,verb,transIntrans,temporary,1
-be,ser,verb,transIntrans,permanent,1
-can,poder,verb,transIntrans,n_a,1
 call,llamar,verb,transIntrans,n_a,1
 break,romper,verb,transitive,n_a,1
 buy,comprar,verb,transitive,n_a,1
@@ -590,7 +660,6 @@ describe,describir,verb,transIntrans,n_a,1
 deserve,merecer,verb,transIntrans,n_a,1
 die,morir,verb,transIntrans,n_a,1
 dismiss,despedir,verb,transIntrans,n_a,1
-make,hacer,verb,transitive,n_a,1
 draw,dibujar,verb,transitive,n_a,1
 enter,entrar,verb,transIntrans,n_a,1
 fall,caer,verb,transIntrans,n_a,1
@@ -601,11 +670,8 @@ continue,continuar,verb,transIntrans,n_a,1
 forgive,perdonar,verb,transIntrans,n_a,1
 raise,levantar,verb,transIntrans,n_a,1
 give,dar,verb,transIntrans,n_a,1
-go,ir,verb,transIntrans,n_a,1
 hate,odiar,verb,transIntrans,n_a,1
-have,tener,verb,transIntrans,n_a,1
 breakfast,desayunar,verb,transIntrans,n_a,1
-hear,oír,verb,transIntrans,n_a,1
 help,ayudar,verb,transIntrans,n_a,1
 hope,esperar,verb,transIntrans,n_a,1
 hurt,doler,verb,transIntrans,n_a,1
@@ -629,7 +695,6 @@ like,gustar,verb,transIntrans,n_a,1
 love,encantar,verb,transIntrans,n_a,1
 live,vivir,verb,transIntrans,n_a,1
 lose,perder,verb,transIntrans,n_a,1
-want,querer,verb,transIntrans,n_a,1
 love,amar,verb,transitive,person,1
 manage,dirigir,verb,transIntrans,n_a,1
 meet,encontrar,verb,transIntrans,n_a,1
@@ -639,28 +704,21 @@ need,necesitar,verb,transIntrans,n_a,1
 order,pedir,verb,transitive,food,1
 pass,pasar,verb,transIntrans,n_a,1
 phone,telefonear,verb,transIntrans,n_a,1
-play,tocar,verb,transIntrans,music,1
 prevent,prevenir,verb,transIntrans,n_a,1
 pull,tirar,verb,transIntrans,n_a,1
 push,empujar,verb,transIntrans,n_a,1
-read,leer,verb,transIntrans,n_a,1
 receive,recibir,verb,transIntrans,n_a,1
 regret,lamentar,verb,transIntrans,n_a,1
 remember,recordar,verb,transIntrans,n_a,1
 save,salvar,verb,transIntrans,n_a,1
 say,decir,verb,transIntrans,n_a,1
-see,ver,verb,transIntrans,n_a,1
 sell,vender,verb,transIntrans,n_a,1
 sing,cantar,verb,transIntrans,n_a,1
-sleep,dormir,verb,transIntrans,n_a,1
-speak,hablar,verb,transIntrans,n_a,1
-write,escribir,verb,transIntrans,n_a,1
 work,trabajar,verb,transIntrans,n_a,1
 wish,desear,verb,transIntrans,n_a,1
 win,ganar,verb,transIntrans,n_a,1
 wear,llevar,verb,transIntrans,clothing,1
 visit,visitar,verb,transIntrans,n_a,1
-walk,caminar,verb,transIntrans,n_a,1
 ask a question,hacer una pregunta,phrase,n_a,n_a,1
 wash,lavar,verb,transIntrans,n_a,1
 tidy,arreglar,verb,transIntrans,n_a,1
@@ -775,6 +833,7 @@ almost,casi,adverb,n_a,n_a,1
 already,ya,adverb,n_a,n_a,1
 badly,mal,adverb,n_a,n_a,1
 below,abajo,adverb,n_a,n_a,1
+below,debajo de,preposition,n_a,place,1
 especially,especialmente,adverb,n_a,n_a,1
 fortunately,afortunadamente,adverb,n_a,n_a,1
 here,aquí,adverb,n_a,n_a,1
@@ -834,6 +893,7 @@ seventy,setenta,number,n_a,n_a,1
 eighty,ochenta,number,n_a,n_a,1
 ninety,noventa,number,n_a,n_a,1
 hundred,cien,number,n_a,n_a,1
+zero,cero,number,n_a,n_a,1
 101,ciento uno,number,n_a,n_a,1
 102,ciento dos,number,n_a,n_a,1
 120,ciento veinte,number,n_a,n_a,1
@@ -880,18 +940,13 @@ litre,litro,noun,masculine,size,1
 maximum,máximo,adjective,n_a,size,1
 minimum,mínimo,adjective,n_a,size,1
 much,mucho,adverb,n_a,size,1
-nothing,nada,pronoun,n_a,size,1
 only,solamente,adverb,n_a,size,1
 several,varios,adjective,n_a,size,1
 also,también,adverb,n_a,n_a,1
-and,y,conjunction,n_a,n_a,1
-but,pero,conjunction,n_a,n_a,1
 nevertheless,sin embargo,conjunction,n_a,n_a,1
-or,o,conjunction,n_a,n_a,1
 so,pues,conjunction,n_a,n_a,1
 afterwards,luego,conjunction,n_a,n_a,1
 then,entonces,conjunction,n_a,n_a,1
-though,aunque,conjunction,n_a,n_a,1
 fortnight,quince días,noun,masculine,time,1
 afternoon,tarde,noun,feminine,time,1
 ago,hace,adverb,n_a,time,1
@@ -940,17 +995,7 @@ in autumn,en otoño,phrase,n_a,time,1
 in spring,en primavera,phrase,n_a,time,1
 in summer,en verano,phrase,n_a,time,1
 in winter,en invierno,phrase,n_a,time,1
-how much,cuánto,phrase,n_a,interrogative,1
-how many,cuántos,phrase,n_a,interrogative,1
-how,cómo,adverb,n_a,interrogative,1
-what for,para qué,phrase,n_a,interrogative,1
-what,qué,adverb,n_a,interrogative,1
-when,cuándo,adverb,n_a,interrogative,1
-where,dónde,adverb,n_a,interrogative,1
 where to,adónde,adverb,n_a,interrogative,1
-which,cuál,adjective,n_a,interrogative,1
-who,quién,pronoun,n_a,interrogative,1
-why,por qué,adverb,n_a,interrogative,1
 all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
 here you are,aquí lo tienes,phrase,n_a,n_a,1
@@ -967,17 +1012,14 @@ once again,otra vez,phrase,n_a,n_a,1
 too bad,demasiado mal,phrase,n_a,n_a,1
 usually,normalmente,adverb,n_a,n_a,1
 what a shame,qué lástima,phrase,n_a,n_a,1
-as,como,adverb,n_a,n_a,1
 everybody,todos,pronoun,n_a,n_a,1
 figure,cifra,noun,feminine,person,1
 for example,por ejemplo,phrase,n_a,n_a,1
-if,si,conjunction,n_a,n_a,1
 middle,medio,noun,masculine,n_a,1
 half,mitad,noun,feminine,n_a,1
 miss,señorita,noun,feminine,person,1
 mr,señor,noun,feminine,person,1
 mrs,señora,noun,feminine,person,1
-no,no,adjective,n_a,n_a,1
 number,número,noun,masculine,n_a,1
 shape,forma,noun,feminine,n_a,1
 someone,alguien,pronoun,n_a,person,1
@@ -990,8 +1032,6 @@ these,estos,pronoun,n_a,n_a,1
 time,vez,noun,feminine,n_a,1
 type,tipo,noun,masculine,n_a,1
 way,manera,noun,feminine,n_a,1
-yes,sí,adjective,n_a,n_a,1
-belt,cinturón,noun,masculine,clothing,1
 boot,bota,noun,feminine,clothing,1
 boxer shorts,calzoncillos,phrase,n_a,clothing,1
 bra,sostén,noun,masculine,clothing,1
@@ -1001,7 +1041,6 @@ changing room,probador,noun,masculine,clothing,1
 clothes,ropa,noun,feminine,clothing,1
 clothes shop,tienda de ropa,noun,feminine,building,1
 cotton,algodón,noun,masculine,clothing,1
-dress,vestido,noun,masculine,clothing,1
 dressed in,vestido de,phrase,n_a,clothing,1
 earring,pendiente,noun,masculine,clothing,1
 fashion,moda,noun,feminine,clothing,1
@@ -1036,20 +1075,15 @@ shorts,pantalón corto,noun,masculine,clothing,1
 shoe size,número de zapata,noun,masculine,clothing,1
 slipper,zapatilla,noun,feminine,clothing,1
 smart,elegante,adjective,n_a,clothing,1
-sock,calcetín,noun,masculine,clothing,1
 sports kit,ropa de deporte,noun,feminine,clothing,1
 sports shirt,camisa de deporte,noun,feminine,clothing,1
 striped,a rayas,adjective,n_a,clothing,1
-suit,traje,noun,masculine,clothing,1
 style,estilo,noun,masculine,clothing,1
-sweater,suéter,noun,masculine,clothing,1
 sweatshirt,sudadera,noun,feminine,clothing,1
 swimming costume,traje de baño,noun,masculine,clothing,1
-tie,corbata,noun,feminine,clothing,1
 tights,medias,phrase,n_a,clothing,1
 tracksuit,chandal,noun,masculine,clothing,1
 trainers,zapatillas de deportes,phrase,n_a,clothing,1
-trouser,pantálon,noun,masculine,clothing,1
 umbrella,paraguas,noun,masculine,clothing,1
 watch,reloj,noun,masculine,clothing,1
 wool,lana,noun,feminine,clothing,1
@@ -1071,7 +1105,6 @@ birthplace,lugar de nacimiento,noun,masculine,person,1
 flat,piso,noun,masculine,building,1
 born,nacido,adjective,n_a,person,1
 bossy,mandón,adjective,n_a,person,1
-boyfriend,novio,noun,masculine,person,1
 brother-in-law,cuñado,noun,masculine,person,1
 sister-in-law,cuñada,noun,feminine,person,1
 celebrity,celebridad,noun,feminine,person,1
@@ -1079,16 +1112,13 @@ chair,silla,noun,feminine,home,1
 character,carácter,noun,masculine,person,1
 charming,encantador,adjective,n_a,person,1
 chatty,hablador,adjective,n_a,person,1
-child,niño,noun,masculine,person,1
 comfortable,cómodo,adjective,n_a,home,1
-cousin,primo,noun,masculine,person,1
 curly,rizado,adjective,n_a,person,1
 dad,papá,noun,masculine,person,1
 daughter,hija,noun,feminine,person,1
 dead,muerto,adjective,n_a,person,1
 divorced,divorciado,adjective,n_a,person,1
 engaged,prometido,adjective,n_a,person,1
-family,familia,noun,feminine,person,1
 famous,famoso,adjective,n_a,person,1
 feeling,sentimiento,noun,masculine,person,1
 first name,nombre de pila,noun,masculine,person,1
@@ -1098,8 +1128,6 @@ friendship,amistad,noun,feminine,person,1
 furniture,muebles,noun,masculine,home,1
 garden,jardín,noun,masculine,home,1
 garage,garaje,noun,masculine,home,1
-girlfriend,novia,noun,feminine,person,1
-glasses,gafas,phrase,n_a,person,1
 goldfish,peces de colores,phrase,n_a,animal,1
 grandson,nieto,noun,masculine,person,1
 granddaughter,nieta,noun,feminine,person,1
@@ -1108,8 +1136,6 @@ half brother,hermanastro,noun,masculine,person,1
 half sister,hermanastra,noun,feminine,person,1
 hamster,hámster,noun,masculine,animal,1
 honest,honrado,adjective,n_a,person,1
-husband,esposo,noun,masculine,person,1
-wife,esposa,noun,feminine,person,1
 ideal,ideal,adjective,n_a,n_a,1
 in a good mood,de buen humor,phrase,n_a,person,1
 in a bad mood,de mal humor,phrase,n_a,person,1
@@ -1143,7 +1169,6 @@ only child,hijo único,phrase,n_a,person,1
 optimistic,optimista,adjective,n_a,person,1
 penfriend,amigo por correspondencia,noun,masculine,person,1
 people,gente,noun,feminine,person,1
-person,persona,noun,feminine,person,1
 pessimistic,pesimista,adjective,n_a,person,1
 pet,mascota,noun,masculine,animal,1
 picture,cuadro,noun,masculine,n_a,1
@@ -1183,7 +1208,6 @@ celebrate,celebrar,verb,transIntrans,n_a,1
 to get on well with,llevarse bien con,phrase,n_a,n_a,1
 respect,respetar,verb,transitive,n_a,1
 separate,separar,verb,transitive,n_a,1
-tortoise,tortuga,noun,feminine,animal,1
 twin,gemelo,noun,masculine,person,1
 unemployed,desempleado,adjective,n_a,person,1
 unbearable,inaguantable,adjective,n_a,n_a,1
@@ -1205,7 +1229,6 @@ band,banda,noun,feminine,music,1
 group,grupo,noun,masculine,music,1
 basketball,baloncesto,noun,masculine,sport,1
 body building,culturismo,noun,masculine,sport,1
-book,libro,noun,masculine,n_a,1
 boxing,boxeo,noun,masculine,sport,1
 camera,cámara,noun,feminine,n_a,1
 canoeing,piragüismo,noun,masculine,sport,1

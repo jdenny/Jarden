@@ -15,7 +15,7 @@ import jarden.quiz.Quiz;
  * and passes it to us. Also note that Quiz already has
  * questionStyle & answerStyle: printed or spoken; see EngSpaFragment.currentQuestionStyle
  */
-public class EngSpaQuiz2 extends Quiz {
+public class EngSpaQuiz extends Quiz {
 	static public interface QuizEventListener {
 		void onNewLevel(int userLevel);
 	}
@@ -54,7 +54,7 @@ public class EngSpaQuiz2 extends Quiz {
 		personSize = persons.length;
 	}
 	
-	public EngSpaQuiz2(EngSpaDAO engSpaDAO, EngSpaUser engSpaUser) {
+	public EngSpaQuiz(EngSpaDAO engSpaDAO, EngSpaUser engSpaUser) {
 		this.engSpaUser = engSpaUser;
 		this.engSpaDAO = engSpaDAO;
 		setUserLevel(engSpaUser.getUserLevel());

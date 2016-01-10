@@ -1,7 +1,7 @@
 package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpa;
-import jarden.engspa.EngSpaQuiz2;
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.VerbUtils;
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
@@ -26,7 +26,7 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	private EditText englishVerbEditText;
 	private ListView conjugationListView;
 	private TextView statusTextView;
-	private EngSpaQuiz2 engSpaQuiz;
+	private EngSpaQuiz engSpaQuiz;
 	private ArrayAdapter<String> conjugateListAdapter;
 
 	@Override

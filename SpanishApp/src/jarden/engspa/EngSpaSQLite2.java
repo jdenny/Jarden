@@ -10,7 +10,7 @@ import java.util.Random;
 import com.jardenconsulting.spanishapp.BuildConfig;
 import com.jardenconsulting.spanishapp.R;
 
-import static jarden.engspa.EngSpaQuiz2.WORDS_PER_LEVEL;
+import static jarden.engspa.EngSpaQuiz.WORDS_PER_LEVEL;
 import static jarden.provider.engspa.EngSpaContract.*;
 import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
