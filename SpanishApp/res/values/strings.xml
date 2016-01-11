@@ -28,11 +28,17 @@ your list of failed words</string>
 Allows you to speak the answer; requires internet connection</string>
     <string name="micStr">Mic</string>
     <string name="noStr">No</string>
+    <string name="numberGameStr">Number Game</string>
+    <string name="numberPrompt">Number</string>
+    <string name="one">1</string>
     <string name="passStr">Pass</string>
     <string name="phraseStr">Phrase</string>
     <string name="questionAnswerStr">Question -> Answer</string>
     <string name="questionStyleStr">Question Style</string>
     <string name="repeatStr">Repeat</string>
+    <string name="repeatButtonTip">Repeat the spoken question</string>
+    <string name="resetStr">Reset</string>
+    <string name="resetButtonTip">Restart the game, 2 levels below current</string>
     <string name="sentenceStr">Sentence</string>
     <string name="showStr">Show</string>
     <string name="spanishStr">Spanish</string>

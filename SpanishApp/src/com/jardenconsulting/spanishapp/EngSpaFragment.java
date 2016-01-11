@@ -1,6 +1,5 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
 import jarden.engspa.EngSpaDAO;
@@ -11,7 +10,6 @@ import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -19,8 +17,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -37,13 +33,9 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
-		OnLongClickListener,
-		OnEditorActionListener, OnInitListener, QuizEventListener {
+		OnLongClickListener, OnEditorActionListener, QuizEventListener {
 
-	public static final int WORD_LOADER_ID = 1;
-	
 	private static final int PHRASE_ACTIVITY_CODE = 1002; 
-	private static final Locale LOCALE_ES = new Locale("es", "ES");
 
 	private TextView userNameTextView;
 	private TextView userLevelTextView;
@@ -56,7 +48,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private String question;
 	private String correctAnswer;
 	private String responseIfCorrect;
-	private TextToSpeech textToSpeech;
 	private Random random = new Random();
 	private EngSpaQuiz engSpaQuiz;
 	private EngSpaUser engSpaUser;
@@ -175,12 +166,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * part 2 of next question: set up UI from business model
 	 */
 	private void askQuestion() {
-		Attribute attribute = engSpaQuiz.getCurrentWord().getAttribute();
-		if (attribute != Attribute.n_a) {
-			this.attributeTextView.setText("hint: " + attribute.toString());
-		} else {
-			this.attributeTextView.setText("");
-		}
+		this.attributeTextView.setText("hint: " + engSpaQuiz.getCurrentWord().getHint());
 		if (this.currentQuestionStyle.voiceText == VoiceText.text) {
 			this.repeatButton.setVisibility(View.INVISIBLE);
 		} else {
@@ -200,24 +186,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.questionTextView.setText(this.question);
 		}
 	}
+	private void speakQuestion() {
+		((MainActivity) getActivity()).speakQuestion(question);
+	}
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
-	}
-	private void speakQuestion() {
-		if (this.textToSpeech == null) {
-			new Thread(new Runnable() {
-				public void run() {
-					EngSpaFragment.this.textToSpeech = new TextToSpeech(
-						getActivity(), EngSpaFragment.this); // invokes onInit() on completion
-				}
-			}).start();
-		} else {
-			speakQuestion2();
-		}
-	}
-	@SuppressWarnings("deprecation")
-	private void speakQuestion2() {
-		textToSpeech.speak(question, TextToSpeech.QUEUE_ADD, null);
 	}
 
 	@Override // onClickListener
@@ -237,7 +210,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			selfMarkButton(false);
 		}
 	}
-    @Override // onLongClickListener
+    @Override // OnLongClickListener
     public boolean onLongClick(View view) {
 		int id = view.getId();
 		if (id == R.id.goButton) {
@@ -419,47 +392,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 	}
 	@Override // Fragment
-	public void onPause() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onPause()");
-		super.onPause();
-		if (this.textToSpeech != null) {
-			textToSpeech.stop();
-			textToSpeech.shutdown();
-			textToSpeech = null;
-		}
-	}
-	@Override // Fragment
 	public void onDestroy() {
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onDestroy()");
 		super.onDestroy();
-	}
-	@Override // OnInitListener (called when textToSpeech is initialised)
-	public void onInit(int status) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onInit()");
-		if (status == TextToSpeech.SUCCESS) {
-			int result = textToSpeech.setLanguage(LOCALE_ES);
-			if (BuildConfig.DEBUG) {
-				Log.d(MainActivity.TAG, "textToSpeech.setLanguage(); result=" + result);
-			}
-			if (result == TextToSpeech.LANG_MISSING_DATA
-					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
-				setStatusOnUiThread("TextToSpeech for Spanish is not supported");
-			}
-			// do on UI thread? seems okay as it is
-			if (EngSpaFragment.this.question != null) speakQuestion2(); 
-		} else {
-			Log.w(MainActivity.TAG, "EngSpaFragment.onInit(" + status + ")");
-			// this.statusTextView.setText(
-			setStatusOnUiThread(
-				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
-		}
-	}
-	private void setStatusOnUiThread(final String status) {
-		this.statusTextView.post(new Runnable() {
-			public void run() {
-				statusTextView.setText(status);
-			}
-		});
 	}
 
 	/**

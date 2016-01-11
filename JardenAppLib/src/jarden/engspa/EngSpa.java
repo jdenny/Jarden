@@ -80,6 +80,19 @@ public class EngSpa {
 		return english + ":" + spanish + "(w=" + wrongCt +
 			",r=" + consecutiveRightCt + ",l=" + levelsWrongCt + ")";
 	}
+	/**
+	 * Used to disambiguate words.
+	 * @return
+	 */
+	public String getHint() {
+		if (attribute == Attribute.n_a) {
+			if (wordType != WordType.noun &&
+					wordType != WordType.verb &&
+					wordType != WordType.phrase) {
+				return wordType.toString();
+			} else return "";
+		} else return attribute.toString();
+	}
 	public int getId() {
 		return id;
 	}

@@ -159,6 +159,69 @@ because,porque,conjunction,n_a,n_a,1
 nor,ni,conjunction,n_a,n_a,1
 but,sino,conjunction,n_a,n_a,1
 while,mientras,conjunction,n_a,n_a,1
+against,contra,preposition,n_a,n_a,1
+among,entre,preposition,n_a,place,1
+by,por,preposition,n_a,place,1
+for,para,preposition,n_a,n_a,1
+on,sobre,preposition,n_a,n_a,1
+with,con,preposition,n_a,n_a,1
+without,sin,preposition,n_a,n_a,1
+during,durante,preposition,n_a,n_a,1
+against,contra,preposition,n_a,n_a,1
+toward,hacia,preposition,n_a,place,1
+under,bajo,preposition,n_a,n_a,1
+in,en,preposition,n_a,place,1
+near,cerca,preposition,n_a,place,1
+according to,según,preposition,n_a,n_a,1
+about,acerca,preposition,n_a,n_a,1
+today,hoy,adverb,n_a,time,1
+tomorrow,mañana,adverb,n_a,time,1
+yesterday,ayer,adverb,n_a,time,1
+calendar,calendario,noun,masculine,time,1
+Monday,lunes,noun,masculine,time,1
+August,agosto,noun,masculine,time,1
+October,octubre,noun,masculine,time,1
+April,abril,noun,masculine,time,1
+minute,minuto,noun,masculine,time,1
+Thursday,jueves,noun,masculine,time,1
+Sunday,domingo,noun,masculine,time,1
+Tuesday,martes,noun,masculine,time,1
+day,día,noun,masculine,time,1
+Wednesday,miércoles,noun,masculine,time,1
+Saturday,sábado,noun,masculine,time,1
+year,año,noun,masculine,time,1
+Friday,viernes,noun,masculine,time,1
+January,enero,noun,masculine,time,1
+time,vez,noun,feminine,time,1
+February,febrero,noun,masculine,time,1
+last night,anoche,adverb,n_a,time,1
+December,diciembre,noun,masculine,time,1
+March,marzo,noun,masculine,time,1
+morning,mañana,noun,feminine,time,1
+June,junio,noun,masculine,time,1
+second,segundo,number,n_a,n_a,1
+July,julio,noun,masculine,time,1
+May,mayo,noun,masculine,time,1
+September,septiembre,noun,masculine,time,1
+November,noviembre,noun,masculine,time,1
+spring,primavera,noun,feminine,time,1
+winter,invierno,noun,masculine,time,1
+moment,momento,noun,masculine,time,1
+summer,verano,noun,masculine,time,1
+late,tarde,adjective,n_a,time,1
+early,temprano,adjective,n_a,time,1
+autumn,otoño,noun,masculine,time,1
+midday,mediodía,noun,masculine,time,1
+midnight,medianoche,noun,feminine,time,1
+week,semana,noun,feminine,time,1
+month,mes,noun,masculine,time,1
+season,temporada,noun,feminine,time,1
+often,a menudo,adverb,n_a,time,1
+always,siempre,adverb,n_a,time,1
+seldom,pocas veces,adverb,n_a,time,1
+sometimes,a veces,adverb,n_a,time,1
+tonight,esta noche,adverb,n_a,time,1
+party,fiesta,noun,feminine,time,1
 tall,alto,adjective,n_a,person,1
 short,bajo,adjective,n_a,person,1
 big,grande,adjective,n_a,person,1
@@ -385,42 +448,6 @@ swimming pool,piscina,noun,feminine,building,1
 park,parque,noun,masculine,place,1
 hospital,hospital,noun,masculine,building,1
 shopping centre,centro comercial,noun,masculine,building,1
-Monday,lunes,noun,masculine,time,1
-Tuesday,martes,noun,masculine,time,1
-Wednesday,miércoles,noun,masculine,time,1
-Thursday,jueves,noun,masculine,time,1
-Friday,viernes,noun,masculine,time,1
-Saturday,sábado,noun,masculine,time,1
-Sunday,domingo,noun,masculine,time,1
-January,enero,noun,masculine,time,1
-February,febrero,noun,masculine,time,1
-March,marzo,noun,masculine,time,1
-April,abril,noun,masculine,time,1
-May,mayo,noun,masculine,time,1
-June,junio,noun,masculine,time,1
-July,julio,noun,masculine,time,1
-August,agosto,noun,masculine,time,1
-September,septiembre,noun,masculine,time,1
-October,octubre,noun,masculine,time,1
-November,noviembre,noun,masculine,time,1
-December,diciembre,noun,masculine,time,1
-spring,primavera,noun,feminine,time,1
-summer,verano,noun,masculine,time,1
-autumn,otoño,noun,masculine,time,1
-winter,invierno,noun,masculine,time,1
-midday,mediodía,noun,masculine,time,1
-midnight,medianoche,noun,feminine,time,1
-today,hoy,adverb,n_a,time,1
-tomorrow,mañana,adverb,n_a,time,1
-yesterday,ayer,adverb,n_a,time,1
-week,semana,noun,feminine,time,1
-month,mes,noun,masculine,time,1
-season,estación,noun,feminine,time,1
-often,a menudo,adverb,n_a,time,1
-always,siempre,adverb,n_a,time,1
-seldom,pocas veces,adverb,n_a,time,1
-sometimes,a veces,adverb,n_a,time,1
-tonight,esta noche,adverb,n_a,time,1
 France,Francia,noun,feminine,place,1
 Germany,Alemania,noun,feminine,place,1
 Italy,Italia,noun,feminine,place,1
@@ -512,22 +539,16 @@ kind,agradable,adjective,n_a,n_a,1
 terrible,terrible,adjective,n_a,n_a,1
 across,a través de,preposition,n_a,place,1
 after,tras,preposition,n_a,place,1
-against,contra,preposition,n_a,n_a,1
-among,entre,preposition,n_a,place,1
 around,alrededor de,preposition,n_a,place,1
 before,antes,adverb,n_a,time,1
 behind,tras,preposition,n_a,place,1
 beneath,bajo,preposition,n_a,place,1
 beside,junto a,preposition,n_a,place,1
 between,entre,preposition,n_a,place,1
-by,por,preposition,n_a,place,1
 down,abajo,preposition,n_a,place,1
-in,en,preposition,n_a,place,1
-near,cerca,preposition,n_a,place,1
 outside,fuera de,preposition,n_a,place,1
 over,encima de,preposition,n_a,place,1
 since,desde,preposition,n_a,place,1
-toward,hacia,preposition,n_a,place,1
 within,dentro de,preposition,n_a,place,1
 door,puerta,noun,feminine,home,1
 bitter,amargo,adjective,n_a,n_a,1
@@ -562,8 +583,6 @@ field,campo,noun,masculine,place,1
 farmer,labrador,noun,masculine,person,1
 rain,lluvia,noun,feminine,weather,1
 rain,llover,verb,intransitive,weather,1
-late,tarde,adjective,n_a,time,1
-early,temprano,adjective,n_a,time,1
 mirror,espejo,noun,masculine,home,1
 forget,olvidar,verb,transitive,n_a,1
 dirty,sucio,adjective,n_a,n_a,1
@@ -853,27 +872,20 @@ there,allí,adverb,n_a,n_a,1
 unfortunately,desgraciadamente,adverb,n_a,n_a,1
 up there,arriba,adverb,n_a,n_a,1
 very,muy,adverb,n_a,n_a,1
-according to,según,preposition,n_a,n_a,1
 at the end of,al final de,preposition,n_a,n_a,1
 because of,a causa de,preposition,n_a,n_a,1
 behind,detrás,preposition,n_a,n_a,1
-during,durante,preposition,n_a,n_a,1
 everywhere,por todas partes,preposition,n_a,n_a,1
 except,salvo,preposition,n_a,n_a,1
 far,lejos,preposition,n_a,n_a,1
-for,para,preposition,n_a,n_a,1
 in order to,para,preposition,n_a,n_a,1
 from,de,preposition,n_a,n_a,1
 next to,al lado de,preposition,n_a,n_a,1
-on,sobre,preposition,n_a,n_a,1
 on the corner of,en la esquina de,preposition,n_a,n_a,1
 opposite,enfrente de,preposition,n_a,n_a,1
 outside,afuera,preposition,n_a,n_a,1
 through,a través de,preposition,n_a,n_a,1
-under,bajo,preposition,n_a,n_a,1
 until,hasta,preposition,n_a,n_a,1
-with,con,preposition,n_a,n_a,1
-without,sin,preposition,n_a,n_a,1
 twenty-one,veintiuno,number,n_a,n_a,1
 twenty-two,veintidós,number,n_a,n_a,1
 twenty-three,veintitrés,number,n_a,n_a,1
@@ -915,7 +927,6 @@ zero,cero,number,n_a,n_a,1
 million,millón,number,n_a,n_a,1
 two million,dos millones,number,n_a,n_a,1
 first,primero,number,n_a,n_a,1
-second,segundo,number,n_a,n_a,1
 third,tercero,number,n_a,n_a,1
 fourth,cuarto,number,n_a,n_a,1
 fifth,quinto,number,n_a,n_a,1
@@ -951,7 +962,6 @@ fortnight,quince días,noun,masculine,time,1
 afternoon,tarde,noun,feminine,time,1
 ago,hace,adverb,n_a,time,1
 always,siempre,adverb,n_a,time,1
-day,día,noun,masculine,time,1
 day after tomorrow,pasado mañana,phrase,n_a,time,1
 day before yesterday,anteayer,phrase,n_a,time,1
 early,temprano,adjective,n_a,time,1
@@ -960,19 +970,14 @@ every day,todos los días,phrase,n_a,time,1
 from time to time,de vez en cuando,phrase,n_a,time,1
 straight away,ahora mismo,phrase,n_a,time,1
 last,pasado,adjective,n_a,time,1
-last night,anoche,adverb,n_a,time,1
 last year,año pasado,phrase,n_a,time,1
-minute,minuto,noun,masculine,time,1
-morning,mañana,noun,feminine,time,1
 next,próximo,adjective,n_a,time,1
 night,noche,noun,feminine,time,1
 now,ahora,adverb,n_a,time,1
 on time,a tiempo,phrase,n_a,time,1
-party,fiesta,noun,feminine,time,1
 soon,pronto,adverb,n_a,time,1
 the next day,al día siguiente,phrase,n_a,time,1
 weekend,fin de semana,noun,masculine,time,1
-year,año,noun,masculine,time,1
 at one o’clock,a la una,phrase,n_a,time,1
 at two o’clock,a las dos,phrase,n_a,time,1
 five past three,las tres y cinco,phrase,n_a,time,1
@@ -1029,7 +1034,6 @@ those,esos,pronoun,n_a,n_a,1
 thing,cosa,noun,feminine,n_a,1
 this,esto,pronoun,n_a,n_a,1
 these,estos,pronoun,n_a,n_a,1
-time,vez,noun,feminine,n_a,1
 type,tipo,noun,masculine,n_a,1
 way,manera,noun,feminine,n_a,1
 boot,bota,noun,feminine,clothing,1

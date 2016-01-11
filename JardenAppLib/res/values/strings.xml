@@ -11,4 +11,11 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
     
+    <!-- Quiz apps -->
+    <string name="correct">right</string>
+    <string name="emptyAnswer">please supply an answer</string>
+    <string name="fail">wrong! the right answer is: </string>
+    <string name="incorrect">wrong; try again</string>
+    
+    
 </resources>

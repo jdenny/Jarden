@@ -2,7 +2,9 @@ package com.jardenconsulting.spanishapp;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
+import jarden.app.race.RaceFragment;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
@@ -13,6 +15,8 @@ import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,20 +44,26 @@ import android.widget.TextView;
 	call engSpaFragment to create engSpaQuiz
  */
 public class MainActivity extends AppCompatActivity
-		implements UserSettingsListener,
+		implements UserSettingsListener, OnInitListener,
 		NewDBDataDialog.UpdateDBListener {
     public static final String TAG = "SpanishMain";
+	public static final Locale LOCALE_ES = new Locale("es", "ES");
+
     private static final String DATA_VERSION = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
+	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaFragment engSpaFragment;
 	private DialogFragment userDialog;
 	private VerbTableFragment verbTableFragment;
+	private RaceFragment raceFragment;
 	private ProgressBar progressBar;
 	private TextView statusTextView;
 	private boolean engSpaFileModified;
 	private long dateEngSpaFileModified;
 	private String updateStatus;
+	private TextToSpeech textToSpeech;
+	private String questionToSpeak;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +101,62 @@ public class MainActivity extends AppCompatActivity
 			}
 			showFragment(verbTableFragment, VERB_TABLE);
 			return true;
+		} else if (id == R.id.numberGame) {
+			if (this.raceFragment == null) {
+				this.raceFragment = new RaceFragment();
+			}
+			showFragment(raceFragment, NUMBER_GAME);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	@Override // OnInitListener (called when textToSpeech is initialised)
+	public void onInit(int status) {
+		if (BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onInit()");
+		progressBar.setVisibility(ProgressBar.INVISIBLE);
+		this.statusTextView.setText("");
+		if (status == TextToSpeech.SUCCESS) {
+			int result = textToSpeech.setLanguage(LOCALE_ES);
+			if (BuildConfig.DEBUG) {
+				Log.d(MainActivity.TAG, "textToSpeech.setLanguage(); result=" + result);
+			}
+			if (result == TextToSpeech.LANG_MISSING_DATA
+					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				this.statusTextView.setText("TextToSpeech for Spanish is not supported");
+			}
+			if (this.questionToSpeak != null) speakQuestion2(); 
+		} else {
+			Log.w(MainActivity.TAG, "EngSpaFragment.onInit(" + status + ")");
+			this.statusTextView.setText(
+				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
+		}
+	}
+	@Override // Activity
+	public void onPause() {
+		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onPause()");
+		super.onPause();
+		if (this.textToSpeech != null) {
+			textToSpeech.stop();
+			textToSpeech.shutdown();
+			textToSpeech = null;
+		}
+	}
+	public void speakQuestion(String question) {
+		this.questionToSpeak = question;
+		if (this.textToSpeech == null) {
+			// invokes onInit() on completion
+			textToSpeech = new TextToSpeech(this, this);
+			this.statusTextView.setText("loading textToSpeech...");
+			this.progressBar.setVisibility(ProgressBar.VISIBLE);
+		} else {
+			speakQuestion2();
+		}
+	}
+	@SuppressWarnings("deprecation")
+	private void speakQuestion2() {
+		textToSpeech.speak(this.questionToSpeak, TextToSpeech.QUEUE_ADD, null);
+	}
+
 
 	public void showUserDialog() {
 		if (this.userDialog == null) this.userDialog = new UserDialog();
@@ -205,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 	private void showFragment(Fragment fragment, String tag) {
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.fragmentLayout, fragment, tag);
-		if (tag == VERB_TABLE) ft.addToBackStack(tag);
+		if (tag == VERB_TABLE || tag == NUMBER_GAME) ft.addToBackStack(tag);
 		ft.commit();
 	}
 
