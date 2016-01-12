@@ -45,18 +45,20 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextView attributeTextView;
 	private EditText answerEditText;
 	private TextView statusTextView;
-	private String question;
-	private String correctAnswer;
-	private String responseIfCorrect;
-	private Random random = new Random();
-	private EngSpaQuiz engSpaQuiz;
-	private EngSpaUser engSpaUser;
-	private QuestionStyle currentQuestionStyle;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
 	private Button repeatButton;
 	private ImageButton micButton;
+
+	private Random random = new Random();
+	private QuestionStyle currentQuestionStyle;
+	private String question;
+	private String correctAnswer;
+	private String responseIfCorrect;
+	private EngSpaQuiz engSpaQuiz;
+	private EngSpaUser engSpaUser;
 	private EngSpaDAO engSpaDAO;
+
 	
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
@@ -473,5 +475,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		onNewLevel(); // strictly only necessary if change level or questionType
 		return true;
+	}
+	public void setTopic(String topic) {
+		this.engSpaQuiz.setTopic(topic);
+		nextQuestion();
 	}
 }

@@ -317,6 +317,11 @@ public class VerbUtils {
 	private static String[][] alcanzarPreterite = { {"yo", "alcancé"} };
 	private static Object[][] alcanzarTenses = { {"r", alcanzarPreterite} };
 
+	private static String[][] aparcarPreterite = { {"yo", "aparqué"} };
+	private static Object[][] aparcarTenses = {
+		{"r", aparcarPreterite}, {"no", "aparques"}
+	};
+	
 	private static String[][] caerPresent = {
 		{"yo", "caigo"}
 	};
@@ -379,6 +384,11 @@ public class VerbUtils {
 		{"r", creerPreterite}
 	};
 
+	private static String[][] cruzarPreterite = { {"yo", "crucé"} };
+	private static Object[][] cruzarTenses = {
+		{"r", cruzarPreterite}, {"no", "cruces"}
+	};
+	
 	private static String[][] darPresent = { {"yo", "doy"} };
 	private static String[][] darPreterite = {
 		{"yo", "di"}, {"tu", "diste"}, {"el", "dio"}, {"n", "dimos"},
@@ -592,6 +602,14 @@ public class VerbUtils {
 		{"p", mostrarPresent}, {"si", "muestra"}, {"no", "muestres"}
 	};
 
+	private static String[][] nevarPresent = {
+		{"yo", "nievo"}, {"tu", "nievas"}, {"el", "nieva"},
+		{"e", "nievan"}
+	};
+	private static Object[][] nevarTenses = {
+		{"p", nevarPresent}, {"si", "nieva"}, {"no", "nieves"}
+	};
+
 	private static String[][] oirPresent = {
 		{"yo", "oigo"}, {"tu", "oyes"}, {"el", "oye"}, {"e", "oyen"}
 	};
@@ -624,6 +642,11 @@ public class VerbUtils {
 		{"si", "pide"}, {"no", "pidas"}
 	};
 
+	private static String[][] pegarPreterite = { {"yo", "pegué"} };
+	private static Object[][] pegarTenses = {
+		{"r", pegarPreterite}, {"no", "pegues"}
+	};
+	
 	private static String[][] pensarPresent = {
 		{"yo", "pienso"}, {"tu", "piensas"}, {"el", "piensa"}, {"e", "piensan"}
 	};
@@ -666,6 +689,18 @@ public class VerbUtils {
 	private static Object[][] ponerTenses = {
 		{"p", ponerPresent}, {"r", ponerPreterite},
 		{"f", "pondr"}, {"si", "pon"}, {"no", "pongas"}
+	};
+
+	private static String[][] preferirPresent = {
+		{"yo", "prefiero"}, {"tu", "prefieres"}, {"el", "prefiere"},
+		{"e", "prefieren"}
+	};
+	private static String[][] preferirPreterite = {
+		{"el", "prefirió"}, {"e", "prefirieron"}
+	};
+	private static Object[][] preferirTenses = {
+		{"p", preferirPresent}, {"r", preferirPreterite},
+		{"si", "prefiere"}, {"no", "prefieras"}
 	};
 
 	private static String[][] prevenirPresent = {
@@ -838,6 +873,13 @@ public class VerbUtils {
 		{"r", tocarPreterite}, {"no", "toques"}
 	};
 
+	private static String[][] torcerPresent = {
+		{"yo", "tuerzo"}, {"tu", "tuerces"}, {"el", "tuerce"}, {"e", "tuercen"}
+	};
+	private static Object[][] torcerTenses = {
+		{"p", torcerPresent}, {"si", "tuerce"}, {"no", "tuerzas"}
+	};
+
 	private static String[][] traerPresent = { {"yo", "traigo"} };
 	private static String[][] traerPreterite = {
 		{"yo", "traje"}, {"tu", "trajiste"}, {"el", "trajo"},
@@ -881,25 +923,28 @@ public class VerbUtils {
 
 	private static Object[][] irregSpaVerbs = {
 		{"agradecer", agradecerTenses}, {"alcanzar", alcanzarTenses},
+		{"aparcar", aparcarTenses},
 		{"caer", caerTenses}, {"cargar", cargarTenses},
 		{"chocar", chocarTenses}, {"conocer", conocerTenses},
 		{"contar", contarTenses}, {"continuar", continuarTenses},
 		{"costar", costarTenses},
-		{"creer", creerTenses}, {"dar", darTenses},
+		{"creer", creerTenses}, {"curzar", cruzarTenses}, {"dar", darTenses},
 		{"decir", decirTenses}, {"despertar", despertarTenses},
 		{"despedir", despedirTenses}, {"dirigir", dirigirTenses},
 		{"doler", dolerTenses}, {"dormir", dormirTenses},
 		{"descargar", descargarTenses},{"ejercer", ejercerTenses},
 		{"encontrar", encontrarTenses}, {"estar", estarTenses},
 		{"entender", entenderTenses}, {"enviar", enviarTenses},
+		{"preferir", preferirTenses},
 		{"haber", haberTenses}, {"hacer", hacerTenses},
 		{"ir", irTenses}, {"jugar", jugarTenses},
 		{"leer", leerTenses},
 		{"llegar", llegarTenses}, {"llover", lloverTenses},
 		{"merecer", merecerTenses}, {"morir", morirTenses},
-		{"mostrar", mostrarTenses},
+		{"mostrar", mostrarTenses}, {"nevar", nevarTenses},
 		{"oír", oirTenses}, {"padecer", padecerTenses},
 		{"parecer", parecerTenses}, {"pedir", pedirTenses},
+		{"pegar", pegarTenses},
 		{"pensar", pensarTenses}, {"perder", perderTenses},
 		{"pescar", pescarTenses},
 		{"poder", poderTenses}, {"poner", ponerTenses},
@@ -911,6 +956,7 @@ public class VerbUtils {
 		{"ser", serTenses}, {"servir", servirTenses},
 		{"sonar", sonarTenses},
 		{"sonreír", sonreirTenses}, {"tener", tenerTenses},
+		{"torcer", torcerTenses},
 		{"tocar", tocarTenses}, {"traer", traerTenses},
 		{"valer", valerTenses}, {"venir", venirTenses},
 		{"ver", verTenses}
@@ -925,8 +971,8 @@ public class VerbUtils {
 		{"accompany", "accompanied"},
 		{"awake", "awoke"}, {"bring", "brought"},
 		{"break", "broke"}, {"buy", "bought"}, {"can", "could"}, 
-		{"carry", "carried"}, {"chat", "chatted"},
-		{"choose", "chose"}, {"come", "came"}, {"cost", "cost"}, {"cry", "cried"},
+		{"carry", "carried"}, {"chat", "chatted"}, {"choose", "chose"},
+		{"come", "came"}, {"cost", "cost"}, {"cry", "cried"},
 		{"do", "did"}, {"draw", "drew"}, {"drink", "drank"}, {"eat", "ate"},
 		{"fall", "fell"}, {"forget", "forgot"}, {"forgive", "forgave"},
 		{"give", "gave"}, {"go", "went"}, {"have", "had"},

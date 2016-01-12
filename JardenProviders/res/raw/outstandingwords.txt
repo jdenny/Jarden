@@ -1,119 +1,132 @@
-apply,dirigirse a, solicitar, aplicar,verb,transIntrans,n_a,6
-be born,nacer,verb,transIntrans,n_a,6
-be careful,tener cuidado,verb,transIntrans,n_a,6
-be hot/cold,tener calor/frío,verb,transIntrans,n_a,6
-be hungry,tener hambre,verb,transIntrans,n_a,6
-be in a hurry,tener prisa,verb,transIntrans,n_a,6
-be interested in,interesarse en,verb,transIntrans,n_a,6
-be keen to,tener ganas de,verb,transIntrans,n_a,6
-be located,encontrarse, estar situado/situarse,verb,transIntrans,n_a,6
-be lucky,tener suerte,verb,transIntrans,n_a,6
-be sleepy, tired,tener sueño,verb,transIntrans,n_a,6
-be sorry,sentir, lamentar,verb,transIntrans,n_a,6
-be successful,tener éxito,verb,transIntrans,n_a,6
-be thirsty,tener sed,verb,transIntrans,n_a,6
-borrow,pedir prestado,verb,transIntrans,n_a,6
-brush (teeth,hair),cepillarse ,verb,transIntrans,n_a,6
-buy tickets (for a show),sacar entradas,verb,transIntrans,n_a,6
-cancel,cancelar,verb,transIntrans,n_a,6
-change (trains etc),hacer transbordo,verb,transIntrans,n_a,6
-check,averiguar, verificar,verb,transIntrans,n_a,6
-clear the table,quitar la mesa,verb,transIntrans,n_a,6
-click,cliquear, hacer clic,verb,transIntrans,n_a,6
-climb mountains,escalar montañas,verb,transIntrans,n_a,6
-complain,quejarse,verb,transIntrans,n_a,6
-contact,contactar,verb,transIntrans,n_a,6
-discuss,hablar de,verb,transIntrans,n_a,6
-do the vacuum cleaning,pasar la aspiradora,verb,transIntrans,n_a,6
-do the washing up,fregar (los platos),verb,transIntrans,n_a,6
-dress,vestirse,verb,transIntrans,n_a,6
-drive,conducir,verb,transIntrans,n_a,6
-end,terminar(se),verb,transIntrans,n_a,6
-enjoy oneself,divertirse, pasarlo bien,verb,transIntrans,n_a,6
-escape,escapar(se),verb,transIntrans,n_a,6
-fail (an exam),suspender (un examen),verb,transIntrans,n_a,6
-feel,sentir(se),verb,transIntrans,n_a,6
-fill out (a form),rellenar (una ficha),verb,transIntrans,n_a,6
-find, to meet,encontrar(se),verb,transIntrans,n_a,6
-get (good) marks,sacar (buenas) notas,verb,transIntrans,n_a,6
-get angry,enfadarse,verb,transIntrans,n_a,6
-get dressed,vestirse,verb,transIntrans,n_a,6
-get on well with,llevarse bien con,verb,transIntrans,n_a,6
-give (presents),ofrecer/dar (regalos)/regalar,verb,transIntrans,n_a,6
-give orders,mandar,verb,transIntrans,n_a,6
-go along (in a car),circular, viajar (en coche),verb,transIntrans,n_a,6
-go down, to get off (bus, train),bajar,verb,transIntrans,n_a,6
-go for a walk,pasearse, ir de paseo, dar un paseo,verb,transIntrans,n_a,6
-go shopping,ir de compras,verb,transIntrans,n_a,6
-go to bed,acostarse,verb,transIntrans,n_a,6
-go up; get onto (bus,train),subir,verb,transIntrans,n_a,6
-go wrong/to fail,fallar, fracasar,verb,transIntrans,n_a,6
-hand over,entregar,verb,transIntrans,n_a,6
-have (auxiliary verb),haber,verb,transIntrans,n_a,6
-have a cold,estar resfriado/constipado,verb,transIntrans,n_a,6
-have lunch,almorzar,verb,transIntrans,n_a,6
-have to; must,deber/tener que,verb,transIntrans,n_a,6
-hurry,darse prisa,verb,transIntrans,n_a,6
-introduce,introducir,verb,transIntrans,n_a,6
-land,aterrizar,verb,transIntrans,n_a,6
-lay the table,poner la mesa,verb,transIntrans,n_a,6
-leave/go away,marcharse,verb,transIntrans,n_a,6
-lift the receiver,descolgar (el teléfono),verb,transIntrans,n_a,6
-light, turn on,encender,verb,transIntrans,n_a,6
-load, to charge,cargar,verb,transIntrans,n_a,6
-look after,cuidar,verb,transIntrans,n_a,6
-look for, to fetch,buscar,verb,transIntrans,n_a,6
-look like, to resemble,parecerse a,verb,transIntrans,n_a,6
-make a mistake,equivocarse,verb,transIntrans,n_a,6
-note,notar, darse cuenta,verb,transIntrans,n_a,6
-organise,organizar,verb,transIntrans,n_a,6
-park,aparcar,verb,transIntrans,n_a,6
-pass (an exam),aprobar (un examen),verb,transIntrans,n_a,6
-please; be pleasing to,gustar (a),verb,transIntrans,n_a,6
-prefer,preferir,verb,transIntrans,n_a,6
-present/to introduce (someone),presentar,verb,transIntrans,n_a,6
-put back/to replace,reemplazar, reponer,verb,transIntrans,n_a,6
-put on make up,maquillarse,verb,transIntrans,n_a,6
-realise,darse cuenta de,verb,transIntrans,n_a,6
-recommend,recomendar,verb,transIntrans,n_a,6
-refund,reembolsar,verb,transIntrans,n_a,6
-repair,reparar, arreglar,verb,transIntrans,n_a,6
-repeat,repetir,verb,transIntrans,n_a,6
-research,investigar,verb,transIntrans,n_a,6
-reserve/ to book,reservar,verb,transIntrans,n_a,6
-return,volver,verb,transIntrans,n_a,6
-ride a horse,montar a caballo, ir a caballo,verb,transIntrans,n_a,6
-save (money),ahorrar,verb,transIntrans,n_a,6
-say goodbye,despedirse,verb,transIntrans,n_a,6
+	public enum Attribute {
+		animal, body, building, clothing, colour, culture, drink, fact, food,
+		hobby, home, interrogative, language, mineral, money, music, n_a,
+		permanent, person, place, size, sport, technology, temporary, time,
+		transport, weather;
+	}
 
-shave,afeitarse,verb,transIntrans,n_a,6
-shower,ducharse,verb,transIntrans,n_a,6
-sign,firmar,verb,transIntrans,n_a,6
-sit down,sentarse,verb,transIntrans,n_a,6
-skate,patinar,verb,transIntrans,n_a,6
-ski,esquiar,verb,transIntrans,n_a,6
-smoke,fumar,verb,transIntrans,n_a,6
-snow,nevar,verb,transIntrans,n_a,6
-spend (money),gastar,verb,transIntrans,n_a,6
-spend (time),pasar,verb,transIntrans,n_a,6
-start/to begin,empezar/comenzar,verb,transIntrans,n_a,6
-stay/to remain,quedarse,verb,transIntrans,n_a,6
-stick,pegar,verb,transIntrans,n_a,6
-sunbathe,tomar el sol,verb,transIntrans,n_a,6
-surf the internet,navegar en Internet,verb,transIntrans,n_a,6
-take advantage of,aprovechar,verb,transIntrans,n_a,6
-take photographs,sacar fotos,verb,transIntrans,n_a,6
-tell, to recount,contar,verb,transIntrans,n_a,6
-touch,tocar,verb,transIntrans,n_a,6
-try,intentar, tratar de ,verb,transIntrans,n_a,6
-try to ,tratar de ,verb,transIntrans,n_a,6
-twist, to turn,torcer,verb,transIntrans,n_a,6
-type,escribir a máquina, mecanografiar,verb,transIntrans,n_a,6
-use,usar, utilizar,verb,transIntrans,n_a,6
-worry,preocuparse,verb,transIntrans,n_a,6
-
+bathe,bañarse,verb,transIntrans,n_a,1
+village,pueblo,noun,masculine,size,1
+tour (on transport) excursión,noun,feminine,place,1 recorrido,noun,masculine,size,1
+toilet aseo,noun,masculine,size,1 , baño,noun,masculine,size,1 , servicio,noun,masculine,size,1
+to take off (plane) despegar
+to pack/unpack (cases) hacer/deshacer la maleta
+cross,atravesar
+till (cashier's desk) caja,noun,feminine,place,1
+ticket inspector, revisor/a (mf)
+tent tienda,noun,feminine,place,1
+bench,banco,noun,masculine,size,1
+reduction,rebaja,noun,feminine,place,1
+poster/notice póster,noun,masculine,size,1, cartel,noun,masculine,size,1
+press prensa,noun,feminine,place,1
+outskirts (of town/city) afueras (f pl)
+one way street,system dirección única,noun,feminine,place,1;sentido único,noun,masculine,size,1
+occupied; taken (seat etc) ocupado/a
+apply,dirigirse a, solicitar, aplicar,verb,transIntrans,n_a,1
+be born,nacer,verb,transIntrans,n_a,1
+be careful,tener cuidado,verb,transIntrans,n_a,1
+be hot/cold,tener calor/frío,verb,transIntrans,n_a,1
+be hungry,tener hambre,verb,transIntrans,n_a,1
+be in a hurry,tener prisa,verb,transIntrans,n_a,1
+be interested in,interesarse en,verb,transIntrans,n_a,1
+be keen to,tener ganas de,verb,transIntrans,n_a,1
+be located,encontrarse, estar situado/situarse,verb,transIntrans,n_a,1
+be lucky,tener suerte,verb,transIntrans,n_a,1
+be sleepy, tired,tener sueño,verb,transIntrans,n_a,1
+be sorry,sentir, lamentar,verb,transIntrans,n_a,1
+be successful,tener éxito,verb,transIntrans,n_a,1
+be thirsty,tener sed,verb,transIntrans,n_a,1
+borrow,pedir prestado,verb,transIntrans,n_a,1
+brush (teeth,hair),cepillarse ,verb,transIntrans,n_a,1
+buy tickets (for a show),sacar entradas,verb,transIntrans,n_a,1
+cancel,cancelar,verb,transIntrans,n_a,1
+change (trains etc),hacer transbordo,verb,transIntrans,n_a,1
+check,averiguar, verificar,verb,transIntrans,n_a,1
+clear the table,quitar la mesa,verb,transIntrans,n_a,1
+click,cliquear, hacer clic,verb,transIntrans,n_a,1
+climb mountains,escalar montañas,verb,transIntrans,n_a,1
+complain,quejarse,verb,transIntrans,n_a,1
+contact,contactar,verb,transIntrans,n_a,1
+discuss,hablar de,verb,transIntrans,n_a,1
+do the vacuum cleaning,pasar la aspiradora,verb,transIntrans,n_a,1
+do the washing up,fregar (los platos),verb,transIntrans,n_a,1
+dress,vestirse,verb,transIntrans,n_a,1
+drive,conducir,verb,transIntrans,n_a,1
+end,terminar(se),verb,transIntrans,n_a,1
+enjoy oneself,divertirse, pasarlo bien,verb,transIntrans,n_a,1
+escape,escapar(se),verb,transIntrans,n_a,1
+fail (an exam),suspender (un examen),verb,transIntrans,n_a,1
+feel,sentir(se),verb,transIntrans,n_a,1
+fill out (a form),rellenar (una ficha),verb,transIntrans,n_a,1
+find, to meet,encontrar(se),verb,transIntrans,n_a,1
+get (good) marks,sacar (buenas) notas,verb,transIntrans,n_a,1
+get angry,enfadarse,verb,transIntrans,n_a,1
+get dressed,vestirse,verb,transIntrans,n_a,1
+get on well with,llevarse bien con,verb,transIntrans,n_a,1
+give (presents),ofrecer/dar (regalos)/regalar,verb,transIntrans,n_a,1
+give orders,mandar,verb,transIntrans,n_a,1
+go along (in a car),circular, viajar (en coche),verb,transIntrans,n_a,1
+go down, to get off (bus, train),bajar,verb,transIntrans,n_a,1
+go for a walk,pasearse, ir de paseo, dar un paseo,verb,transIntrans,n_a,1
+go shopping,ir de compras,verb,transIntrans,n_a,1
+go to bed,acostarse,verb,transIntrans,n_a,1
+go up; get onto (bus,train),subir,verb,transIntrans,n_a,1
+go wrong/to fail,fallar, fracasar,verb,transIntrans,n_a,1
+hand over,entregar,verb,transIntrans,n_a,1
+have (auxiliary verb),haber,verb,transIntrans,n_a,1
+have a cold,estar resfriado/constipado,verb,transIntrans,n_a,1
+have lunch,almorzar,verb,transIntrans,n_a,1
+have to; must,deber/tener que,verb,transIntrans,n_a,1
+hurry,darse prisa,verb,transIntrans,n_a,1
+introduce,introducir,verb,transIntrans,n_a,1
+land,aterrizar,verb,transIntrans,n_a,1
+lay the table,poner la mesa,verb,transIntrans,n_a,1
+leave/go away,marcharse,verb,transIntrans,n_a,1
+lift the receiver,descolgar (el teléfono),verb,transIntrans,n_a,1
+light, turn on,encender,verb,transIntrans,n_a,1
+load, to charge,cargar,verb,transIntrans,n_a,1
+look after,cuidar,verb,transIntrans,n_a,1
+look for, to fetch,buscar,verb,transIntrans,n_a,1
+look like, to resemble,parecerse a,verb,transIntrans,n_a,1
+make a mistake,equivocarse,verb,transIntrans,n_a,1
+note,notar, darse cuenta,verb,transIntrans,n_a,1
+organise,organizar,verb,transIntrans,n_a,1
+park,aparcar,verb,transIntrans,n_a,1
+pass (an exam),aprobar (un examen),verb,transIntrans,n_a,1
+please; be pleasing to,gustar (a),verb,transIntrans,n_a,1
+present/to introduce (someone),presentar,verb,transIntrans,n_a,1
+put back/to replace,reemplazar, reponer,verb,transIntrans,n_a,1
+put on make up,maquillarse,verb,transIntrans,n_a,1
+realise,darse cuenta de,verb,transIntrans,n_a,1
+recommend,recomendar,verb,transIntrans,n_a,1
+refund,reembolsar,verb,transIntrans,n_a,1
+repair,reparar, arreglar,verb,transIntrans,n_a,1
+repeat,repetir,verb,transIntrans,n_a,1
+research,investigar,verb,transIntrans,n_a,1
+reserve/ to book,reservar,verb,transIntrans,n_a,1
+return,volver,verb,transIntrans,n_a,1
+ride a horse,montar a caballo, ir a caballo,verb,transIntrans,n_a,1
+save (money),ahorrar,verb,transIntrans,n_a,1
+say goodbye,despedirse,verb,transIntrans,n_a,1
+shave,afeitarse,verb,transIntrans,n_a,1
+shower,ducharse,verb,transIntrans,n_a,1
+sit down,sentarse,verb,transIntrans,n_a,1
+ski,esquiar,verb,transIntrans,n_a,1
+start/to begin,empezar/comenzar,verb,transIntrans,n_a,1
+stay/to remain,quedarse,verb,transIntrans,n_a,1
+sunbathe,tomar el sol,verb,transIntrans,n_a,1
+surf the internet,navegar en Internet,verb,transIntrans,n_a,1
+take advantage of,aprovechar,verb,transIntrans,n_a,1
+take photographs,sacar fotos,verb,transIntrans,n_a,1
+try to ,tratar de ,verb,transIntrans,n_a,1
+twist, to turn,torcer,verb,transIntrans,n_a,1
+type,escribir a máquina, mecanografiar,verb,transIntrans,n_a,1
+use,usar, utilizar,verb,transIntrans,n_a,1
+worry,preocuparse,verb,transIntrans,n_a,1
 (to) turn/switch off apagar
 (to) turn/switch on encender
 book (of tickets) carné (m)
-
 department store almacenes (mpl)
+left luggage,consigna,noun,feminine,place,1
+leisure centre centro de ocio; polideportivo,noun,masculine,size,1
+litter/rubbish bin cubo de basura,noun,masculine,size,1

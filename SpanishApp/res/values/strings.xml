@@ -3,7 +3,8 @@
 
     <string name="app_name">Spanish GCSE Revision</string>
 	<string name="cancelStr">Cancel</string>
-    <string name="conjugateStr">Conjugate</string>
+    <string name="chooseTopicStr">Choose Topic</string>
+	<string name="conjugateStr">Conjugate</string>
     <string name="correctQueryStr">Correct?</string>
     <string name="correctButtonTip">
 Press if your mental guess was correct, or you want to skip this

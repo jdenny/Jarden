@@ -16,4 +16,9 @@
         android:id="@+id/numberGame"
         android:title="@string/numberGameStr"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/selectTopic"
+        android:title="@string/chooseTopicStr"
+        app:showAsAction="never" />
 </menu>

@@ -222,10 +222,46 @@ seldom,pocas veces,adverb,n_a,time,1
 sometimes,a veces,adverb,n_a,time,1
 tonight,esta noche,adverb,n_a,time,1
 party,fiesta,noun,feminine,time,1
+table,mesa,noun,feminine,home,1
+bed,cama,noun,feminine,home,1
+chair,silla,noun,feminine,home,1
+spoon,cuchara,noun,feminine,home,1
+knife,cuchillo,noun,masculine,home,1
+plate,plato,noun,masculine,home,1
+glass,vaso,noun,masculine,home,1
+telephone,teléfono,noun,masculine,home,1
+cup,taza,noun,feminine,home,1
+television,televisión,noun,feminine,home,1
+kitchen,cocina,noun,feminine,home,1
+window,ventana,noun,feminine,home,1
+mirror,espejo,noun,masculine,home,1
+sponge,esponja,noun,feminine,home,1
+sofa,sofá,noun,masculine,home,1
+lamp,lámpara,noun,feminine,home,1
+desk,escritorio,noun,masculine,home,1
+frying pan,sartén,noun,feminine,home,1
+wall,pared,noun,feminine,home,1
+oven,horno,noun,masculine,home,1
+roof,techo,noun,masculine,home,1
+flat,piso,noun,masculine,building,1
+bedroom,dormitorio,noun,masculine,home,1
+basement,sótano,noun,masculine,home,1
+staircase,escalera,noun,feminine,home,1
+refrigerator,refrigerador,noun,masculine,home,1
+washing machine,lavadora,noun,feminine,home,1
+dryer,secadora,noun,feminine,home,1
+bath,baño,noun,masculine,home,1
+room,habitación,noun,feminine,home,1
+soap,jabón,noun,masculine,home,1
+umbrella,paraguas,noun,masculine,home,1
+wallet,cartera,noun,feminine,money,1
 tall,alto,adjective,n_a,person,1
 short,bajo,adjective,n_a,person,1
 big,grande,adjective,n_a,person,1
 small,pequeño,adjective,n_a,person,1
+long,largo,adjective,n_a,size,1
+short,corto,adjective,n_a,size,1
+size,tamaño,noun,masculine,size,1
 I am tall,soy alto,phrase,n_a,n_a,1
 I am short,soy bajo,phrase,n_a,n_a,1
 eleven,once,number,n_a,n_a,1
@@ -284,7 +320,6 @@ lip,labio,noun,masculine,body,1
 elbow,codo,noun,masculine,body,1
 t-shirt,camiseta,noun,feminine,clothing,1
 boot,bota,noun,feminine,clothing,1
-room,habitación,noun,feminine,place,1
 double,doble,adjective,n_a,size,1
 reserve,reservar,verb,transitive,n_a,1
 house,alojar,verb,transitive,place,1
@@ -292,8 +327,6 @@ hotel,hotel,noun,masculine,building,1
 guest house,pensión,noun,feminine,building,1
 youth,juvenil,noun,masculine,person,1
 hostel,albergue,noun,masculine,building,1
-bath,baño,noun,masculine,home,1
-telephone,teléfono,noun,masculine,home,1
 floor,piso,noun,masculine,place,1
 outside,fuera,adjective,n_a,place,1
 upstairs,arriba,adverb,n_a,home,1
@@ -361,7 +394,6 @@ food shopping,compra de comestibles,phrase,n_a,food,1
 fork,tenedor,noun,masculine,food,1
 fruit pie,tarta de frutas,noun,feminine,food,1
 fruit juice,jugo de fruta,noun,masculine,food,1
-glass,vaso,noun,masculine,drink,1
 green bean,judía verde,noun,feminine,food,1
 hamburger,hamburguesa,noun,feminine,food,1
 hot chocolate,chocolate caliente,noun,masculine,drink,1
@@ -372,7 +404,6 @@ inn,posada,noun,feminine,building,1
 jar,tarro,noun,masculine,food,1
 jam,mermelada,noun,feminine,food,1
 kebab,brocheta,noun,feminine,food,1
-knife,cuchillo,noun,masculine,food,1
 lemonade,limonada,noun,feminine,drink,1
 salad,ensalada,noun,feminine,food,1
 main course,plato principal,noun,masculine,food,1
@@ -391,7 +422,6 @@ packet,paquete,noun,masculine,food,1
 pâté,paté,noun,masculine,food,1
 pizza,pizza,noun,feminine,food,1
 pineapple,piña,noun,feminine,food,1
-plate,plato,noun,masculine,food,1
 plum,ciruela,noun,feminine,food,1
 radish,rábano,noun,masculine,food,1
 refreshment,refresco,noun,masculine,food,1
@@ -405,11 +435,9 @@ slice,rebanada,noun,feminine,food,1
 snack,merienda,noun,feminine,food,1
 café,cafetería,noun,feminine,building,1
 speciality,especialidad,noun,feminine,food,1
-spoon,cuchara,noun,feminine,food,1
 starter,entrada,noun,feminine,food,1
 sweet,dulce,adjective,n_a,food,1
 sweet,caramelo,noun,masculine,food,1
-table,mesa,noun,feminine,food,1
 table cloth,mantel,noun,masculine,food,1
 tart,tarta,noun,feminine,food,1
 tasty,sabroso,adjective,n_a,food,1
@@ -555,7 +583,6 @@ bitter,amargo,adjective,n_a,n_a,1
 sweet,dulce,adjective,n_a,n_a,1
 I am English,soy inglés,phrase,n_a,n_a,1
 hair,pelo,noun,masculine,body,1
-long,largo,adjective,n_a,n_a,1
 wavy,ondulado,adjective,n_a,n_a,1
 brown,castaño,noun,masculine,n_a,1
 fountain,fuente,noun,feminine,n_a,1
@@ -566,10 +593,8 @@ play,jugar,verb,transIntrans,n_a,1
 sport,deporte,noun,masculine,n_a,1
 shower,ducha,noun,feminine,home,1
 towel,toalla,noun,feminine,home,1
-dryer,secadora,noun,feminine,home,1
 comb,peine,noun,masculine,home,1
 brush,cepillo,noun,masculine,home,1
-soap,jabón,noun,masculine,home,1
 above,arriba,adverb,n_a,place,1
 however,sin embargo,adverb,n_a,n_a,1
 therefore,por lo tanto,adverb,n_a,n_a,1
@@ -583,7 +608,6 @@ field,campo,noun,masculine,place,1
 farmer,labrador,noun,masculine,person,1
 rain,lluvia,noun,feminine,weather,1
 rain,llover,verb,intransitive,weather,1
-mirror,espejo,noun,masculine,home,1
 forget,olvidar,verb,transitive,n_a,1
 dirty,sucio,adjective,n_a,n_a,1
 clean,limpio,adjective,n_a,n_a,1
@@ -626,7 +650,6 @@ hide,esconder,verb,transIntrans,n_a,1
 closed on Mondays,cerrado los lunes,phrase,n_a,n_a,1
 cocoa,cacao,noun,masculine,drink,1
 cream,crema,noun,feminine,food,1
-cup,taza,noun,feminine,drink,1
 customer,cliente,noun,masculine,person,1
 inside,dentro,adjective,n_a,place,1
 awaken,despertar,verb,n_a,n_a,1
@@ -638,17 +661,13 @@ happen,suceder,verb,intransitive,n_a,1
 inform,enterar,verb,transitive,n_a,1
 smile,sonrisa,noun,feminine,person,1
 despite,a pesar de,phrase,n_a,n_a,1
-roof,techo,noun,masculine,home,1
 to be afraid,tener miedo,phrase,n_a,n_a,1
 sit here my friend,siéntate aquí mi amigo,phrase,n_a,n_a,1
 bring,traer,verb,transIntrans,n_a,1
 bag,bolsa,noun,feminine,n_a,1
 home,hogar,noun,masculine,place,1
 fly off the handle,perder los estribos,phrase,n_a,n_a,1
-window,ventana,noun,feminine,home,1
-wall,pared,noun,feminine,home,1
 son-in-law,yerno,noun,masculine,person,1
-desk,escritorio,noun,masculine,home,1
 accept,aceptar,verb,transIntrans,n_a,1
 accompany,acompañar,verb,transitive,n_a,1
 add,añadir,verb,transIntrans,n_a,1
@@ -660,7 +679,6 @@ argue,discutir,verb,transIntrans,n_a,1
 arrive,llegar,verb,transIntrans,n_a,1
 ask,preguntar,verb,transIntrans,n_a,1
 avoid,evitar,verb,transIntrans,n_a,1
-bathe,bañarse,verb,transIntrans,n_a,1
 be,estar,verb,transIntrans,temporary,1
 call,llamar,verb,transIntrans,n_a,1
 break,romper,verb,transitive,n_a,1
@@ -825,7 +843,6 @@ same,mismo,adjective,n_a,n_a,1
 satisfied,satisfecho,adjective,n_a,n_a,1
 sensational,sensacional,adjective,n_a,n_a,1
 serious,serio,adjective,n_a,n_a,1
-short,corto,adjective,n_a,n_a,1
 shy,tímido,adjective,n_a,n_a,1
 silent,silencioso,adjective,n_a,n_a,1
 stupid,estúpido,adjective,n_a,n_a,1
@@ -1088,7 +1105,6 @@ swimming costume,traje de baño,noun,masculine,clothing,1
 tights,medias,phrase,n_a,clothing,1
 tracksuit,chandal,noun,masculine,clothing,1
 trainers,zapatillas de deportes,phrase,n_a,clothing,1
-umbrella,paraguas,noun,masculine,clothing,1
 watch,reloj,noun,masculine,clothing,1
 wool,lana,noun,feminine,clothing,1
 adolescent,adolescente,adjective,n_a,person,1
@@ -1102,17 +1118,14 @@ baby,bebé,noun,masculine,person,1
 bald,calvo,adjective,n_a,person,1
 bathroom,cuarto de baño,noun,masculine,home,1
 beard,barba,noun,feminine,body,1
-bedroom,dormitorio,noun,masculine,home,1
 date of birth,fecha de nacimiento,noun,feminine,person,1
 birthday,cumpleaños,noun,masculine,person,1
 birthplace,lugar de nacimiento,noun,masculine,person,1
-flat,piso,noun,masculine,building,1
 born,nacido,adjective,n_a,person,1
 bossy,mandón,adjective,n_a,person,1
 brother-in-law,cuñado,noun,masculine,person,1
 sister-in-law,cuñada,noun,feminine,person,1
 celebrity,celebridad,noun,feminine,person,1
-chair,silla,noun,feminine,home,1
 character,carácter,noun,masculine,person,1
 charming,encantador,adjective,n_a,person,1
 chatty,hablador,adjective,n_a,person,1
@@ -1146,7 +1159,6 @@ in a bad mood,de mal humor,phrase,n_a,person,1
 in love,enamorado,adjective,n_a,person,1
 intelligent,inteligente,adjective,n_a,person,1
 invitation,invitación,noun,feminine,n_a,1
-kitchen,cocina,noun,feminine,home,1
 kiss,beso,noun,masculine,n_a,1
 lazy,perezoso,adjective,n_a,person,1
 life,vida,noun,feminine,n_a,1
@@ -1191,7 +1203,6 @@ separated,separado,adjective,n_a,person,1
 serious,serio,adjective,n_a,n_a,1
 shy,tímido,adjective,n_a,person,1
 single,soltero,adjective,n_a,person,1
-sofa,sofá,noun,masculine,home,1
 son-in-law,yerno,noun,masculine,person,1
 daughter-in-law,nuera,noun,feminine,person,1
 straight,lacio,adjective,n_a,n_a,1
@@ -1397,11 +1408,9 @@ arrival,llegada,noun,feminine,n_a,1
 art gallery,galería de arte,phrase,n_a,building,1
 autonomous community,comunidad autónoma,phrase,n_a,n_a,1
 balcony,balcón,noun,masculine,home,1
-basement,sótano,noun,masculine,home,1
 bath towel,toalla de baño,phrase,n_a,home,1
 bath tub,bañera,noun,feminine,home,1
 beach,playa,noun,feminine,n_a,1
-bed,cama,noun,feminine,home,1
 bedlinen,ropa de cama,phrase,n_a,home,1
 bunk,litera,noun,feminine,home,1
 bicycle,bicicleta,noun,feminine,transport,1
@@ -1498,3 +1507,134 @@ journey,viaje,noun,masculine,n_a,1
 key,llave,noun,feminine,n_a,1
 lake,lago,noun,masculine,place,1
 launderette,lavandería automática,noun,feminine,building,1
+sign,firmar,verb,transIntrans,n_a,1
+skate,patinar,verb,transIntrans,n_a,1
+smoke,fumar,verb,transIntrans,n_a,1
+snow,nevar,verb,transIntrans,n_a,1
+spend,gastar,verb,transIntrans,money,1
+stick,pegar,verb,transIntrans,n_a,1
+prefer,preferir,verb,transitive,n_a,1
+touch,tocar,verb,transIntrans,person,1
+try,intentar,verb,transIntrans,n_a,1
+lift,ascensor,noun,masculine,building,1
+line,línea,noun,feminine,n_a,1
+lorry,camión,noun,masculine,transport,1
+luggage,equipaje,noun,masculine,transport,1
+main road,autovía,noun,feminine,transport,1
+map,mapa,noun,feminine,transport,1
+marketplace,plaza del mercado,noun,feminine,place,1
+the media,el medios de comunicación,phrase,n_a,n_a,1
+metro,metro,noun,masculine,building,1
+meeting place,lugar de reunión,noun,masculine,place,1
+monument,monumento,noun,masculine,place,1
+moped,ciclomotor,noun,masculine,transport,1
+motorway,autopista,noun,feminine,transport,1
+mountain,montaña,noun,feminine,place,1
+nature,naturaleza,noun,feminine,n_a,1
+newspaper,periódico,noun,masculine,n_a,1
+kiosk,quiosco,noun,masculine,place,1
+night club,club nocturno,noun,masculine,building,1
+nightlife,vida nocturna,noun,feminine,hobby,1
+office,oficina,noun,feminine,place,1
+on foot,a pie,phrase,n_a,person,1
+opening times,horas de apertura,phrase,n_a,place,1
+outing,excursión,noun,feminine,hobby,1
+owner,dueño,noun,masculine,person,1
+palace,palacio,noun,masculine,building,1
+passenger,pasajero,noun,masculine,person,1
+passport control,control de pasaportes,noun,masculine,place,1
+pavement,acera,noun,feminine,place,1
+pedestrian,peatón,noun,masculine,person,1
+pedestrian area,zona peatonal,noun,feminine,place,1
+pedestrian crossing,paso de peatones,noun,masculine,place,1
+petrol,gasolina,noun,feminine,transport,1
+petrol station,gasolinera,noun,feminine,place,1
+service station,estación de servicio,noun,feminine,place,1
+picturesque,pintoresco,adjective,n_a,n_a,1
+pillow,almohada,noun,feminine,place,1
+site,sitio,noun,masculine,place,1
+plane,avión,noun,masculine,transport,1
+platform,andén,noun,masculine,place,1
+playground,área de recreo,noun,feminine,place,1
+police,policía,noun,feminine,person,1
+police station,comisaría de policía,noun,feminine,place,1
+policeman,policía,noun,masculine,person,1
+postcard,tarjeta postal,noun,feminine,culture,1
+price list,lista de precios,phrase,n_a,n_a,1
+priority,prioridad,noun,feminine,culture,1
+problem,problema,noun,masculine,n_a,1
+province,provincia,noun,feminine,place,1
+public holiday,día de fiesta,phrase,n_a,culture,1
+public,público,adjective,n_a,n_a,1
+reception,recepción,noun,feminine,place,1
+receptionist,recepcionista,noun,masculine,person,1
+reduction,reducción,noun,feminine,n_a,1
+region,región,noun,feminine,place,1
+area,zona,noun,feminine,place,1
+rent,alquiler,noun,masculine,money,1
+reservation,reserva,noun,feminine,n_a,1
+return ticket,billete de ida y vuelta,noun,masculine,transport,1
+river,río,noun,masculine,size,1
+main road,carretera,noun,feminine,transport,1
+road map,mapa de carreteras,noun,masculine,transport,1
+street,calle,noun,feminine,transport,1
+roundabout,glorieta,noun,feminine,transport,1
+place of interest,lugar de interés,phrase,n_a,place,1
+signal,señal,noun,feminine,n_a,1
+single room,habitación individual,noun,feminine,place,1
+single ticket,billete de ida,noun,masculine,transport,1
+sleeping bag,saco de dormir,noun,masculine,size,1
+sleeping car,coche-cama,noun,masculine,transport,1
+souvenir,recuerdo,noun,masculine,hobby,1
+sports centre,polideportivo,noun,masculine,place,1
+square,plaza,noun,feminine,place,1
+stadium,estadio,noun,masculine,building,1
+suburb,suburbio,noun,masculine,place,1
+residential,residencial,adjective,n_a,place,1
+suitcase,maleta,noun,feminine,transport,1
+summer camp,campamento de verano,noun,feminine,place,1
+supplement,suplemento,noun,masculine,size,1
+taxi,taxi,noun,masculine,transport,1
+telephone card,tarjeta telefónica,noun,feminine,n_a,1
+tennis court,cancha de tenís,noun,feminine,place,1
+theme park,parque temático,noun,masculine,place,1
+ticket,billete,noun,masculine,transport,1
+ticket office,mostrador de billetes,noun,masculine,place,1
+timetable,horario,noun,masculine,size,1
+to be situated,estar situado,phrase,n_a,n_a,1
+camp,acampar,verb,intransitive,hobby,1
+cross,cruzar,verb,transIntrans,place,1
+function,funcionar,verb,transIntrans,n_a,1
+park,aparcar,verb,transIntrans,transport,1
+confirm,confirmar,verb,transIntrans,n_a,1
+toilet paper,papel higiénico,noun,masculine,home,1
+toothbrush,cepillo de dientes,noun,masculine,home,1
+toothpaste,pasta de dientes,noun,feminine,home,1
+tour,gira,noun,feminine,place,1
+walking tour,excursión a pie,noun,feminine,hobby,1
+tourist,turista,noun,masculine,person,1
+tower,torre,noun,feminine,building,1
+tower block,bloque de pisos,noun,masculine,building,1
+town centre,centro ciudad,noun,masculine,place,1
+platform,andén,noun,masculine,transport,1
+traffic,circulación,noun,feminine,transport,1
+traffic jam,atasco,noun,masculine,transport,1
+traffic lights,semáforo,noun,masculine,transport,1
+train,tren,noun,masculine,transport,1
+tram,tranvía,noun,masculine,transport,1
+twin room,habitación de dos camas,noun,feminine,place,1
+underground station,estación de metro,noun,feminine,transport,1
+unleaded,sin plomo,adjective,n_a,transport,1
+view,vista,noun,feminine,place,1
+village,aldea,noun,feminine,place,1
+visit,visita,noun,feminine,place,1
+waiting room,sala de espera,noun,feminine,place,1
+wardrobe,armario,noun,masculine,home,1
+wash basin,lavabo,noun,masculine,home,1
+path,camino,noun,masculine,transport,1
+welcome,bienvenido,adjective,n_a,n_a,1
+well worth seeing,vale la pena ver,phrase,n_a,n_a,1
+west,oeste,noun,masculine,place,1
+shop window,escaparate,noun,masculine,place,1
+forest,bosque,noun,masculine,size,1
+youth hostel,albergue juvenil,noun,masculine,building,1

@@ -56,6 +56,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		WRONG_CT +  " INTEGER NOT NULL, " +
 		LEVELS_WRONG_CT + " INTEGER NOT NULL, PRIMARY KEY (" +
 		USER_ID + "," + WORD_ID + ") );";
+	private static final String CREATE_ATTRIBUTE_INDEX =
+		"CREATE INDEX attributeIndex ON " + TABLE + " (" + ATTRIBUTE + ");";
 	private static final String DROP_TABLE =
 			"DROP TABLE IF EXISTS " + TABLE;
 	private static final String DROP_USER_TABLE =
@@ -93,6 +95,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	public void onCreate(SQLiteDatabase engSpaDB) {
 		Log.i(this.TAG, "EngSpaSQLite.onCreate()");
 		engSpaDB.execSQL(CREATE_TABLE);
+		engSpaDB.execSQL(CREATE_ATTRIBUTE_INDEX);
 		engSpaDB.execSQL(CREATE_USER_TABLE);
 		engSpaDB.execSQL(CREATE_USER_WORD_TABLE);
 		populateDatabase(engSpaDB);
@@ -108,7 +111,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		Log.i(this.TAG,
 				"EngSpaSQLite.onUpgrade(oldVersion=" + oldVersion +
 				", newVersion=" + newVersion + ")");
-		engSpaDB.execSQL(DROP_TABLE);
+		engSpaDB.execSQL(DROP_TABLE); // also removes any indexes
 		engSpaDB.execSQL(DROP_USER_TABLE);
 		engSpaDB.execSQL(DROP_USER_WORD_TABLE);
 		onCreate(engSpaDB);
@@ -144,7 +147,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			Attribute.valueOf((String) values.get(ATTRIBUTE));
 			return true;
 		} catch(Exception ex) {
-			Log.e(TAG, "exception in EngSpaSQLite.validateValues(): " + ex);
+			Log.e(TAG, "exception in EngSpaSQLite2.validateValues(" + values + "): " + ex);
 			return false;
 		}
 	}
@@ -495,6 +498,27 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	public List<EngSpa> findWords(EngSpa engSpa) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override // EngSpaDAO
+	public List<EngSpa> findWordsByTopic(String topic) {
+		Cursor cursor = null;
+		try {
+			cursor = getCursor(PROJECTION_ALL_FIELDS,
+					ATTRIBUTE + "=?", // selection
+					new String[] { topic }, // selectionArgs
+					null, // groupBy
+					null, // having,
+					null); // orderBy
+			List<EngSpa> matchList = new ArrayList<EngSpa>();
+			while (cursor.moveToNext()) {
+				matchList.add(engSpaFromCursor(cursor));
+			}
+			return matchList;
+		} finally {
+			if (cursor != null) cursor.close();
+		}
+		
 	}
 
 	@Override // EngSpaDAO

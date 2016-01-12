@@ -45,7 +45,7 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity
 		implements UserSettingsListener, OnInitListener,
-		NewDBDataDialog.UpdateDBListener {
+		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener {
     public static final String TAG = "SpanishMain";
 	public static final Locale LOCALE_ES = new Locale("es", "ES");
 
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
 	private String updateStatus;
 	private TextToSpeech textToSpeech;
 	private String questionToSpeak;
+	private TopicDialog topicDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,9 @@ public class MainActivity extends AppCompatActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.userSettings) {
-			showUserDialog();
+			//!! showUserDialog();
+			if (this.userDialog == null) this.userDialog = new UserDialog();
+			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
 		} else if (id == R.id.verbTable) {
 			if (this.verbTableFragment == null) {
@@ -106,6 +109,10 @@ public class MainActivity extends AppCompatActivity
 				this.raceFragment = new RaceFragment();
 			}
 			showFragment(raceFragment, NUMBER_GAME);
+			return true;
+		} else if (id == R.id.selectTopic) {
+			if (this.topicDialog == null) this.topicDialog = new TopicDialog();
+			this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -157,11 +164,12 @@ public class MainActivity extends AppCompatActivity
 		textToSpeech.speak(this.questionToSpeak, TextToSpeech.QUEUE_ADD, null);
 	}
 
-
+	/*!!
 	public void showUserDialog() {
 		if (this.userDialog == null) this.userDialog = new UserDialog();
 		this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 	}
+	*/
 	/* Update EngSpa table on database if engspa.txt on server has been updated.
 	 * get dateEngSpaModified from url of engspaversion.txt on server
 	 * get savedVersion from SharedPreferences
@@ -299,5 +307,12 @@ public class MainActivity extends AppCompatActivity
 	
 	public void setStatus(String status) {
 		this.statusTextView.setText(status);
+	}
+	@Override // TopicDialog.TopicListener
+	public void onTopicSelected(String topic) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onTopicSelected(" + topic + ")");
+		this.engSpaFragment.setTopic(topic);
+		setTitle("Spanish - " + topic);
 	}
 }

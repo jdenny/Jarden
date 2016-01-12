@@ -35,6 +35,7 @@ public interface EngSpaDAO {
 	 * @return
 	 */
 	List<EngSpa> findWords(EngSpa engSpa);
+	List<EngSpa> findWordsByTopic(String topic);
 	
 	List<EngSpa> getFailedWordList(int userId);
 	List<UserWord> getUserWordList(int userId);

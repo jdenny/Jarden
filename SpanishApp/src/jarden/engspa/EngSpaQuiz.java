@@ -25,6 +25,7 @@ public class EngSpaQuiz extends Quiz {
 	
 	private String spanish;
 	private String english;
+	private String topic = null;
 	
 	private Random random = new Random();
 	private static final Person[] persons;
@@ -253,7 +254,7 @@ public class EngSpaQuiz extends Quiz {
 		}
 	}
 	private EngSpa getPassedWord() {
-		// TODO: check not recently used
+		// TODO: check not recently used - what to do if it is?
 		return engSpaDAO.getRandomPassedWord(engSpaUser.getUserLevel());
 	}
 	/*
@@ -304,5 +305,9 @@ public class EngSpaQuiz extends Quiz {
 	@Override // Quiz
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
 		return getNextQuestion();
+	}
+	public void setTopic(String topic) {
+		this.topic  = topic;
+		this.currentWordList = engSpaDAO.findWordsByTopic(topic);
 	}
 }
