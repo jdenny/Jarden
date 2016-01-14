@@ -34,11 +34,18 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
 		OnLongClickListener, OnEditorActionListener, QuizEventListener {
+	
+	public interface EngSpaActivity {
+		String getTag();
+		void checkDataFileVersion();
+		void speakQuestion(String question);
+		void setStatus(String string);
+		void showTopicDialog();
+	}
 
 	private static final int PHRASE_ACTIVITY_CODE = 1002; 
 
 	private TextView userNameTextView;
-	private TextView userLevelTextView;
 	private TextView currentCtTextView;
 	private TextView failCtTextView;
 	private TextView questionTextView;
@@ -49,6 +56,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private ViewGroup buttonLayout;
 	private Button repeatButton;
 	private ImageButton micButton;
+	private String levelStr;
 
 	private Random random = new Random();
 	private QuestionStyle currentQuestionStyle;
@@ -58,17 +66,23 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaQuiz engSpaQuiz;
 	private EngSpaUser engSpaUser;
 	private EngSpaDAO engSpaDAO;
+	private EngSpaActivity engSpaActivity;
 
-	
+	@Override // Fragment
+	public void onAttach(Activity activity) {
+		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onAttach()");
+		super.onAttach(activity);
+		this.engSpaActivity = (EngSpaActivity) activity;
+	}
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreate(" +
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
 		if (savedInstanceState == null) { // i.e. app first opened, not restarted
-			MainActivity mainActivity = (MainActivity) getActivity();
-			this.engSpaDAO = new EngSpaSQLite2(mainActivity, MainActivity.TAG);
+			this.levelStr = getResources().getString(R.string.levelStr);
+			this.engSpaDAO = new EngSpaSQLite2(getActivity(), engSpaActivity.getTag());
 			this.engSpaUser = engSpaDAO.getUser();
 			if (this.engSpaUser == null) { // i.e. no user yet on database
 				this.engSpaUser = new EngSpaUser("your name",
@@ -76,13 +90,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				engSpaDAO.insertUser(engSpaUser);
 				this.statusTextView.setText(R.string.tipTip); // tip for new user
 			}
-			mainActivity.checkDataFileVersion();
+			engSpaActivity.checkDataFileVersion();
 		}
 	}
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onCreateView()");
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onCreateView()");
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
 		String pendingAnswer = null;
@@ -91,7 +105,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
-		this.userLevelTextView = (TextView) rootView.findViewById(R.id.userLevelTextView);
+		this.userNameTextView.setText(this.engSpaUser.getUserName());
 		this.currentCtTextView = (TextView) rootView.findViewById(R.id.currentCtTextView);
 		this.failCtTextView = (TextView) rootView.findViewById(R.id.failCtTextView);
 		failCtTextView.setOnLongClickListener(this);
@@ -124,7 +138,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return rootView;
 	}
 	public void loadDB() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.loadDB()");
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.loadDB()");
 		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
 		showUserValues();
@@ -163,6 +177,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		this.answerEditText.getText().clear();
 		askQuestion();
+		showStats();
 	}
 	/*
 	 * part 2 of next question: set up UI from business model
@@ -189,7 +204,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 	}
 	private void speakQuestion() {
-		((MainActivity) getActivity()).speakQuestion(question);
+		this.engSpaActivity.speakQuestion(question);
 	}
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
@@ -197,8 +212,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 
 	@Override // onClickListener
 	public void onClick(View view) {
-		MainActivity mainActivity = (MainActivity) getActivity();
-		mainActivity.setStatus("");
+		engSpaActivity.setStatus("");
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
@@ -249,21 +263,23 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (BuildConfig.DEBUG) {
-			Log.d(MainActivity.TAG,
+			Log.d(engSpaActivity.getTag(),
 					"EngSpaFragment.onActivityResult(resultCode=" + resultCode);			
 		}
 		if (resultCode == Activity.RESULT_OK) {
 			ArrayList<String> matches = data.getStringArrayListExtra(
 					RecognizerIntent.EXTRA_RESULTS);
 			for (String match: matches) {
-				Log.d(MainActivity.TAG, "match=" + match);
+				Log.d(engSpaActivity.getTag(), "match=" + match);
 				if (match.equalsIgnoreCase(this.correctAnswer)) {
 					this.responseIfCorrect = "Right! " + match;
 					setIsCorrect(true);
 					return;
 				}
 			}
-			setIsCorrect(false, matches.get(0) + " is wrong");
+			// show no correct answer yet, but allow user another try
+			// without penalty:
+			this.statusTextView.setText(matches.get(0) + " is wrong");
 		} else {
 			this.statusTextView.setText(
 					"resultCode from speech recognition: " + resultCode);
@@ -276,7 +292,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.statusTextView.setText("");
 		showButtonLayout();
 		engSpaQuiz.setCorrect(isCorrect);
-		showStats();
+		//!! showStats();
 		nextQuestion();
 	}
 	private void showSelfMarkLayout() {
@@ -302,7 +318,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		String suppliedAnswer = getSuppliedAnswer().trim();
 		if (suppliedAnswer.length() == 0) {
 			showSelfMarkLayout();
-			this.answerEditText.setText(this.correctAnswer); // this is null on restart !!
+			try {
+				this.answerEditText.setText(this.correctAnswer); // this is null on restart !!
+			} catch (Exception e) {
+				Log.e(engSpaActivity.getTag(), "answerEditText=" + answerEditText +
+						", correctAnswer=" + correctAnswer);
+			}
 			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
 				if (this.currentQuestionStyle.spaAnswer) {
@@ -364,14 +385,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return builder.toString();
 	}
 	private void showStats() {
-		int owct = engSpaQuiz.getCurrentWordCount();
+		int cwct = engSpaQuiz.getCurrentWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
-		userLevelTextView.setText(Integer.toString(this.engSpaUser.getUserLevel()));
-		this.currentCtTextView.setText(Integer.toString(owct));
+		//!! showUserLevel();
+		this.currentCtTextView.setText(Integer.toString(cwct));
 		this.failCtTextView.setText(Integer.toString(fwct));
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
-			Log.d(MainActivity.TAG, debugState);
+			Log.d(engSpaActivity.getTag(), debugState);
 		}
 	}
 
@@ -386,7 +407,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	@Override // Fragment
 	public void onResume() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onResume()");
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onResume()");
 		super.onResume();
 		if (this.question != null) {
 			askQuestion();
@@ -395,7 +416,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	@Override // Fragment
 	public void onDestroy() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onDestroy()");
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onDestroy()");
 		super.onDestroy();
 	}
 
@@ -421,7 +442,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * 				EngSpaFragment.onNewLevel() [if level changed]
 	 */
 	private void onNewLevel() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG,
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(),
 				"EngSpaFragment.onNewLevel(" +
 				engSpaUser.getUserLevel() + ")");
 		showButtonLayout();
@@ -431,8 +452,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 
 	private void showUserValues() {
 		userNameTextView.setText(engSpaUser.getUserName());
-		userLevelTextView.setText(Integer.toString(engSpaUser.getUserLevel()));
-		showStats();
+		showUserLevel();
 	}
 	public EngSpaUser getEngSpaUser() {
 		return this.engSpaUser;
@@ -477,7 +497,22 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		return true;
 	}
 	public void setTopic(String topic) {
+		if (topic == null) {
+			showUserLevel();
+		} else {
+			getActivity().setTitle("Spanish - " + topic);
+		}
 		this.engSpaQuiz.setTopic(topic);
 		nextQuestion();
+	}
+
+	@Override // QuizEventListener
+	public void onTopicComplete() {
+		showUserLevel();
+		engSpaActivity.showTopicDialog();
+	}
+	private void showUserLevel() {
+		getActivity().setTitle("Spanish - " + this.levelStr + " " +
+				engSpaUser.getUserLevel());
 	}
 }

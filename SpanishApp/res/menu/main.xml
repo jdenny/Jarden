@@ -21,4 +21,9 @@
         android:id="@+id/selectTopic"
         android:title="@string/chooseTopicStr"
         app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/questionsByLevel"
+        android:title="@string/questionsByLevelStr"
+        app:showAsAction="never" />
 </menu>

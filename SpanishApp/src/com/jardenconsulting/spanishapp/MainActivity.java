@@ -13,6 +13,7 @@ import jarden.http.MyHttpClient;
 import jarden.provider.engspa.EngSpaContract.QuestionStyle;
 import jarden.quiz.QuizCache;
 
+import com.jardenconsulting.spanishapp.EngSpaFragment.EngSpaActivity;
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
 import android.speech.tts.TextToSpeech;
@@ -44,7 +45,7 @@ import android.widget.TextView;
 	call engSpaFragment to create engSpaQuiz
  */
 public class MainActivity extends AppCompatActivity
-		implements UserSettingsListener, OnInitListener,
+		implements EngSpaActivity, UserSettingsListener, OnInitListener,
 		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener {
     public static final String TAG = "SpanishMain";
 	public static final Locale LOCALE_ES = new Locale("es", "ES");
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatActivity
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState != null) {
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
+			String title = savedInstanceState.getString("title");
+			if (title != null) setTitle(title);
 		}
 		showEngSpaFragment();
 	}
@@ -94,7 +97,6 @@ public class MainActivity extends AppCompatActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.userSettings) {
-			//!! showUserDialog();
 			if (this.userDialog == null) this.userDialog = new UserDialog();
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
@@ -111,11 +113,24 @@ public class MainActivity extends AppCompatActivity
 			showFragment(raceFragment, NUMBER_GAME);
 			return true;
 		} else if (id == R.id.selectTopic) {
-			if (this.topicDialog == null) this.topicDialog = new TopicDialog();
-			this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
+			showTopicDialog();
+			return true;
+		} else if (id == R.id.questionsByLevel) {
+			this.engSpaFragment.setTopic(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	@Override // EngSpaActivity
+	public void showTopicDialog() {
+		if (this.topicDialog == null) this.topicDialog = new TopicDialog();
+		this.topicDialog.show(getSupportFragmentManager(), "TopicDialog");
+	}
+	@Override // TopicDialog.TopicListener
+	public void onTopicSelected(String topic) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onTopicSelected(" + topic + ")");
+		this.engSpaFragment.setTopic(topic);
 	}
 	@Override // OnInitListener (called when textToSpeech is initialised)
 	public void onInit(int status) {
@@ -123,9 +138,15 @@ public class MainActivity extends AppCompatActivity
 		progressBar.setVisibility(ProgressBar.INVISIBLE);
 		this.statusTextView.setText("");
 		if (status == TextToSpeech.SUCCESS) {
+			if (this.textToSpeech == null) {
+				// this could happen if activity is paused between creating
+				// new textToSpeech and getting the response back here
+				this.statusTextView.setText("textToSpeech closed down");
+				return;
+			}
 			int result = textToSpeech.setLanguage(LOCALE_ES);
 			if (BuildConfig.DEBUG) {
-				Log.d(MainActivity.TAG, "textToSpeech.setLanguage(); result=" + result);
+				Log.d(TAG, "textToSpeech.setLanguage(); result=" + result);
 			}
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -133,14 +154,14 @@ public class MainActivity extends AppCompatActivity
 			}
 			if (this.questionToSpeak != null) speakQuestion2(); 
 		} else {
-			Log.w(MainActivity.TAG, "EngSpaFragment.onInit(" + status + ")");
+			Log.w(TAG, "MainActivity.onInit(" + status + ")");
 			this.statusTextView.setText(
 				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
 		}
 	}
 	@Override // Activity
 	public void onPause() {
-		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "EngSpaFragment.onPause()");
+		if (BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onPause()");
 		super.onPause();
 		if (this.textToSpeech != null) {
 			textToSpeech.stop();
@@ -148,6 +169,12 @@ public class MainActivity extends AppCompatActivity
 			textToSpeech = null;
 		}
 	}
+	@Override // Activity
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		savedInstanceState.putString("title", getTitle().toString());
+		super.onSaveInstanceState(savedInstanceState);
+	}
+	@Override // EngSpaActivity
 	public void speakQuestion(String question) {
 		this.questionToSpeak = question;
 		if (this.textToSpeech == null) {
@@ -164,12 +191,6 @@ public class MainActivity extends AppCompatActivity
 		textToSpeech.speak(this.questionToSpeak, TextToSpeech.QUEUE_ADD, null);
 	}
 
-	/*!!
-	public void showUserDialog() {
-		if (this.userDialog == null) this.userDialog = new UserDialog();
-		this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
-	}
-	*/
 	/* Update EngSpa table on database if engspa.txt on server has been updated.
 	 * get dateEngSpaModified from url of engspaversion.txt on server
 	 * get savedVersion from SharedPreferences
@@ -180,6 +201,7 @@ public class MainActivity extends AppCompatActivity
 	 *		add new data to EngSpa
 	 *		set SharedPreferences to latestVersion
 	 */
+	@Override // EngSpaActivity
 	public void checkDataFileVersion() {
 		engSpaFileModified = false;
 		this.statusTextView.setText("checking for updates...");
@@ -305,14 +327,12 @@ public class MainActivity extends AppCompatActivity
 		return this.engSpaFragment.getEngSpaUser();
 	}
 	
+	@Override // EngSpaActivity
 	public void setStatus(String status) {
 		this.statusTextView.setText(status);
 	}
-	@Override // TopicDialog.TopicListener
-	public void onTopicSelected(String topic) {
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.onTopicSelected(" + topic + ")");
-		this.engSpaFragment.setTopic(topic);
-		setTitle("Spanish - " + topic);
+	@Override // EngSpaActivity
+	public String getTag() {
+		return TAG;
 	}
 }

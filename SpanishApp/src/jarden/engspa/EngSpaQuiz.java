@@ -1,5 +1,6 @@
 package jarden.engspa;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -18,10 +19,11 @@ import jarden.quiz.Quiz;
 public class EngSpaQuiz extends Quiz {
 	static public interface QuizEventListener {
 		void onNewLevel(int userLevel);
+		void onTopicComplete();
 	}
 	public static final int WORDS_PER_LEVEL = 10;
 
-	private static final char[] QUESTION_SEQUENCE = {'C', 'F', 'P', 'F'};
+	private static final char[] QUESTION_SEQUENCE = {'C', 'F', 'P', 'C', 'F'};
 	
 	private String spanish;
 	private String english;
@@ -33,8 +35,23 @@ public class EngSpaQuiz extends Quiz {
 	private static final int tenseSize;
 	private static final int personSize;
 	
-	private List<EngSpa> currentWordList; // difficulty == userLevel
-	// words wrong at this userLevel or carried over from previous levels
+	/*
+	 * if in topic mode (this.topic != null):
+	 * 		currentWordList holds words of this topic
+	 * else (in level mode):
+	 * 		currentWordList holds words where difficulty == userLevel
+	 */
+	private List<EngSpa> currentWordList;
+	/*
+	 * when the user has got to the end of all the topic words
+	 * we revert to levelWordList (then prompt user to choose
+	 * another topic if she wants to)
+	 */
+	private List<EngSpa> levelWordList;
+	/*
+	 * words wrong at this userLevel or carried over from
+	 * previous levels
+	 */
 	private List<EngSpa> failedWordList;
 	
 	private EngSpaUser engSpaUser;
@@ -47,7 +64,8 @@ public class EngSpaQuiz extends Quiz {
 	//! private int outstandingWordCount = -1;
 	private EngSpaDAO engSpaDAO;
 	private char sequenceChar; // P=passed, C=current, F=failed
-	
+
+
 	static {
 		tenses = Tense.values();
 		persons = Person.values();
@@ -100,6 +118,7 @@ public class EngSpaQuiz extends Quiz {
 		this.engSpaUser.setUserLevel(level);
 		this.engSpaDAO.updateUser(engSpaUser);
 		this.currentWordList = this.engSpaDAO.getCurrentWordList(level);
+		Collections.shuffle(currentWordList);
 		this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 	}
 	
@@ -122,7 +141,13 @@ public class EngSpaQuiz extends Quiz {
 	public String getNextQuestion() {
 		if (this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
-			incrementUserLevel();
+			if (topic == null) incrementUserLevel();
+			else {
+				endOfTopic();
+				if (this.quizEventListener != null) {
+					quizEventListener.onTopicComplete();
+				}
+			}
 		}
 		// check each of the question types; there should be at least one available
 		this.currentWord = null;
@@ -155,7 +180,7 @@ public class EngSpaQuiz extends Quiz {
 		WordType wordType = currentWord.getWordType();
 		if (wordType == WordType.verb) {
 			// choose tense based on user level:
-			int verbLevel = this.engSpaUser.getUserLevel() / 3 + 1;
+			int verbLevel = this.engSpaUser.getUserLevel() / 5 + 1;
 			if (verbLevel > tenseSize) verbLevel = tenseSize;
 			Tense tense = tenses[random.nextInt(verbLevel)];
 			Person person = persons[random.nextInt(personSize)];
@@ -253,9 +278,19 @@ public class EngSpaQuiz extends Quiz {
 			engSpaDAO.insertUserWord(userWord);
 		}
 	}
+	/*
+	 * get random word from previous level (i.e. previously got right);
+	 * being random, it may be recently used, so have up to 3 attempts;
+	 * after that, just return 3rd word anyway
+	 */
 	private EngSpa getPassedWord() {
-		// TODO: check not recently used - what to do if it is?
-		return engSpaDAO.getRandomPassedWord(engSpaUser.getUserLevel());
+		EngSpa es = null;
+		int level = engSpaUser.getUserLevel();
+		for (int i = 0; i < 3; i++) {
+			es = engSpaDAO.getRandomPassedWord(level);
+			if (!isRecentWord(es)) return es;
+		}
+		return es;
 	}
 	/*
 	 * Return first word in failed list that is not also in recent list.
@@ -306,8 +341,19 @@ public class EngSpaQuiz extends Quiz {
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
 		return getNextQuestion();
 	}
+	private void endOfTopic() {
+		if (this.topic != null) {
+			this.currentWordList = this.levelWordList;
+			this.topic = null;
+		}
+	}
 	public void setTopic(String topic) {
-		this.topic  = topic;
-		this.currentWordList = engSpaDAO.findWordsByTopic(topic);
+		if (topic == null) endOfTopic();
+		else {
+			this.topic = topic;
+			this.levelWordList = currentWordList; // to go back to later if necessary
+			this.currentWordList = engSpaDAO.findWordsByTopic(topic);
+			Collections.shuffle(this.currentWordList);
+		}
 	}
 }

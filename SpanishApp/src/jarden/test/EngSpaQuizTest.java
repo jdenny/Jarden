@@ -214,5 +214,10 @@ public class EngSpaQuizTest implements QuizEventListener {
 		Log.d(TAG, "onNewLevel(" + userLevel + ")");
 		this.userLevel = userLevel;
 	}
+	@Override
+	public void onTopicComplete() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
