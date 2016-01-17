@@ -41,9 +41,11 @@ public final class EngSpaContract {
 	public static final String WORD_ID = "wordId";
 	public static final String CONSEC_RIGHT_CT = "consecutiveRightCt";
 	public static final String WRONG_CT = "wrongCt";
+	public static final String QUESTION_SEQUENCE = "questionSequence";
 	public static final String LEVELS_WRONG_CT = "levelsWrongCt";
 	public static final String[] PROJECTION_ALL_USER_WORD_FIELDS = {
-		USER_ID, WORD_ID, CONSEC_RIGHT_CT, WRONG_CT, LEVELS_WRONG_CT
+		//!! USER_ID, WORD_ID, CONSEC_RIGHT_CT, WRONG_CT, LEVELS_WRONG_CT
+		USER_ID, WORD_ID, CONSEC_RIGHT_CT, QUESTION_SEQUENCE
 	};
 	
 	public enum VoiceText {

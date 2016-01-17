@@ -8,8 +8,10 @@ import jarden.engspa.EngSpaQuiz.QuizEventListener;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
+import jarden.engspa.UserWord;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -41,6 +43,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		void speakQuestion(String question);
 		void setStatus(String string);
 		void showTopicDialog();
+		int getQuestionSequence();
 	}
 
 	private static final int PHRASE_ACTIVITY_CODE = 1002; 
@@ -67,6 +70,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaUser engSpaUser;
 	private EngSpaDAO engSpaDAO;
 	private EngSpaActivity engSpaActivity;
+	private String tipTip = null;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -88,7 +92,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				this.engSpaUser = new EngSpaUser("your name",
 						1, QuestionStyle.writtenSpaToEng);
 				engSpaDAO.insertUser(engSpaUser);
-				this.statusTextView.setText(R.string.tipTip); // tip for new user
+				this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
 			}
 			engSpaActivity.checkDataFileVersion();
 		}
@@ -135,6 +139,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
 		this.answerEditText.setOnEditorActionListener(this);
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
+		if (tipTip != null) this.statusTextView.setText(tipTip); // tip for new user
+
 		return rootView;
 	}
 	public void loadDB() {
@@ -150,7 +156,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * which are not part of UI
 	 */
 	private void nextQuestion() {
-		String spanish = engSpaQuiz.getNextQuestion();
+		String spanish = engSpaQuiz.getNextQuestion2(
+				engSpaActivity.getQuestionSequence());
 		String english = engSpaQuiz.getEnglish();
 		
 		QuestionStyle questionStyle = this.engSpaUser.getQuestionStyle();
@@ -292,7 +299,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.statusTextView.setText("");
 		showButtonLayout();
 		engSpaQuiz.setCorrect(isCorrect);
-		//!! showStats();
 		nextQuestion();
 	}
 	private void showSelfMarkLayout() {
@@ -387,7 +393,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void showStats() {
 		int cwct = engSpaQuiz.getCurrentWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
-		//!! showUserLevel();
 		this.currentCtTextView.setText(Integer.toString(cwct));
 		this.failCtTextView.setText(Integer.toString(fwct));
 		if (BuildConfig.DEBUG) {
@@ -514,5 +519,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void showUserLevel() {
 		getActivity().setTitle("Spanish - " + this.levelStr + " " +
 				engSpaUser.getUserLevel());
+	}
+	public void listFails() {
+		// for now, as debug aid, list all fails, i.e. for all users
+		// (yes, I know, there is only one at the moment!)
+		List<UserWord> userWordList = this.engSpaDAO.getUserWordList(-1);
+		for (UserWord userWord: userWordList) {
+			Log.d(engSpaActivity.getTag(), "listFails: " + userWord);
+		}
+	}
+	public void deleteFails() {
+		// for now, as debug aid, delete all fails, i.e. for all users
+		int rowCt = this.engSpaDAO.deleteAllUserWords(-1);
+			Log.d(engSpaActivity.getTag(), "userWords deleted: " + rowCt);
 	}
 }

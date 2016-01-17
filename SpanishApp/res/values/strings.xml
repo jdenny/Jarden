@@ -10,6 +10,7 @@
 Press if your mental guess was correct, or you want to skip this
 word; it will not be added to your list of failed words</string>
     <string name="currentStr">Currents:</string>
+    <string name="deleteFailsStr">Delete all fails</string>
     <string name="englishStr">English</string>
     <string name="failStr">Fails:</string>
     <string name="failCtTip">
@@ -25,6 +26,7 @@ you want to skip this word, just pretend you got it right!</string>
 Press if your mental guess was wrong; this word will be added to
 your list of failed words</string>
     <string name="levelStr">Level:</string>
+    <string name="listFailsStr">List all fails</string>
     <string name="micButtonTip">
 Allows you to speak the answer; requires internet connection</string>
     <string name="micStr">Mic</string>

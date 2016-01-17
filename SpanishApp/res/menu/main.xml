@@ -26,4 +26,14 @@
         android:id="@+id/questionsByLevel"
         android:title="@string/questionsByLevelStr"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/listFails"
+        android:title="@string/listFailsStr"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/deleteFails"
+        android:title="@string/deleteFailsStr"
+        app:showAsAction="never" />
 </menu>

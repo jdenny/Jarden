@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "SpanishMain";
 	public static final Locale LOCALE_ES = new Locale("es", "ES");
 
-    private static final String DATA_VERSION = "DataVersion";
+    private static final String DATA_VERSION_KEY = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity
 	private TextToSpeech textToSpeech;
 	private String questionToSpeak;
 	private TopicDialog topicDialog;
+	private SharedPreferences sharedPreferences;
+    private static String questionSequenceKey = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onCreate(savedInstanceState is " +
 				(savedInstanceState==null?"":"not ") + "null)");
+		sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -117,6 +120,12 @@ public class MainActivity extends AppCompatActivity
 			return true;
 		} else if (id == R.id.questionsByLevel) {
 			this.engSpaFragment.setTopic(null);
+			return true;
+		} else if (id == R.id.listFails) {
+			this.engSpaFragment.listFails();
+			return true;
+		} else if (id == R.id.deleteFails) {
+			this.engSpaFragment.deleteFails();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -209,8 +218,7 @@ public class MainActivity extends AppCompatActivity
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-				long savedVersion = prefs.getLong(DATA_VERSION, 0);
+				long savedVersion = sharedPreferences.getLong(DATA_VERSION_KEY, 0);
 				try {
 					String urlStr = QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1";
 					dateEngSpaFileModified = MyHttpClient.getLastModified(urlStr);
@@ -265,9 +273,8 @@ public class MainActivity extends AppCompatActivity
 						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
 						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
 						engSpaDAO.newDictionary(contentValues);
-						SharedPreferences prefs = getSharedPreferences(TAG, Context.MODE_PRIVATE);
-						SharedPreferences.Editor editor = prefs.edit();
-						editor.putLong(DATA_VERSION, dateEngSpaFileModified);
+						SharedPreferences.Editor editor = sharedPreferences.edit();
+						editor.putLong(DATA_VERSION_KEY, dateEngSpaFileModified);
 						editor.commit();
 						updateStatus = "";
 					} catch (IOException e) {
@@ -334,5 +341,20 @@ public class MainActivity extends AppCompatActivity
 	@Override // EngSpaActivity
 	public String getTag() {
 		return TAG;
+	}
+	/**
+	 * questionSequence is a sequence number that is incremented
+	 * each time a question is asked.
+	 */
+	@Override // EngSpaActivity
+	public int getQuestionSequence() {
+		if (questionSequenceKey == null) {
+			questionSequenceKey = "QSN_" + getEngSpaUser().getUserId();
+		}
+		int questionSeq = sharedPreferences.getInt(questionSequenceKey, 0);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(questionSequenceKey, ++questionSeq);
+		editor.commit();
+		return questionSeq;
 	}
 }

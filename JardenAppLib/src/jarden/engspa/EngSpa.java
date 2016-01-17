@@ -9,7 +9,7 @@ import jarden.provider.engspa.EngSpaContract.WordType;
  * @author john.denny@gmail.com
  *
  */
-public class EngSpa {
+public class EngSpa extends UserWord {
 	private int id;
 	private String english;
 	private String spanish;
@@ -17,12 +17,15 @@ public class EngSpa {
 	private Qualifier qualifier;
 	private Attribute attribute;
 	private int level;
+	/*!!
 	private int wrongCt;
 	private int consecutiveRightCt;
 	private int levelsWrongCt;
+	*/
 
 	public EngSpa(int id, String english, String spanish,
 			WordType wordType, Qualifier qualifier, Attribute attribute, int level) {
+		super(-1, id);
 		this.id = id;
 		this.english = english;
 		this.spanish = spanish;
@@ -35,6 +38,7 @@ public class EngSpa {
 	 * Record result of answering this question, right or wrong.
 	 * Return true if word considered passed; see {@link #isPassed()}
 	 */
+	/*!!
 	public boolean addResult(boolean correct) {
 		if (correct) {
 			++consecutiveRightCt;
@@ -44,6 +48,7 @@ public class EngSpa {
 		}
 		return isPassed();
 	}
+	*/
 	/**
 	 * Return true if user has answered correctly enough times,
 	 * else false:<br>
@@ -51,6 +56,7 @@ public class EngSpa {
 	 *	if wrong once, need 2 consecutive rights;<br>
 	 *	if wrong more than once, need 3 consecutive rights.
 	 */
+	/*!!
 	public boolean isPassed() {
 		return ((levelsWrongCt + wrongCt) == 0)?(consecutiveRightCt >= 1):
 			((levelsWrongCt + wrongCt) == 1)?(consecutiveRightCt >= 2):
@@ -59,6 +65,7 @@ public class EngSpa {
 	public boolean isNeedRevision() {
 		return levelsWrongCt > 0;
 	}
+	*/
 	/**
 	 * if answered wrongly, carried to next level;
 	 * if answer wrongly again, carried to next 2 levels (max of two);
@@ -66,6 +73,7 @@ public class EngSpa {
 	 * @param userLevel
 	 * @return
 	 */
+	/*!!
 	public boolean onIncrementingLevel(int userLevel) {
 		if (wrongCt > 0) {
 			if (levelsWrongCt < 2) ++levelsWrongCt;
@@ -76,9 +84,9 @@ public class EngSpa {
 		consecutiveRightCt = 0;
 		return isNeedRevision();
 	}
+	*/
 	public String toString() {
-		return english + ":" + spanish + "(w=" + wrongCt +
-			",r=" + consecutiveRightCt + ",l=" + levelsWrongCt + ")";
+		return english + ":" + spanish + "(" + super.toString() + ")";
 	}
 	/**
 	 * Used to disambiguate words.
@@ -135,6 +143,7 @@ public class EngSpa {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	/*!!
 	public int getWrongCt() {
 		return wrongCt;
 	}
@@ -153,5 +162,6 @@ public class EngSpa {
 	public void setLevelsWrongCt(int levelsWrongCt) {
 		this.levelsWrongCt = levelsWrongCt;
 	}
+	*/
 }
 

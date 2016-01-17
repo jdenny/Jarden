@@ -37,10 +37,28 @@ public interface EngSpaDAO {
 	List<EngSpa> findWords(EngSpa engSpa);
 	List<EngSpa> findWordsByTopic(String topic);
 	
+	/**
+	 * if userId < 1: return all fails
+	 * else: return fails for specified user
+	 * @param userId
+	 * @return
+	 */
 	List<EngSpa> getFailedWordList(int userId);
+	/**
+	 * if userId < 1: return all userWords
+	 * else: return userWords for specified user
+	 * @param userId
+	 * @return
+	 */
 	List<UserWord> getUserWordList(int userId);
 	long insertUserWord(UserWord userWord);
 	int updateUserWord(UserWord userWord);
 	int deleteUserWord(UserWord userWord);
+	/**
+	 * 
+	 * @param userId if < 1 then delete all user words
+	 * @return number of rows deleted
+	 */
+	int deleteAllUserWords(int userId);
 
 }

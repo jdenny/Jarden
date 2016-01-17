@@ -102,7 +102,7 @@ coat,abrigo,noun,masculine,clothing,1
 skirt,falda,noun,feminine,clothing,1
 clothing,ropa,noun,feminine,home,1
 suit,traje,noun,masculine,clothing,1
-glasses,gafas,phrase,n_a,person,1
+the glasses,las gafas,phrase,n_a,person,1
 sweater,suéter,noun,masculine,clothing,1
 sock,calcetín,noun,masculine,clothing,1
 tie,corbata,noun,feminine,clothing,1

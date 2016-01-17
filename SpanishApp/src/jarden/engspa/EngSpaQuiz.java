@@ -23,7 +23,11 @@ public class EngSpaQuiz extends Quiz {
 	}
 	public static final int WORDS_PER_LEVEL = 10;
 
-	private static final char[] QUESTION_SEQUENCE = {'C', 'F', 'P', 'C', 'F'};
+	/*
+	 * controls which list of words to choose the next question from,
+	 * one of current, fails and passed
+	 */
+	private static final char[] CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
 	
 	private String spanish;
 	private String english;
@@ -55,16 +59,18 @@ public class EngSpaQuiz extends Quiz {
 	private List<EngSpa> failedWordList;
 	
 	private EngSpaUser engSpaUser;
-	private int questionSequenceCt;
+	/*
+	 * index to CFP_LIST
+	 */
+	private int cfpListIndex;
 	// cache of last 3 questions asked:
 	private static final int RECENTS_CT = 3;
 	private EngSpa[] recentWords = new EngSpa[RECENTS_CT];
 	private EngSpa currentWord;
 	private QuizEventListener quizEventListener;
-	//! private int outstandingWordCount = -1;
 	private EngSpaDAO engSpaDAO;
-	private char sequenceChar; // P=passed, C=current, F=failed
-
+	private char cfpChar; // C=current, F=failed, P=passed
+	private int questionSequence;
 
 	static {
 		tenses = Tense.values();
@@ -93,6 +99,7 @@ public class EngSpaQuiz extends Quiz {
 		boolean levelIncremented =
 				(newUserLevel <= engSpaDAO.getMaxUserLevel());
 		if (levelIncremented) {
+			/*!!
 			List<UserWord> failedList = engSpaDAO.getUserWordList(engSpaUser.getUserId());
 			for (UserWord userWord: failedList) {
 				if (userWord.onIncrementingLevel(newUserLevel)) {
@@ -101,6 +108,7 @@ public class EngSpaQuiz extends Quiz {
 					engSpaDAO.deleteUserWord(userWord);
 				}
 			}
+			*/
 			setUserLevel(newUserLevel);
 			if (this.quizEventListener != null) {
 				quizEventListener.onNewLevel(newUserLevel);
@@ -128,17 +136,20 @@ public class EngSpaQuiz extends Quiz {
 	fails are per user!)
 	Logic:
 	if no currents and no fails: endOfQuestions
-	in sequence CFPF; if list empty, go to next list in sequence
-	get Current
-		if no currents (can't be recent): move on
-	 	if wrong: move to Failed; if right: move to Passed
+	in sequence defined by CFP_LIST and cfpListIndex:
+	 	if list empty, go to next list in sequence
+	get Current; start from 1st
+		can't be recent word
 	get Failed; start from 1st
-		if no non-recent fails: move on
-	 	if passed() move to Passed
-	get Passed; check not recent; have 2 attempts, then move on
-		if wrong, move to Failed
+		if consecRights < 2
+			can't be recent word
+		else
+			can't be one of previous 10 words
+	get random Passed
+		can't be recent word
 	 */
-	public String getNextQuestion() {
+	public String getNextQuestion2(int questionSequence) {
+		this.questionSequence = questionSequence;
 		if (this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
 			if (topic == null) incrementUserLevel();
@@ -151,12 +162,12 @@ public class EngSpaQuiz extends Quiz {
 		}
 		// check each of the question types; there should be at least one available
 		this.currentWord = null;
-		for (int i = 0; i < QUESTION_SEQUENCE.length && currentWord == null; i++) {
-			this.sequenceChar = QUESTION_SEQUENCE[questionSequenceCt];
-			incrementQuestionSequenceCt();
-			if (sequenceChar == 'C' && this.currentWordList.size() > 0) {
-				this.currentWord = this.currentWordList.remove(0);
-			} else if (sequenceChar == 'P') {
+		for (int i = 0; i < CFP_LIST.length && currentWord == null; i++) {
+			this.cfpChar = CFP_LIST[cfpListIndex];
+			incrementCfpListIndex();
+			if (cfpChar == 'C' && this.currentWordList.size() > 0) {
+				this.currentWord = getCurrentLevelWord();
+			} else if (cfpChar == 'P') {
 				this.currentWord = getPassedWord();
 			} else {
 				this.currentWord = getNextFailedWord();
@@ -166,7 +177,7 @@ public class EngSpaQuiz extends Quiz {
 			// running out of words; this can only happen at level 1
 			// (so no passed words) and when currentWordList is empty
 			// and when words in failed list are also in recentWords
-			this.sequenceChar = 'F';
+			this.cfpChar = 'F';
 			this.currentWord = failedWordList.get(0);
 		}
 
@@ -224,9 +235,9 @@ public class EngSpaQuiz extends Quiz {
 		}
 		return this.spanish;
 	}
-	private void incrementQuestionSequenceCt() {
-		if (++this.questionSequenceCt >= QUESTION_SEQUENCE.length) {
-			this.questionSequenceCt = 0;
+	private void incrementCfpListIndex() {
+		if (++this.cfpListIndex >= CFP_LIST.length) {
+			this.cfpListIndex = 0;
 		}
 	}
 	/**
@@ -248,7 +259,7 @@ public class EngSpaQuiz extends Quiz {
 		return correct;
 	}
 
-	/**
+	/** !!
 	 * if word is from current list
 	 * 		if wrong: add to Failed
 	 * else if word from failed list
@@ -257,13 +268,61 @@ public class EngSpaQuiz extends Quiz {
 	 * 		if wrong, add to failed list
 	 * @param correct
 	 */
+	/**
+	if answerCorrect:
+		if word in failList:
+			increment consecRights in failList & DB
+			if consecRights > 1:
+				remove from failList
+			if consecRights > 2:
+				remove from DB
+		else: (correct, not in failList)
+			do nothing!
+	else: (wrong)
+		if word in failList:
+			consecRights = 0; update DB
+		else: (wrong, not in failList)
+			create fail (consecRight=0)
+			add fail to failList & DB
+
+	 * @param correct
+	 */
 	public void setCorrect(boolean correct) {
-		boolean passed = currentWord.addResult(correct);
+		boolean inFailedList = this.failedWordList.contains(currentWord);
+		int consecRights = currentWord.addResult(correct, questionSequence);
+		if (correct) {
+			if (inFailedList) {
+				if (consecRights > 1) {
+					this.failedWordList.remove(currentWord);
+				}
+				if (consecRights > 2) {
+					engSpaDAO.deleteUserWord(currentWord);
+				} else {
+					engSpaDAO.updateUserWord(currentWord);
+				}
+			}
+		} else { // not correct
+			if (inFailedList) {
+				engSpaDAO.updateUserWord(currentWord);
+			} else {
+				currentWord.setUserId(this.engSpaUser.getUserId());
+				engSpaDAO.insertUserWord(currentWord);
+				this.failedWordList.add(currentWord);
+			}
+		}
+		/*!!
 		if (!correct) addToFailed();
+		else if (passed) {
+			boolean wordInFailedList = this.failedWordList.remove(currentWord);
+			if (wordInFailedList) {
+				this.engSpaDAO.deleteUserWord(userWord);
+			}
+		}
 		if (this.sequenceChar == 'F' && passed) {
 			this.failedWordList.remove(currentWord);
-		}
+		} */
 	}
+	/*!!
 	private void addToFailed() {
 		UserWord userWord = new UserWord(
 				engSpaUser.getUserId(),
@@ -278,26 +337,38 @@ public class EngSpaQuiz extends Quiz {
 			engSpaDAO.insertUserWord(userWord);
 		}
 	}
+	*/
+	private EngSpa getCurrentLevelWord() {
+		EngSpa es;
+		for (int i = 0; i < currentWordList.size(); i++) {
+			es = currentWordList.get(i);
+			if (!isRecentWord(es)) {
+				currentWordList.remove(i);
+				return es;
+			}
+		}
+		return null;
+	}
 	/*
 	 * get random word from previous level (i.e. previously got right);
-	 * being random, it may be recently used, so have up to 3 attempts;
-	 * after that, just return 3rd word anyway
+	 * being random, it may be recently used, so have up to 3 attempts
 	 */
 	private EngSpa getPassedWord() {
-		EngSpa es = null;
+		EngSpa es;
 		int level = engSpaUser.getUserLevel();
+		if (level < 2) return null;
 		for (int i = 0; i < 3; i++) {
 			es = engSpaDAO.getRandomPassedWord(level);
 			if (!isRecentWord(es)) return es;
 		}
-		return es;
+		return null;
 	}
 	/*
-	 * Return first word in failed list that is not also in recent list.
+	 * Return first word in failed list that was not recently used.
 	 */
 	private EngSpa getNextFailedWord() {
 		for (EngSpa es: failedWordList) {
-			if (!isRecentWord(es)) return es;
+			if (!es.isRecentlyUsed(questionSequence)) return es;
 		}
 		return null;
 	}
@@ -321,7 +392,8 @@ public class EngSpaQuiz extends Quiz {
 	}
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
-		StringBuilder sb = new StringBuilder("EngSpaQuiz2 fails: "); 
+		StringBuilder sb = new StringBuilder("EngSpaQuiz.questionSequence=" +
+				questionSequence + "; cfpChar=" + cfpChar + "; fails: "); 
 		for (EngSpa word: this.failedWordList) {
 			sb.append(word + ",");
 		}
@@ -339,7 +411,7 @@ public class EngSpaQuiz extends Quiz {
 	}
 	@Override // Quiz
 	public String getNextQuestion(int level) throws EndOfQuestionsException {
-		return getNextQuestion();
+		return "who wants to know?";
 	}
 	private void endOfTopic() {
 		if (this.topic != null) {
