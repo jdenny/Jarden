@@ -95,7 +95,7 @@ spider,araña,noun,feminine,animal,1
 monkey,mono,noun,masculine,animal,1
 bull,toro,noun,masculine,animal,1
 shirt,camisa,noun,feminine,clothing,1
-trouser,pantálon,noun,masculine,clothing,1
+trouser,pantalón,noun,masculine,clothing,1
 shoe,zapato,noun,masculine,clothing,1
 hat,sombrero,noun,masculine,clothing,1
 coat,abrigo,noun,masculine,clothing,1

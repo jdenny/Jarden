@@ -53,8 +53,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		USER_ID +   " INTEGER NOT NULL, " +
 		WORD_ID +   " INTEGER NOT NULL, " +
 		CONSEC_RIGHT_CT +  " INTEGER NOT NULL, " +
-		//!! WRONG_CT +  " INTEGER NOT NULL, " +
-		//!! LEVELS_WRONG_CT + " INTEGER NOT NULL, PRIMARY KEY (" +
 		QUESTION_SEQUENCE + " INTEGER NOT NULL, PRIMARY KEY (" +
 		USER_ID + "," + WORD_ID + ") );";
 	private static final String CREATE_ATTRIBUTE_INDEX =
@@ -74,10 +72,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			",EngSpa." + ATTRIBUTE +
 			",EngSpa." + LEVEL +
 			",UserWord." + CONSEC_RIGHT_CT +
-			/*!!
-			",UserWord." + WRONG_CT +
-			",UserWord." + LEVELS_WRONG_CT +
-			*/
 			",UserWord." + QUESTION_SEQUENCE +
 			" from EngSpa, UserWord where EngSpa." + BaseColumns._ID +
 			"= UserWord." + WORD_ID +
@@ -393,10 +387,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				EngSpa engSpa = engSpaFromCursor(cursor);
 				engSpa.setUserId(userId);
 				engSpa.setConsecutiveRightCt(cursor.getInt(7));
-				/*!!
-				engSpa.setWrongCt(cursor.getInt(8));
-				engSpa.setLevelsWrongCt(cursor.getInt(9));
-				*/
 				engSpa.setQuestionSequence(cursor.getInt(8));
 				wordList.add(engSpa);
 			}
@@ -435,13 +425,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				int id = cursor.getInt(0);
 				int wordId = cursor.getInt(1);
 				int consecRightCt = cursor.getInt(2);
-				/*!!
-				int wrongCt = cursor.getInt(3);
-				int levelsWrongCt = cursor.getInt(4);
-				*/
 				int questionSequence = cursor.getInt(3);
 				UserWord userWord = new UserWord(
-						//!! userId, wordId, wrongCt, consecRightCt, levelsWrongCt);
 						id, wordId, questionSequence, consecRightCt);
 				userWordList.add(userWord);
 			}
@@ -461,10 +446,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		userWordValues.put(USER_ID, userWord.getUserId());
 		userWordValues.put(WORD_ID, userWord.getWordId());
 		userWordValues.put(CONSEC_RIGHT_CT, userWord.getConsecutiveRightCt());
-		/*!!
-		userWordValues.put(WRONG_CT, userWord.getWrongCt());
-		userWordValues.put(LEVELS_WRONG_CT, userWord.getLevelsWrongCt());
-		*/
 		userWordValues.put(QUESTION_SEQUENCE, userWord.getQuestionSequence());
 		return userWordValues;
 	}

@@ -99,16 +99,6 @@ public class EngSpaQuiz extends Quiz {
 		boolean levelIncremented =
 				(newUserLevel <= engSpaDAO.getMaxUserLevel());
 		if (levelIncremented) {
-			/*!!
-			List<UserWord> failedList = engSpaDAO.getUserWordList(engSpaUser.getUserId());
-			for (UserWord userWord: failedList) {
-				if (userWord.onIncrementingLevel(newUserLevel)) {
-					engSpaDAO.updateUserWord(userWord);
-				} else {
-					engSpaDAO.deleteUserWord(userWord);
-				}
-			}
-			*/
 			setUserLevel(newUserLevel);
 			if (this.quizEventListener != null) {
 				quizEventListener.onNewLevel(newUserLevel);
@@ -259,34 +249,6 @@ public class EngSpaQuiz extends Quiz {
 		return correct;
 	}
 
-	/** !!
-	 * if word is from current list
-	 * 		if wrong: add to Failed
-	 * else if word from failed list
-	 * 		if passed() remove from failed list
-	 * else if word from passed list
-	 * 		if wrong, add to failed list
-	 * @param correct
-	 */
-	/**
-	if answerCorrect:
-		if word in failList:
-			increment consecRights in failList & DB
-			if consecRights > 1:
-				remove from failList
-			if consecRights > 2:
-				remove from DB
-		else: (correct, not in failList)
-			do nothing!
-	else: (wrong)
-		if word in failList:
-			consecRights = 0; update DB
-		else: (wrong, not in failList)
-			create fail (consecRight=0)
-			add fail to failList & DB
-
-	 * @param correct
-	 */
 	public void setCorrect(boolean correct) {
 		boolean inFailedList = this.failedWordList.contains(currentWord);
 		int consecRights = currentWord.addResult(correct, questionSequence);
@@ -310,34 +272,8 @@ public class EngSpaQuiz extends Quiz {
 				this.failedWordList.add(currentWord);
 			}
 		}
-		/*!!
-		if (!correct) addToFailed();
-		else if (passed) {
-			boolean wordInFailedList = this.failedWordList.remove(currentWord);
-			if (wordInFailedList) {
-				this.engSpaDAO.deleteUserWord(userWord);
-			}
-		}
-		if (this.sequenceChar == 'F' && passed) {
-			this.failedWordList.remove(currentWord);
-		} */
 	}
-	/*!!
-	private void addToFailed() {
-		UserWord userWord = new UserWord(
-				engSpaUser.getUserId(),
-				currentWord.getId(),
-				currentWord.getWrongCt(),
-				currentWord.getConsecutiveRightCt(),
-				currentWord.getLevelsWrongCt());
-		if (failedWordList.contains(this.currentWord)) {
-			engSpaDAO.updateUserWord(userWord);
-		} else {
-			this.failedWordList.add(currentWord);
-			engSpaDAO.insertUserWord(userWord);
-		}
-	}
-	*/
+	
 	private EngSpa getCurrentLevelWord() {
 		EngSpa es;
 		for (int i = 0; i < currentWordList.size(); i++) {
@@ -349,6 +285,7 @@ public class EngSpaQuiz extends Quiz {
 		}
 		return null;
 	}
+	
 	/*
 	 * get random word from previous level (i.e. previously got right);
 	 * being random, it may be recently used, so have up to 3 attempts
