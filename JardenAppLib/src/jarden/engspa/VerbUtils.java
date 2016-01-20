@@ -611,10 +611,11 @@ public class VerbUtils {
 	};
 
 	private static String[][] oirPresent = {
-		{"yo", "oigo"}, {"tu", "oyes"}, {"el", "oye"}, {"e", "oyen"}
+		{"yo", "oigo"}, {"tu", "oyes"}, {"el", "oye"}, {"n", "oímos"},
+		{"e", "oyen"}
 	};
 	private static String[][] oirPreterite = {
-		{"el", "oyó"}, {"e", "oyeron"}
+		{"tu", "oíste"}, {"el", "oyó"}, {"n", "oímos"}, {"e", "oyeron"}
 	};
 	private static Object[][] oirTenses = {
 		{"p", oirPresent}, {"r", oirPreterite}, {"f", "oir"},
@@ -993,8 +994,10 @@ public class VerbUtils {
 	};
 	// irregularities when adding 'ing' ( or 'ed'
 	private static String[][] irregEnglishGerundStem = {
-		{"chat", "chatt"}, {"forget", "forgett"}, {"regret", "regrett"},
-		{"swim", "swimm"}, {"win", "winn"}
+		{"chat", "chatt"}, {"die", "dy"}, {"forget", "forgett"},
+		{"hit", "hitt"}, {"put", "putt"}, {"quarrel", "quarrell"},
+		{"run", "runn"},
+		{"regret", "regrett"}, {"swim", "swimm"}, {"win", "winn"}
 	};
 	private static HashMap<String, String> irregEnglishPreteritesMap;
 	private static HashMap<String, String> irregEnglishGerundMap;

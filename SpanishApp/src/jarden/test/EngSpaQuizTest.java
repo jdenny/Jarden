@@ -71,6 +71,8 @@ public class EngSpaQuizTest implements QuizEventListener {
 		//?assertFalse(engSpa.isPassed());
 		assertTrue(esQuiz.checkAnswer(english));
 		assertEquals(0, failedWordList.size());
+		engSpa.addResult(false, 12);
+		System.out.println("level = " + this.userLevel);
 		//? assertTrue(engSpa.isPassed());
 	}
 	private void assertEquals(String expected, String actual) {
@@ -170,6 +172,9 @@ public class EngSpaQuizTest implements QuizEventListener {
 		EngSpa cat = engSpaDAO.getEnglishWord("cat").get(0);
 		EngSpa cake = engSpaDAO.getEnglishWord("cake").get(0);
 		EngSpa onion = engSpaDAO.getEnglishWord("onion").get(0);
+		cat.addResult(true, 10);
+		cake.addResult(true, 10);
+		onion.addResult(true, 10);
 		/*?
 		assertFalse(cat.isNeedRevision());
 		assertFalse(cake.isNeedRevision());

@@ -131,7 +131,6 @@ want,querer,verb,transIntrans,n_a,1
 play,tocar,verb,transIntrans,music,1
 hear,oír,verb,transIntrans,n_a,1
 make,hacer,verb,transitive,n_a,1
-can,poder,verb,transIntrans,n_a,1
 colour,color,noun,masculine,colour,1
 black,negro,adjective,n_a,colour,1
 white,blanco,adjective,n_a,colour,1
@@ -192,7 +191,6 @@ Saturday,sábado,noun,masculine,time,1
 year,año,noun,masculine,time,1
 Friday,viernes,noun,masculine,time,1
 January,enero,noun,masculine,time,1
-time,vez,noun,feminine,time,1
 February,febrero,noun,masculine,time,1
 last night,anoche,adverb,n_a,time,1
 December,diciembre,noun,masculine,time,1

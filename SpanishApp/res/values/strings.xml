@@ -19,7 +19,7 @@ previous levels</string>
     <string name="goButtonTip">
 Type in your answer and press Go; or think of your answer (ideally
 speak it aloud) and press Go, then mark your own answer. Note: if
-you want to skip this word, just pretend you got it right!</string>
+you want to skip a word, just pretend you got it right!</string>
     <string name="goStr">Go</string>
     <string name="homeStr">Home</string>
     <string name="incorrectButtonTip">
@@ -46,7 +46,9 @@ Allows you to speak the answer; requires internet connection</string>
     <string name="sentenceStr">Sentence</string>
     <string name="showStr">Show</string>
     <string name="spanishStr">Spanish</string>
-    <string name="tipTip">Long press on a button to show tip</string>
+    <string name="tipTip">
+¡Bienvenida! Welcome! Open \'User Settings\' to change your name, or the question style.
+Long press on a button to show tip</string>
     <string name="updateStr">Update</string>
 	<string name="userLevelStr">User level</string>
 	<string name="userNameStr">User name</string>

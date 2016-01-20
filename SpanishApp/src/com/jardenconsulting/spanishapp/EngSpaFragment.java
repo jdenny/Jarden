@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 public class EngSpaFragment extends Fragment implements OnClickListener,
 		OnLongClickListener, OnEditorActionListener, QuizEventListener {
@@ -327,8 +328,10 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			try {
 				this.answerEditText.setText(this.correctAnswer); // this is null on restart !!
 			} catch (Exception e) {
-				Log.e(engSpaActivity.getTag(), "answerEditText=" + answerEditText +
-						", correctAnswer=" + correctAnswer);
+				String errMess = "answerEditText=" + answerEditText +
+						", correctAnswer=" + correctAnswer;
+				Toast.makeText(getActivity(), errMess, Toast.LENGTH_LONG).show();
+				Log.e(engSpaActivity.getTag(), errMess);
 			}
 			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
