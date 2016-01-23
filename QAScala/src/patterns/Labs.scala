@@ -8,20 +8,18 @@ object Labs extends App {
 }
 
 object basic {
-	// simple way:
-	def get2(index: Int, list: List[String]) = list(index)
-	// using recursion:
-	def get(index: Int, list: List[String]) = {
-		def _get(list: List[String], count: Int): String = {
-			if (index == count) list.head
-			else _get(list.tail, count+1)
-		}
-		_get(list, 0)
+	def nth(list: List[Any], n: Int): Any = n match {
+		case 0 => list.head
+		case _ => nth(list.tail, n-1)
 	}
 	
-	val list = List("zero", "uno", "dos", "tres", "cuatro")
-	println("get(2, list)=" + get(2, list))
-	assert("dos" == get(2, list))
+	val nums = List(2, 3, 5, 8, 12)
+	assert(nth(nums, 2) == 5)
+	assert(nth(nums, 4) == 12)
+	val names = List("Thomas", "Richard", "Harold")
+	assert(nth(names, 0) == "Thomas")
+	assert(nth(names, 2) == "Harold")
+
 	println("end of basic")
 }
 
@@ -81,8 +79,13 @@ object expressionEvaluation {
 		case Add(e1, e2) => eval(e1) + eval(e2)
 	}
 
+	// 10 + (-(3 + 4))
 	val expr = Add(Const(10), Neg(Add(Const(3), Const(4))))
-	println(eval(expr))
+	val res = eval(expr)
+	println(res)
+	assert(res == 3)
+	
+	println("end of expressionEvaluation")
 }
 
 object simpleList2 {
@@ -102,12 +105,16 @@ object simpleList2 {
 		}
 		def drop(n: Int) = {
 			@scala.annotation.tailrec
-			def _drop[A](list: JList[A], n: Int): JList[A] = list match {
+			def _drop(list: JList[A], m: Int): JList[A] = list match {
 				case JNil => JNil
-				case jCons: JCons[A] if n > 0 => _drop(jCons.tail, n - 1)
-				case _ => list
+				case jCons: JCons[A] => m match {
+					case 0 => jCons
+					case 1 => jCons.tail
+					case _ => _drop(jCons.tail, m - 1)
+				}
 			}
-			_drop(this, n)
+			if (n <= 0) this
+			else _drop(this, n)
 		}
 		/**
 		 * from this: (1, ^2), (2, ^3), (3, Nil)
@@ -145,12 +152,11 @@ object simpleList2 {
 					_reverse(new JCons[A](jCons.head, JNil), jCons.tail)
 			}
 		}
-		def map[B](f: (A) => B): JList[B] = {
+		def map[B](f: A => B): JList[B] = {
 			def _map(jList: JList[A]): JList[B] = jList match {
 				case JNil => JNil
-				case jCons: JCons[A] => {
-					new JCons[B](f(jCons.head), _map(jCons.tail))
-				}
+				case jCons: JCons[A] =>
+					new JCons(f(jCons.head), _map(jCons.tail))
 			}
 			_map(this)
 		}

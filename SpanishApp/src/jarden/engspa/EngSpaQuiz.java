@@ -271,6 +271,15 @@ public class EngSpaQuiz extends Quiz {
 				engSpaDAO.insertUserWord(currentWord);
 				this.failedWordList.add(currentWord);
 			}
+			/* TODO:
+			// new version; see https://www.sqlite.org/lang_insert.html
+			if (!inFailedList) {
+				currentWord.setUserId(this.engSpaUser.getUserId());
+				this.failedWordList.add(currentWord);
+			}
+			// could be on DB.userWord but not in failed list
+			engSpaDAO.replace(currentWord);
+			 */
 		}
 	}
 	
