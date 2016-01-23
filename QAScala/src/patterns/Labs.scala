@@ -163,18 +163,13 @@ object simpleList2 {
 		/**
 		 * Return new list where each element matches predicate p.
 		 */
-		def filter(p: (A) => Boolean): JList[A] = {
-			@scala.annotation.tailrec
-			def getNextMatch(jList: JList[A]): JList[A] = jList match {
-				case jCons: JCons[A] if p(jCons.head) => jCons
-				case JNil => JNil
-				case jCons: JCons[A] => getNextMatch(jCons.tail)
-			}
-			def _filter(jList: JList[A]): JList[A] =
-					getNextMatch(jList) match {
+		def filter(pred: (A) => Boolean): JList[A] = {
+			def _filter(jList: JList[A]): JList[A] = jList match {
 				case JNil => JNil
 				case jCons: JCons[A] =>
-					new JCons[A](jCons.head, _filter(jCons.tail))
+					// new JCons[A](jCons.head, _filter(jCons.tail))
+					if (pred(jCons.head)) new JCons[A](jCons.head, _filter(jCons.tail))
+					else _filter(jCons.tail)
 			}
 			_filter(this)
 		}
@@ -224,8 +219,8 @@ object simpleList2 {
 	assert(JList("I1", "I2", "I3", "I4") == jlist4.map("I" + _))
 	println("jlist4 evens=" + jlist4.filter(x => x % 2 == 0))
 	assert(JList(2, 4) == jlist4.filter(x => x % 2 == 0))
-	val evens = (x: Int) => x % 2 == 0
-	assert(JList(2, 4, 6) == JList(1, 2, 3, 4, 5, 6).filter(evens))
+	val isEven = (n: Int) => n % 2 == 0
+	assert(JList(2, 4, 6) == JList(1, 2, 3, 4, 5, 6).filter(isEven))
 	println("jlist4.take(3)=" + jlist4.take(3))
 	assert(JList(1, 2, 3) == jlist4.take(3))
 	println("jlist4.take(-1)=" + jlist4.take(-1))
