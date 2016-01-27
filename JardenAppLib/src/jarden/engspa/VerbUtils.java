@@ -261,7 +261,7 @@ public class VerbUtils {
 		    } else if (tense == Tense.future) {
 		        engVerbModified = "will " + englishVerb;
 		    } else if (tense == Tense.preterite) {
-		        if (englishVerb == "be") {
+		        if (englishVerb.equals("be")) {
 		        	if (thirdPersonSingular || person == Person.yo) engVerbModified = "was";
 		        	else engVerbModified = "were";
 		        } else {

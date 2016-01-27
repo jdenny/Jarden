@@ -582,7 +582,6 @@ sweet,dulce,adjective,n_a,n_a,1
 I am English,soy inglés,phrase,n_a,n_a,1
 hair,pelo,noun,masculine,body,1
 wavy,ondulado,adjective,n_a,n_a,1
-brown,castaño,noun,masculine,n_a,1
 fountain,fuente,noun,feminine,n_a,1
 port,puerto,noun,masculine,place,1
 quite,bastante,adverb,n_a,n_a,1
@@ -784,7 +783,6 @@ brave,valiente,adjective,n_a,n_a,1
 brief,breve,adjective,n_a,n_a,1
 brilliant,brillante,adjective,n_a,n_a,1
 broken,roto,adjective,n_a,n_a,1
-chestnut brown,castaño,adjective,n_a,n_a,1
 close,cercano,adjective,n_a,n_a,1
 closed,cerrado,adjective,n_a,n_a,1
 comfortable,cómodo,adjective,n_a,n_a,1
