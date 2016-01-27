@@ -1025,7 +1025,7 @@ public class VerbUtils {
 
 		irregEnglishGerundMap = new HashMap<String, String>();
 		for (String[] irregGerund: irregEnglishGerundStem) {
-			irregEnglishPreteritesMap.put(irregGerund[0], irregGerund[1]);
+			irregEnglishGerundMap.put(irregGerund[0], irregGerund[1]);
 		}
 	}
 	

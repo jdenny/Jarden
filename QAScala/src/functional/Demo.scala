@@ -1,6 +1,20 @@
 package functional
 
 object Demo extends App {
+	// functional contrasted with imperative style
+	val names = List("John", "Sam", "Joe", "Angela")
+	
+	val jsb = new scala.collection.mutable.ListBuffer[String]
+	for (i <- 0 until names.size) {
+		val name = names(i)
+		if (name.startsWith("J")) jsb += name
+	}
+	val js = jsb.toList
+	println("names beginning with J: " + js)
+	
+	val js2 = names.filter(name => name.startsWith("J"))
+	println("names beginning with J: " + js2)
+
 	// val as simple value:
 	val num: Int = 5
 	val num2 = 6
@@ -51,6 +65,4 @@ object Demo extends App {
 	assert (arith3(multiply, 6, 4) == 24)
 	
 	println("all done!")
-	
-
 }

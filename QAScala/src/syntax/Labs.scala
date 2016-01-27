@@ -9,6 +9,14 @@ object Labs extends App {
 			year % 400 == 0
 		} yield year
 	}
+	def isLeapYear(year: Int) = {
+		year % 4 == 0 &&
+			(year % 100 != 0 ||
+			year % 400 == 0)
+	}
+	def findLeaps2(y1: Int, y2: Int) =
+		Range(y1, y2).filter(year => isLeapYear(year))
+		
 	def xPn(x: Double, n: Int): Double = {
 		if (n == 0) 1
 		else if (n == 1) x
@@ -23,6 +31,10 @@ object Labs extends App {
 			1 / xPn(x, -n)
 		}
 	}
+	assert(isLeapYear(1896))
+	assert(!isLeapYear(1900))
+	assert(isLeapYear(2000))
+	println(findLeaps2(1960, 2010))
 	val leaps = findLeaps(1960, 2010)
 	println(leaps)
 	println("2^-2=" + xPn(2, -2))

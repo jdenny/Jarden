@@ -18,11 +18,3 @@ class SimpleTest extends FlatSpec {
 		assert(false, "didn't throw exception!")
 	}
 }
-
-object John {
-	def j {
-		val fs = new FlatSpec
-			
-	}
-}
-

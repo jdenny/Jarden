@@ -1,3 +1,6 @@
+Sample solutions:
+ https://www.dropbox.com/sh/gblwxvuuc083jxr/AACgpYM2h5w8TWFN8uCAEcera?dl=0
+
 Exercise 2 - Syntax Basics
 	3 - using recursion
 		algorithm should be x^n = x.x^n-1 if n is odd and +ve
@@ -25,9 +28,19 @@ Collections and Generics, slide 27
 
 Collections and Generics, slide 29
 	"but the fact that we put [+A] means that the type we're
-	adding my not be an A." Both methods would work as they
+	adding may not be an A." Both methods would work as they
 	do without the '+'; see my comment for slide 27, plus
 	description on slide 30.
+
+Collections and Functional Programming, slide 8
+	"foldRight is... so values are processed from left to right"
+	should be
+	"foldRight is... so values are processed from right to left"
+	
+Collections and Functional Programming, slide 10
+	as an alternative to the groupBy & map statement, we could
+	use the recently discussed mapValues:
+		str.groupBy(c => c).mapValues(cs => cs.size)	
 
 Collections and Functional Programming, slide 19
 	for(i <= 0 to 2; ...)
@@ -40,6 +53,10 @@ Pattern Matching, slide 4
 Pattern Matching, slide 6
 	"case constructors create objects and compare them with
 	the argument" - what does this mean?
+
+Pattern Matching, slide 9
+	"case h :: rest => sum(rest, s+h)" should be
+	"case h :: rest => sumx(rest, s+h)"
 	
 Exercise 7 - Pattern Matching
 	not sure how to use pattern matching to solve this problem	
