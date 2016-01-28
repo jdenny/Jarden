@@ -55,6 +55,12 @@ public interface EngSpaDAO {
 	int updateUserWord(UserWord userWord);
 	int deleteUserWord(UserWord userWord);
 	/**
+	 * Replace or Insert
+	 * @param userWord
+	 * @return
+	 */
+	long replaceUserWord(UserWord userWord);
+	/**
 	 * 
 	 * @param userId if < 1 then delete all user words
 	 * @return number of rows deleted

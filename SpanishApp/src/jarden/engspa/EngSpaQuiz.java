@@ -263,23 +263,16 @@ public class EngSpaQuiz extends Quiz {
 					engSpaDAO.updateUserWord(currentWord);
 				}
 			}
+			currentWordList.remove(currentWord); // remove if in list
 		} else { // not correct
-			if (inFailedList) {
-				engSpaDAO.updateUserWord(currentWord);
-			} else {
-				currentWord.setUserId(this.engSpaUser.getUserId());
-				engSpaDAO.insertUserWord(currentWord);
-				this.failedWordList.add(currentWord);
-			}
-			/* TODO:
-			// new version; see https://www.sqlite.org/lang_insert.html
 			if (!inFailedList) {
 				currentWord.setUserId(this.engSpaUser.getUserId());
 				this.failedWordList.add(currentWord);
 			}
 			// could be on DB.userWord but not in failed list
-			engSpaDAO.replace(currentWord);
-			 */
+			// because it's removed from failed list after 2 right
+			// but not from DB.userWord until 3 right
+			engSpaDAO.replaceUserWord(currentWord);
 		}
 	}
 	
@@ -288,7 +281,6 @@ public class EngSpaQuiz extends Quiz {
 		for (int i = 0; i < currentWordList.size(); i++) {
 			es = currentWordList.get(i);
 			if (!isRecentWord(es)) {
-				currentWordList.remove(i);
 				return es;
 			}
 		}
@@ -339,8 +331,13 @@ public class EngSpaQuiz extends Quiz {
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
 		StringBuilder sb = new StringBuilder("EngSpaQuiz.questionSequence=" +
-				questionSequence + "; cfpChar=" + cfpChar + "; fails: "); 
+				questionSequence + "; cfpChar=" + cfpChar + "; failedWordList: "); 
 		for (EngSpa word: this.failedWordList) {
+			sb.append(word + ",");
+		}
+		List<EngSpa> dbFailedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
+		sb.append("\ndbFailedWordList: ");
+		for (EngSpa word: dbFailedWordList) {
 			sb.append(word + ",");
 		}
 		return sb.toString();

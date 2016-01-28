@@ -84,18 +84,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
-		//!! if (savedInstanceState == null) { // i.e. app first opened, not restarted
-			this.levelStr = getResources().getString(R.string.levelStr);
-			this.engSpaDAO = new EngSpaSQLite2(getActivity(), engSpaActivity.getTag());
-			this.engSpaUser = engSpaDAO.getUser();
-			if (this.engSpaUser == null) { // i.e. no user yet on database
-				this.engSpaUser = new EngSpaUser("your name",
-						1, QuestionStyle.writtenSpaToEng);
-				engSpaDAO.insertUser(engSpaUser);
-				this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
-			}
+		if (savedInstanceState == null) { // i.e. app first opened, not restarted
 			engSpaActivity.checkDataFileVersion();
-		//!! }
+		}
+		this.levelStr = getResources().getString(R.string.levelStr);
+		this.engSpaDAO = new EngSpaSQLite2(getActivity(), engSpaActivity.getTag());
+		this.engSpaUser = engSpaDAO.getUser();
+		if (this.engSpaUser == null) { // i.e. no user yet on database
+			this.engSpaUser = new EngSpaUser("your name",
+					1, QuestionStyle.writtenSpaToEng);
+			engSpaDAO.insertUser(engSpaUser);
+			this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
+		}
 	}
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,7 +109,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
-		this.userNameTextView.setText(this.engSpaUser.getUserName()); // !! null pointer exception
+		this.userNameTextView.setText(this.engSpaUser.getUserName());
 		this.currentCtTextView = (TextView) rootView.findViewById(R.id.currentCtTextView);
 		this.failCtTextView = (TextView) rootView.findViewById(R.id.failCtTextView);
 		failCtTextView.setOnLongClickListener(this);

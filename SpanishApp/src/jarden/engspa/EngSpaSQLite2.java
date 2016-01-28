@@ -277,6 +277,10 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		return getWritableDatabase().update(USER_WORD_TABLE,
 			values, selection, selectionArgs);
 	}
+	public long replaceUserWord(ContentValues values) {
+		return getWritableDatabase().replace(
+				USER_WORD_TABLE, null, values);
+	}
 	public int deleteUserWord(String selection, String[] selectionArgs) {
 		return getWritableDatabase().delete(USER_WORD_TABLE,
 			selection, selectionArgs);
@@ -456,6 +460,11 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 				USER_WORD_SELECTION,
 				getSelectionArgs(userWord));
 	}
+	@Override // EngSpaDAO
+	public long replaceUserWord(UserWord userWord) {
+		return replaceUserWord(getContentValues(userWord));
+	}
+
 	private static String[] getSelectionArgs(UserWord userWord) {
 		return new String[]{
 				Integer.toString(userWord.getUserId()),
@@ -585,5 +594,4 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			return user;
 		} else return null;
 	}
-
 }
