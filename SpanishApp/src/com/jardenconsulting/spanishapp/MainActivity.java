@@ -22,14 +22,21 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,10 +53,12 @@ import android.widget.TextView;
  */
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener, OnInitListener,
-		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener {
+		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener,
+		ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
 	public static final Locale LOCALE_ES = new Locale("es", "ES");
 
+    private static String questionSequenceKey = null;
     private static final String DATA_VERSION_KEY = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
@@ -67,7 +76,10 @@ public class MainActivity extends AppCompatActivity
 	private String questionToSpeak;
 	private TopicDialog topicDialog;
 	private SharedPreferences sharedPreferences;
-    private static String questionSequenceKey = null;
+	private DrawerLayout drawerLayout;
+	private ListView drawerList;
+	private String[] drawerTitles;
+	private ActionBarDrawerToggle actionBarDrawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +91,22 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
+		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		this.drawerList = (ListView) findViewById(R.id.left_drawer);
+		Resources resources = getResources();
+		this.drawerTitles = resources.getStringArray(R.array.navigationDrawerTitles);
+		TypedArray iconArray = resources.obtainTypedArray(R.array.navigationDrawIcons);
+		int drawerTitlesLength = drawerTitles.length;
+		DrawerItem[] drawerItems = new DrawerItem[drawerTitlesLength];
+		for (int i = 0; i < drawerTitlesLength; i++) {
+			drawerItems[i] = new DrawerItem(iconArray.getDrawable(i), drawerTitles[i]);
+		}
+		iconArray.recycle();
+		DrawerItemAdapter adapter = new DrawerItemAdapter(this,
+				R.layout.drawer_list_item, drawerItems);
+		this.drawerList.setAdapter(adapter);
+        this.drawerList.setOnItemClickListener(this);
+
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		if (savedInstanceState != null) {
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
@@ -87,13 +115,40 @@ public class MainActivity extends AppCompatActivity
 		}
 		showEngSpaFragment();
 	}
-	@Override
+	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	@Override
+	@Override // OnItemClickListener
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (position == 0) {
+			if (this.verbTableFragment == null) {
+				this.verbTableFragment = new VerbTableFragment();
+			}
+			showFragment(verbTableFragment, VERB_TABLE);
+		} else if (position == 1) {
+			if (this.raceFragment == null) {
+				this.raceFragment = new RaceFragment();
+			}
+			showFragment(raceFragment, NUMBER_GAME);
+		} else if (position == 2) {
+			showTopicDialog();
+		} else if (position == 3) {
+			this.engSpaFragment.setTopic(null);
+		} else if (position == 4) {
+			// TODO: help
+			this.statusTextView.setText("help is on its way!");
+		} else {
+			this.statusTextView.setText("unrecognised item position: " + position);
+		}
+		this.drawerList.setItemChecked(position, true);
+		this.drawerList.setSelection(position);
+		getSupportActionBar().setTitle(this.drawerTitles[position]);
+		this.drawerLayout.closeDrawer(this.drawerList);
+    }	
+	@Override // Activity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -102,30 +157,6 @@ public class MainActivity extends AppCompatActivity
 		if (id == R.id.userSettings) {
 			if (this.userDialog == null) this.userDialog = new UserDialog();
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
-			return true;
-		} else if (id == R.id.verbTable) {
-			if (this.verbTableFragment == null) {
-				this.verbTableFragment = new VerbTableFragment();
-			}
-			showFragment(verbTableFragment, VERB_TABLE);
-			return true;
-		} else if (id == R.id.numberGame) {
-			if (this.raceFragment == null) {
-				this.raceFragment = new RaceFragment();
-			}
-			showFragment(raceFragment, NUMBER_GAME);
-			return true;
-		} else if (id == R.id.selectTopic) {
-			showTopicDialog();
-			return true;
-		} else if (id == R.id.questionsByLevel) {
-			this.engSpaFragment.setTopic(null);
-			return true;
-		} else if (id == R.id.listFails) {
-			this.engSpaFragment.listFails();
-			return true;
-		} else if (id == R.id.deleteFails) {
-			this.engSpaFragment.deleteFails();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

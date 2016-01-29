@@ -8,10 +8,8 @@ import jarden.engspa.EngSpaQuiz.QuizEventListener;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
-import jarden.engspa.UserWord;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import android.annotation.SuppressLint;
@@ -515,6 +513,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		getActivity().setTitle("Spanish - " + this.levelStr + " " +
 				engSpaUser.getUserLevel());
 	}
+	/*!!
 	public void listFails() {
 		// for now, as debug aid, list all fails, i.e. for all users
 		// (yes, I know, there is only one at the moment!)
@@ -528,4 +527,5 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		int rowCt = this.engSpaDAO.deleteAllUserWords(-1);
 			Log.d(engSpaActivity.getTag(), "userWords deleted: " + rowCt);
 	}
+	*/
 }

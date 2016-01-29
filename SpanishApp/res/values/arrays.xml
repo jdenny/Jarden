@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="navigationDrawerTitles">
+	    <item>Verb Table</item>
+	    <item>Numbers Game</item>
+	    <item>Select Topic</item>
+	    <item>Questions By Level</item>
+	    <item>Help</item>
+	</string-array>
+
+	<array name="navigationDrawIcons">
+        <item>@drawable/red_man</item>
+        <item>@drawable/green_man</item>
+        <item>@drawable/blue_man</item>
+        <item>@drawable/red_man</item>
+        <item>@drawable/green_man</item>
+    </array>
+    
+</resources>

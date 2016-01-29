@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Spanish GCSE Revision</string>
 	<string name="cancelStr">Cancel</string>
     <string name="chooseTopicStr">Choose Topic</string>
@@ -62,5 +61,4 @@ Long press on a button to show tip</string>
 		
     <string name="appDescription">English - Spanish Tutor</string>
 		
-    <string name="selfMarkStr">Self Mark</string>
 </resources>
