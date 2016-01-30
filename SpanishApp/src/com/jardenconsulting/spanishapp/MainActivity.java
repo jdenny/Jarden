@@ -10,7 +10,7 @@ import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.quiz.QuizCache;
 
 import com.jardenconsulting.spanishapp.EngSpaFragment.EngSpaActivity;
@@ -54,7 +54,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener, OnInitListener,
 		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener,
-		ListView.OnItemClickListener {
+		QAStyleDialog.QAStyleListener, ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
 	public static final Locale LOCALE_ES = new Locale("es", "ES");
 
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 	private TextToSpeech textToSpeech;
 	private String questionToSpeak;
 	private TopicDialog topicDialog;
+	private QAStyleDialog qaStyleDialog;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
@@ -124,20 +125,23 @@ public class MainActivity extends AppCompatActivity
 	@Override // OnItemClickListener
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (position == 0) {
+			if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
+			this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
+		} else if (position == 1) {
 			if (this.verbTableFragment == null) {
 				this.verbTableFragment = new VerbTableFragment();
 			}
 			showFragment(verbTableFragment, VERB_TABLE);
-		} else if (position == 1) {
+		} else if (position == 2) {
 			if (this.raceFragment == null) {
 				this.raceFragment = new RaceFragment();
 			}
 			showFragment(raceFragment, NUMBER_GAME);
-		} else if (position == 2) {
-			showTopicDialog();
 		} else if (position == 3) {
-			this.engSpaFragment.setTopic(null);
+			showTopicDialog();
 		} else if (position == 4) {
+			this.engSpaFragment.setTopic(null);
+		} else if (position == 5) {
 			// TODO: help
 			this.statusTextView.setText("help is on its way!");
 		} else {
@@ -171,6 +175,12 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onTopicSelected(" + topic + ")");
 		this.engSpaFragment.setTopic(topic);
+	}
+	@Override // QAStyleDialog.QAStyleListener
+	public void onQAStyleSelected(QAStyle qaStyle) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onQAStyleSelected(" + qaStyle + ")");
+		this.engSpaFragment.setUserQAStyle(qaStyle);
 	}
 	@Override // OnInitListener (called when textToSpeech is initialised)
 	public void onInit(int status) {
@@ -346,10 +356,10 @@ public class MainActivity extends AppCompatActivity
 	 * user chose to update it.
 	 */
 	@Override // UserSettingsListener
-	public void onUpdateUser(String userName, int userLevel, QuestionStyle questionStyle) {
+	public void onUpdateUser(String userName, int userLevel, QAStyle qaStyle) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onUpdateUser(" + userName + ", " + userLevel +
-				", " + questionStyle + ")");
+				", " + qaStyle + ")");
 		if (userName.length() < 1) {
 			this.statusTextView.setText("no user name supplied");
 			return;
@@ -358,7 +368,7 @@ public class MainActivity extends AppCompatActivity
 			this.statusTextView.setText("invalid userLevel supplied");
 			return;
 		}
-		this.engSpaFragment.setUser(userName, userLevel, questionStyle);
+		this.engSpaFragment.setUser(userName, userLevel, qaStyle);
 	}
 	@Override // UserSettingsListener
 	public EngSpaUser getEngSpaUser() {

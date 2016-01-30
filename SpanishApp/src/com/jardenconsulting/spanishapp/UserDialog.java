@@ -2,7 +2,7 @@ package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaUser;
 import jarden.provider.engspa.EngSpaContract;
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,12 +20,12 @@ import android.widget.Spinner;
 public class UserDialog extends DialogFragment implements DialogInterface.OnClickListener {
 	private EditText userNameEditText;
 	private EditText userLevelEditText;
-	private Spinner questionStyleSpinner;
+	private Spinner qaStyleSpinner;
 	private UserSettingsListener userSettingsListener;
 	private AlertDialog alertDialog;
 	
 	public interface UserSettingsListener {
-		void onUpdateUser(String userName, int userLevel, QuestionStyle questionStyle);
+		void onUpdateUser(String userName, int userLevel, QAStyle qaStyle);
 		EngSpaUser getEngSpaUser();
 	}
 	
@@ -45,12 +45,12 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		View view = inflater.inflate(R.layout.dialog_user, null);
 		this.userNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
 		this.userLevelEditText = (EditText) view.findViewById(R.id.userLevelEditText);
-		this.questionStyleSpinner = (Spinner) view.findViewById(R.id.questionStyleSpinner);
-		ArrayAdapter<String> questionStyleAdapter = new ArrayAdapter<String>(activity,
+		this.qaStyleSpinner = (Spinner) view.findViewById(R.id.qaStyleSpinner);
+		ArrayAdapter<String> qaStyleAdapter = new ArrayAdapter<String>(activity,
 				android.R.layout.simple_spinner_item,
-				EngSpaContract.questionStyleNames);
-		questionStyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		questionStyleSpinner.setAdapter(questionStyleAdapter);
+				EngSpaContract.qaStyleNames);
+		qaStyleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		qaStyleSpinner.setAdapter(qaStyleAdapter);
 		EngSpaUser user = userSettingsListener.getEngSpaUser();
 		if (user == null) {
 			// if it's a new engSpaUser, the user must supply the values
@@ -58,8 +58,8 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		} else {
 			userNameEditText.setText(user.getUserName());
 			userLevelEditText.setText(String.valueOf(user.getUserLevel()));
-			int position = user.getQuestionStyle().ordinal();
-			this.questionStyleSpinner.setSelection(position);
+			int position = user.getQAStyle().ordinal();
+			this.qaStyleSpinner.setSelection(position);
 			// cancel button provided only for updates
 			builder.setNegativeButton(R.string.cancelStr, this);
 		}
@@ -86,9 +86,9 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 			} catch (NumberFormatException nfe) {
 				userLevel = -1;
 			}
-			String questionStyleStr = (String) questionStyleSpinner.getSelectedItem();
-			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
-			this.userSettingsListener.onUpdateUser(userName, userLevel, questionStyle);
+			String qaStyleStr = (String) qaStyleSpinner.getSelectedItem();
+			QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
+			this.userSettingsListener.onUpdateUser(userName, userLevel, qaStyle);
 		}
 	}
 }

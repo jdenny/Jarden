@@ -1,6 +1,6 @@
 package com.jardenconsulting.spanishapp;
 
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.VoiceText;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
@@ -60,7 +60,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private String levelStr;
 
 	private Random random = new Random();
-	private QuestionStyle currentQuestionStyle;
+	private QAStyle currentQAStyle;
 	private String question;
 	private String correctAnswer;
 	private String responseIfCorrect;
@@ -90,7 +90,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.engSpaUser = engSpaDAO.getUser();
 		if (this.engSpaUser == null) { // i.e. no user yet on database
 			this.engSpaUser = new EngSpaUser("your name",
-					1, QuestionStyle.writtenSpaToEng);
+					1, QAStyle.writtenSpaToEng);
 			engSpaDAO.insertUser(engSpaUser);
 			this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
 		}
@@ -158,24 +158,24 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				engSpaActivity.getQuestionSequence());
 		String english = engSpaQuiz.getEnglish();
 		
-		QuestionStyle questionStyle = this.engSpaUser.getQuestionStyle();
-		if (questionStyle == QuestionStyle.random) {
+		QAStyle qaStyle = this.engSpaUser.getQAStyle();
+		if (qaStyle == QAStyle.random) {
 			// minus 1 as last one is Random itself:
-			int randInt = random.nextInt(QuestionStyle.values().length - 1);
-			this.currentQuestionStyle = QuestionStyle.values()[randInt];
+			int randInt = random.nextInt(QAStyle.values().length - 1);
+			this.currentQAStyle = QAStyle.values()[randInt];
 		} else {
-			this.currentQuestionStyle = questionStyle;
+			this.currentQAStyle = qaStyle;
 		}
 		this.responseIfCorrect = "Right!";
-		if (this.currentQuestionStyle.spaQuestion) {
+		if (this.currentQAStyle.spaQuestion) {
 			this.question = spanish;
-			if (this.currentQuestionStyle.spaAnswer) {
+			if (this.currentQAStyle.spaAnswer) {
 				this.responseIfCorrect = "Right! " + english;
 			}
 		} else {
 			this.question = english;
 		}
-		if (this.currentQuestionStyle.spaAnswer) {
+		if (this.currentQAStyle.spaAnswer) {
 			this.correctAnswer = spanish;
 		} else {
 			this.correctAnswer = english;
@@ -189,20 +189,20 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 */
 	private void askQuestion() {
 		this.attributeTextView.setText("hint: " + engSpaQuiz.getCurrentWord().getHint());
-		if (this.currentQuestionStyle.voiceText == VoiceText.text) {
+		if (this.currentQAStyle.voiceText == VoiceText.text) {
 			this.repeatButton.setVisibility(View.INVISIBLE);
 		} else {
 			this.repeatButton.setVisibility(View.VISIBLE);
 			speakQuestion();
 		}
-		if (this.currentQuestionStyle.spaAnswer) {
+		if (this.currentQAStyle.spaAnswer) {
 			this.answerEditText.setHint(R.string.spanishStr);
 			this.micButton.setVisibility(View.VISIBLE);
 		} else {
 			this.answerEditText.setHint(R.string.englishStr);
 			this.micButton.setVisibility(View.INVISIBLE);
 		}
-		if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
+		if (this.currentQAStyle.voiceText == VoiceText.voice) {
 			this.questionTextView.setText("");
 		} else {
 			this.questionTextView.setText(this.question);
@@ -323,9 +323,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (suppliedAnswer.length() == 0) {
 			showSelfMarkLayout();
 			this.answerEditText.setText(this.correctAnswer);
-			if (this.currentQuestionStyle.voiceText == VoiceText.voice) {
+			if (this.currentQAStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
-				if (this.currentQuestionStyle.spaAnswer) {
+				if (this.currentQAStyle.spaAnswer) {
 					this.statusTextView.setText(engSpaQuiz.getEnglish());
 				} else {
 					this.statusTextView.setText(engSpaQuiz.getSpanish());
@@ -337,7 +337,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
 			String normalisedSuppliedAnswer = normalise(suppliedAnswer);
 			boolean isCorrect = normalisedCorrectAnswer.equals(normalisedSuppliedAnswer);
-			if (!isCorrect && this.currentQuestionStyle.spaAnswer) {
+			if (!isCorrect && this.currentQAStyle.spaAnswer) {
 				int res = EngSpaUtils.compareSpaWords(normalisedCorrectAnswer,
 						normalisedSuppliedAnswer);
 				if (res >= 0) {
@@ -360,7 +360,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			nextQuestion();
 		} else {
 			this.statusTextView.setText(responseIfWrong);
-			if (this.currentQuestionStyle.voiceText != VoiceText.text) {
+			if (this.currentQAStyle.voiceText != VoiceText.text) {
 				speakQuestion();
 			}
 		}
@@ -463,7 +463,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * @return false if no changes made
 	 */
 	public boolean setUser(String userName, int userLevel,
-			QuestionStyle questionStyle) {
+			QAStyle qaStyle) {
 		int maxUserLevel = engSpaDAO.getMaxUserLevel();
 		if (userLevel > maxUserLevel) {
 			userLevel = maxUserLevel;
@@ -472,27 +472,31 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (engSpaUser != null &&
 				engSpaUser.getUserName().equals(userName) &&
 				engSpaUser.getUserLevel() == userLevel &&
-				engSpaUser.getQuestionStyle() == questionStyle) {
+				engSpaUser.getQAStyle() == qaStyle) {
 			this.statusTextView.setText("no changes made to user");
 			return false;
 		}
 		if (engSpaUser == null) { // i.e. new user
 			this.engSpaUser = new EngSpaUser(userName,
-					userLevel, questionStyle);
+					userLevel, qaStyle);
 			engSpaDAO.insertUser(engSpaUser);
 			this.statusTextView.setText(R.string.tipTip); // tip for new user
 		} else { // update to existing user
 			boolean newLevel = engSpaUser.getUserLevel() != userLevel;
 			engSpaUser.setUserName(userName);
 			engSpaUser.setUserLevel(userLevel);
-			engSpaUser.setQuestionStyle(questionStyle);
+			engSpaUser.setQAStyle(qaStyle);
 			engSpaDAO.updateUser(engSpaUser);
 			if (newLevel) {
 				getEngSpaQuiz().setUserLevel(userLevel);
 			}
 		}
-		onNewLevel(); // strictly only necessary if change level or questionType
+		onNewLevel(); // strictly only necessary if change level or qaStyle
 		return true;
+	}
+	public void setUserQAStyle(QAStyle qaStyle) {
+		engSpaUser.setQAStyle(qaStyle);
+		onNewLevel();
 	}
 	public void setTopic(String topic) {
 		if (topic == null) {

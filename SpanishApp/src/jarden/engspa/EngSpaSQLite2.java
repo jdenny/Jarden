@@ -14,7 +14,7 @@ import static jarden.engspa.EngSpaQuiz.WORDS_PER_LEVEL;
 import static jarden.provider.engspa.EngSpaContract.*;
 import jarden.provider.engspa.EngSpaContract.Attribute;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.WordType;
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,7 +47,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		BaseColumns._ID +          " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
 		NAME +      " TEXT NOT NULL, " +
 		LEVEL +     " INTEGER, " +
-		QUESTION_STYLE + " TEXT NOT NULL);";
+		QA_STYLE + " TEXT NOT NULL);";
 	private static final String CREATE_USER_WORD_TABLE =
 		"CREATE TABLE " + USER_WORD_TABLE + " (" +
 		USER_ID +   " INTEGER NOT NULL, " +
@@ -242,7 +242,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		//?? contentValues.put(BaseColumns._ID, engSpaUser.getUserId());
 		contentValues.put(NAME, engSpaUser.getUserName());
 		contentValues.put(LEVEL, engSpaUser.getUserLevel());
-		contentValues.put(QUESTION_STYLE, engSpaUser.getQuestionStyle().toString());
+		contentValues.put(QA_STYLE, engSpaUser.getQAStyle().toString());
 		return contentValues;
 	}
 	@Override // EngSpaDAO
@@ -586,10 +586,10 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			int userId = cursor.getInt(0);
 			String userName = cursor.getString(1);
 			int userLevel = cursor.getInt(2);
-			String questionStyleStr = cursor.getString(3);
-			QuestionStyle questionStyle = QuestionStyle.valueOf(questionStyleStr);
+			String qaStyleStr = cursor.getString(3);
+			QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
 			EngSpaUser user = new EngSpaUser(userId, userName, userLevel,
-					questionStyle);
+					qaStyle);
 			Log.i(TAG, "EngSpaSQLite2.getUser() retrieved from database: " + user);
 			return user;
 		} else return null;

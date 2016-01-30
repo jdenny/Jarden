@@ -11,7 +11,7 @@ import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaQuiz.QuizEventListener;
 import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 
 public class EngSpaQuizTest implements QuizEventListener {
 	private static final String TAG = "EngSpaQuizTest";
@@ -41,7 +41,7 @@ public class EngSpaQuizTest implements QuizEventListener {
 
 	public EngSpaQuizTest(Context context) {
 		EngSpaDAO engSpaDAO = new EngSpaSQLite2(context, TAG);
-		esQuiz = new EngSpaQuiz(engSpaDAO, new EngSpaUser("Test", 1, QuestionStyle.writtenEngToSpa));
+		esQuiz = new EngSpaQuiz(engSpaDAO, new EngSpaUser("Test", 1, QAStyle.writtenEngToSpa));
 		this.userLevel = esQuiz.getUserLevel();
 		esQuiz.setQuizEventListener(this);
 	}

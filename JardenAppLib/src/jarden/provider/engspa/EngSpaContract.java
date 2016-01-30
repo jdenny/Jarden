@@ -26,9 +26,10 @@ public final class EngSpaContract {
 			AUTHORITY  + "/" + USER_TABLE;
 	public static final Uri CONTENT_URI_USER = Uri.parse(CONTENT_URI_USER_STR);
 	public static final String NAME = "name";
-	public static final String QUESTION_STYLE = "questionStyle";
+	// TODO: change literal to "qaStyle" next time we update database
+	public static final String QA_STYLE = "questionStyle";
 	public static final String[] PROJECTION_ALL_USER_FIELDS = {
-		BaseColumns._ID, NAME, LEVEL, QUESTION_STYLE
+		BaseColumns._ID, NAME, LEVEL, QA_STYLE
 	};
 
 	// constants for UserWord table:
@@ -48,7 +49,7 @@ public final class EngSpaContract {
 	public enum VoiceText {
 		voice, text, both;
 	}
-	public enum QuestionStyle {
+	public enum QAStyle {
 		spokenSpaToSpa(VoiceText.voice, true, true),
 		spokenSpaToEng(VoiceText.voice, true, false),
 		spokenWrittenSpaToEng(VoiceText.both, true, false),
@@ -60,7 +61,7 @@ public final class EngSpaContract {
 		public final boolean spaQuestion;
 		public final boolean spaAnswer;
 
-		private QuestionStyle(VoiceText voiceText, boolean spaQ, boolean spaA) {
+		private QAStyle(VoiceText voiceText, boolean spaQ, boolean spaA) {
 			this.voiceText = voiceText;
 			this.spaQuestion = spaQ;
 			this.spaAnswer = spaA;
@@ -87,7 +88,7 @@ public final class EngSpaContract {
 	public static final String[] wordTypeNames;
 	public static final String[] qualifierNames;
 	public static final String[] attributeNames;
-	public static final String[] questionStyleNames;
+	public static final String[] qaStyleNames;
 	
 	static {
 		WordType[] wordTypes = WordType.values();
@@ -105,10 +106,10 @@ public final class EngSpaContract {
 		for (int i = 0; i < attributes.length; i++) {
 			attributeNames[i] = attributes[i].name();
 		}
-		QuestionStyle[] questionStyles = QuestionStyle.values();
-		questionStyleNames = new String[questionStyles.length];
-		for (int i = 0; i < questionStyles.length; i++) {
-			questionStyleNames[i] = questionStyles[i].name();
+		QAStyle[] qaStyles = QAStyle.values();
+		qaStyleNames = new String[qaStyles.length];
+		for (int i = 0; i < qaStyles.length; i++) {
+			qaStyleNames[i] = qaStyles[i].name();
 		}
 
 	}

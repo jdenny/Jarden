@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="navigationDrawerTitles">
+	    <item>Question Style</item>
 	    <item>Verb Table</item>
 	    <item>Numbers Game</item>
 	    <item>Select Topic</item>
@@ -14,6 +15,7 @@
         <item>@drawable/blue_man</item>
         <item>@drawable/red_man</item>
         <item>@drawable/green_man</item>
+        <item>@drawable/blue_man</item>
     </array>
     
 </resources>

@@ -1,28 +1,28 @@
 package jarden.engspa;
 
-import jarden.provider.engspa.EngSpaContract.QuestionStyle;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 
 public class EngSpaUser {
 	private int userId;
 	private String userName;
 	private int userLevel;
-	private QuestionStyle questionStyle;
+	private QAStyle qaStyle;
 	public EngSpaUser(int userId, String userName, int userLevel,
-			QuestionStyle questionStyle) {
-		this(userName, userLevel, questionStyle);
+			QAStyle qaStyle) {
+		this(userName, userLevel, qaStyle);
 		this.userId = userId;
 	}
 	public EngSpaUser(String userName, int userLevel,
-			QuestionStyle questionStyle) {
+			QAStyle qaStyle) {
 		this.userName = userName;
 		this.userLevel = userLevel;
-		this.questionStyle = questionStyle;
+		this.qaStyle = qaStyle;
 	}
 	@Override
 	public String toString() {
 		return "EngSpaUser [userId=" + userId + ", userName=" + userName
 				+ ", userLevel=" + userLevel +
-				", questionStyle=" + questionStyle + "]";
+				", qaStyle=" + qaStyle + "]";
 	}
 	public int getUserId() {
 		return userId;
@@ -33,11 +33,11 @@ public class EngSpaUser {
 	public int getUserLevel() {
 		return userLevel;
 	}
-	public QuestionStyle getQuestionStyle() {
-		return questionStyle;
+	public QAStyle getQAStyle() {
+		return qaStyle;
 	}
-	public void setQuestionStyle(QuestionStyle questionStyle) {
-		this.questionStyle = questionStyle;
+	public void setQAStyle(QAStyle qaStyle) {
+		this.qaStyle = qaStyle;
 	}
 	public void setId(int userId) {
 		this.userId = userId;

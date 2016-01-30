@@ -24,7 +24,7 @@
         android:inputType="number" />
     
     <Spinner
-        android:id="@+id/questionStyleSpinner"
+        android:id="@+id/qaStyleSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
