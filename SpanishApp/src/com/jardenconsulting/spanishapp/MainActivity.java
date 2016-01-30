@@ -23,8 +23,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -64,9 +64,12 @@ public class MainActivity extends AppCompatActivity
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaFragment engSpaFragment;
-	private DialogFragment userDialog;
 	private VerbTableFragment verbTableFragment;
 	private RaceFragment raceFragment;
+	private DialogFragment userDialog;
+	private HelpDialog helpDialog;
+	private TopicDialog topicDialog;
+	private QAStyleDialog qaStyleDialog;
 	private ProgressBar progressBar;
 	private TextView statusTextView;
 	private boolean engSpaFileModified;
@@ -74,13 +77,10 @@ public class MainActivity extends AppCompatActivity
 	private String updateStatus;
 	private TextToSpeech textToSpeech;
 	private String questionToSpeak;
-	private TopicDialog topicDialog;
-	private QAStyleDialog qaStyleDialog;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private String[] drawerTitles;
-	private ActionBarDrawerToggle actionBarDrawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity
 				(savedInstanceState==null?"":"not ") + "null)");
 		sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
+		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolBar);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -132,24 +134,25 @@ public class MainActivity extends AppCompatActivity
 				this.verbTableFragment = new VerbTableFragment();
 			}
 			showFragment(verbTableFragment, VERB_TABLE);
+			// setTitle(drawerTitles[position]);
 		} else if (position == 2) {
 			if (this.raceFragment == null) {
 				this.raceFragment = new RaceFragment();
 			}
 			showFragment(raceFragment, NUMBER_GAME);
+			// setTitle(drawerTitles[position]);
 		} else if (position == 3) {
 			showTopicDialog();
 		} else if (position == 4) {
 			this.engSpaFragment.setTopic(null);
 		} else if (position == 5) {
-			// TODO: help
-			this.statusTextView.setText("help is on its way!");
+			if (this.helpDialog == null) this.helpDialog = new HelpDialog();
+			this.helpDialog.show(getSupportFragmentManager(), "HelpDialog");
 		} else {
 			this.statusTextView.setText("unrecognised item position: " + position);
 		}
 		this.drawerList.setItemChecked(position, true);
 		this.drawerList.setSelection(position);
-		getSupportActionBar().setTitle(this.drawerTitles[position]);
 		this.drawerLayout.closeDrawer(this.drawerList);
     }	
 	@Override // Activity

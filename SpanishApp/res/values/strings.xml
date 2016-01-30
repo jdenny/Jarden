@@ -20,6 +20,13 @@ Type in your answer and press Go; or think of your answer (ideally
 speak it aloud) and press Go, then mark your own answer. Note: if
 you want to skip a word, just pretend you got it right!</string>
     <string name="goStr">Go</string>
+    <string name="helpHomePage">
+<b>¡Bienvenida! Welcome!</b>\n
+Open \'User Settings\' to change your name.
+Long press on a button to show tip.
+If you have any suggestions for improving this app, please send an email
+to amazemequiz@gmail.com
+    </string>
     <string name="homeStr">Home</string>
     <string name="incorrectButtonTip">
 Press if your mental guess was wrong; this word will be added to
@@ -44,6 +51,7 @@ Allows you to speak the answer; requires internet connection</string>
     <string name="resetButtonTip">Restart the game, 2 levels below current</string>
     <string name="sentenceStr">Sentence</string>
     <string name="showStr">Show</string>
+    <string name="spanishHelpStr">Spanish Help</string>
     <string name="spanishStr">Spanish</string>
     <string name="tipTip">
 ¡Bienvenida! Welcome! Open \'User Settings\' to change your name, or the question style.

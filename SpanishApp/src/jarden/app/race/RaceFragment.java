@@ -58,7 +58,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private BluetoothService bluetoothService;
 	*/
 	private GameData gameData = new GameData();
-	private boolean clientMode = false;
+	//!! private boolean clientMode = false;
 	private int laneCols;
 	private int raceLevel = 1;
 	private Quiz quiz = new NumbersQuiz();
@@ -108,9 +108,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 		laneBView = (LaneView) view.findViewById(R.id.laneB);
 		laneBView.setBitmapId(R.drawable.red_man);
 		levelBView = (TextView) view.findViewById(R.id.laneBLevel);
+		/*!!
 		LaneView laneCView = (LaneView) view.findViewById(R.id.laneC);
 		laneCView.setBitmapId(R.drawable.green_man);
 		TextView levelCView = (TextView) view.findViewById(R.id.laneCLevel);
+		*/
 		this.statusTextView = (TextView) view.findViewById(R.id.statusTextView);
 		this.answerEditText = (EditText) view.findViewById(R.id.answerEditText);
 		this.answerEditText.setOnEditorActionListener(this);
@@ -120,17 +122,18 @@ public class RaceFragment extends Fragment implements TimerListener,
 		button = (Button) view.findViewById(R.id.repeatButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
+		/*!!
 		if (clientMode) {
 			myLaneView = laneCView;
 			opponentLaneView = laneAView;
 			myLevelView = levelCView;
-			//!! opponentLevelView = levelAView;
-		} else {
+			opponentLevelView = levelAView;
+		} else { */
 			myLaneView = laneAView;
-			opponentLaneView = laneCView;
 			myLevelView = levelAView;
+			//!! opponentLaneView = laneCView;
 			//!! opponentLevelView = levelCView;
-		}
+		//!! }
 		/*!!
 		getActivity().getWindow().setSoftInputMode(
 			WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

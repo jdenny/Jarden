@@ -55,7 +55,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextView statusTextView;
 	private ViewGroup selfMarkLayout;
 	private ViewGroup buttonLayout;
-	private Button repeatButton;
+	private ImageButton speakerButton;
 	private ImageButton micButton;
 	private String levelStr;
 
@@ -69,6 +69,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaDAO engSpaDAO;
 	private EngSpaActivity engSpaActivity;
 	private String tipTip = null;
+	private String spanish;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -119,8 +120,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		Button button = (Button) rootView.findViewById(R.id.goButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
-		this.repeatButton = (Button) rootView.findViewById(R.id.repeatButton);
-		this.repeatButton.setOnClickListener(this);
+		this.speakerButton = (ImageButton) rootView.findViewById(R.id.speakerButton);
+		this.speakerButton.setOnClickListener(this);
 		this.micButton = (ImageButton) rootView.findViewById(R.id.micButton);
 		this.micButton.setOnClickListener(this);
 		this.micButton.setOnLongClickListener(this);
@@ -154,7 +155,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * which are not part of UI
 	 */
 	private void nextQuestion() {
-		String spanish = engSpaQuiz.getNextQuestion2(
+		this.spanish = engSpaQuiz.getNextQuestion2(
 				engSpaActivity.getQuestionSequence());
 		String english = engSpaQuiz.getEnglish();
 		
@@ -188,11 +189,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 * part 2 of next question: set up UI from business model
 	 */
 	private void askQuestion() {
-		this.attributeTextView.setText("hint: " + engSpaQuiz.getCurrentWord().getHint());
+		String hint = engSpaQuiz.getCurrentWord().getHint();
+		if (hint.length() > 0) hint = "hint: " + hint;
+		this.attributeTextView.setText(hint);
 		if (this.currentQAStyle.voiceText == VoiceText.text) {
-			this.repeatButton.setVisibility(View.INVISIBLE);
+			//!! this.speakerButton.setVisibility(View.INVISIBLE);
 		} else {
-			this.repeatButton.setVisibility(View.VISIBLE);
+			//!! this.speakerButton.setVisibility(View.VISIBLE);
 			speakQuestion();
 		}
 		if (this.currentQAStyle.spaAnswer) {
@@ -209,7 +212,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 	}
 	private void speakQuestion() {
-		this.engSpaActivity.speakQuestion(question);
+		this.engSpaActivity.speakQuestion(this.question);
 	}
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
@@ -221,8 +224,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		int id = view.getId();
 		if (id == R.id.goButton) {
 			goPressed();
-		} else if (id == R.id.repeatButton) {
-			askQuestion();
+		} else if (id == R.id.speakerButton) {
+			this.engSpaActivity.speakQuestion(this.spanish);
+			//!! askQuestion();
 		} else if (id == R.id.micButton) {
 			startSpeechActivity();
 		} else if (id == R.id.correctButton) {

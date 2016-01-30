@@ -10,7 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-    
+
+		<android.support.v7.widget.Toolbar
+		    android:id="@+id/toolbar"
+		    android:layout_width="match_parent"
+		    android:layout_height="?attr/actionBarSize"
+		    android:background="?attr/colorPrimary"
+		    android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+	    
 	    <FrameLayout
 	        android:id="@+id/fragmentLayout"
 	        android:layout_width="match_parent"
@@ -27,36 +34,12 @@
 	        android:visibility="invisible"
 	        android:layout_height="wrap_content" />
 	
-	    <LinearLayout
-	        android:layout_width="match_parent"
+	    <ImageView
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:orientation="horizontal" >
-	        
-		    <ImageView
-		        android:id="@+id/imageViewLondon"
-		        android:layout_width="0dp"
-		        android:layout_weight="1"
-		        android:layout_height="wrap_content"
-		        android:contentDescription="@string/englishStr"
-		        android:src="@drawable/london4" />
-	
-		    <TextView
-		        android:id="@+id/appDescriptionTextView"
-		        android:layout_width="0dp"
-		        android:layout_weight="1"
-		        android:layout_height="wrap_content"
-		        android:text="@string/appDescription" />
-		
-		    <ImageView
-		        android:id="@+id/imageViewFlamenco"
-		        android:layout_width="0dp"
-		        android:layout_weight="1"
-		        android:layout_height="wrap_content"
-		        android:contentDescription="@string/spanishStr"
-		        android:src="@drawable/flamenco" />
-	
-	    </LinearLayout>
-	
+	        android:contentDescription="@string/englishStr"
+	        android:src="@drawable/feature_graphic" />
+	    
 	</LinearLayout>
 	
 	<ListView android:id="@+id/left_drawer"

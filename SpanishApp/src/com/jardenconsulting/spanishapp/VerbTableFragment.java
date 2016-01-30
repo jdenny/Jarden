@@ -1,5 +1,7 @@
 package com.jardenconsulting.spanishapp;
 
+import java.util.List;
+
 import jarden.engspa.EngSpa;
 import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.VerbUtils;
@@ -56,28 +58,29 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	}
 
 	private void goPressed() {
-		EngSpa engSpa;
+		List<EngSpa> matches;
 		if (this.engSpaQuiz == null) {
 			MainActivity mainActivity = (MainActivity) getActivity();
 			this.engSpaQuiz = mainActivity.getEngSpaQuiz();
 		}
 		String verb = this.spanishVerbEditText.getText().toString().trim();
 		if (verb.length() > 0) {
-			// TODO: sort out may have more than 1 match
-			engSpa = engSpaQuiz.spa2Eng(verb).get(0);
+			matches = engSpaQuiz.spa2Eng(verb);
 		} else {
 			verb = this.englishVerbEditText.getText().toString().trim();
 			if (verb.length() > 0) {
-				engSpa = engSpaQuiz.eng2Spa(verb).get(0);
+				matches = engSpaQuiz.eng2Spa(verb);
 			} else {
 				this.statusTextView.setText("please supply Spanish or English verb");
 				return;
 			}
 		}
-		if (engSpa == null) {
+		if (matches.size() < 1) {
 			this.statusTextView.setText(verb + " not found on our dictionary");
 			return;
 		}
+		// TODO: sort out may have more than 1 match
+		EngSpa engSpa = matches.get(0);
 		if (engSpa.getWordType() != WordType.verb) {
 			this.statusTextView.setText(verb + " is not a verb, but " + engSpa.getWordType());
 			return;
