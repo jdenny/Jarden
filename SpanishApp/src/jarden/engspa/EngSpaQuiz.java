@@ -233,9 +233,9 @@ public class EngSpaQuiz extends Quiz {
 	/**
 	 * @return count of number of words in currentWordList where
 	 * word.isPassed() is false. Notes: currentWordList is list
-	 * of words where word.difficultyLevel == userLevel; isPassed()
-	 * returns true if user has correctly answered the word the
-	 * required number of times.
+	 * of words where word.difficultyLevel == userLevel;
+	 * isPassed() returns true if user has correctly answered the
+	 * word the required number of times.
 	 */
 	public int getCurrentWordCount() {
 		return this.currentWordList.size();
@@ -306,7 +306,7 @@ public class EngSpaQuiz extends Quiz {
 	 */
 	private EngSpa getNextFailedWord() {
 		for (EngSpa es: failedWordList) {
-			if (!es.isRecentlyUsed(questionSequence)) return es;
+			if (!es.isRecentlyUsed(questionSequence) && !isRecentWord(es)) return es;
 		}
 		return null;
 	}

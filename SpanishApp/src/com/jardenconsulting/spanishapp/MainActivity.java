@@ -2,7 +2,6 @@ package com.jardenconsulting.spanishapp;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import jarden.app.race.RaceFragment;
 import jarden.engspa.EngSpaDAO;
@@ -13,11 +12,8 @@ import jarden.http.MyHttpClient;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.quiz.QuizCache;
 
-import com.jardenconsulting.spanishapp.EngSpaFragment.EngSpaActivity;
 import com.jardenconsulting.spanishapp.UserDialog.UserSettingsListener;
 
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -52,12 +48,13 @@ import android.widget.TextView;
 	call engSpaFragment to create engSpaQuiz
  */
 public class MainActivity extends AppCompatActivity
-		implements EngSpaActivity, UserSettingsListener, OnInitListener,
+		implements EngSpaActivity, UserSettingsListener,
 		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener,
 		QAStyleDialog.QAStyleListener, ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
-	public static final Locale LOCALE_ES = new Locale("es", "ES");
-
+	
+    private static final String CURRENT_FRAGMENT_TAG =
+    		"currentFragmentTag";
     private static String questionSequenceKey = null;
     private static final String DATA_VERSION_KEY = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
@@ -66,6 +63,8 @@ public class MainActivity extends AppCompatActivity
 	private EngSpaFragment engSpaFragment;
 	private VerbTableFragment verbTableFragment;
 	private RaceFragment raceFragment;
+	private Fragment currentFragment;
+	private String currentFragmentTag;
 	private DialogFragment userDialog;
 	private HelpDialog helpDialog;
 	private TopicDialog topicDialog;
@@ -75,12 +74,12 @@ public class MainActivity extends AppCompatActivity
 	private boolean engSpaFileModified;
 	private long dateEngSpaFileModified;
 	private String updateStatus;
-	private TextToSpeech textToSpeech;
-	private String questionToSpeak;
+	private String spanish;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private String[] drawerTitles;
+	private String engSpaTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity
 		setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolBar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.statusTextView = (TextView) findViewById(R.id.statusTextView);
 		this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 		this.drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -109,14 +109,19 @@ public class MainActivity extends AppCompatActivity
 				R.layout.drawer_list_item, drawerItems);
 		this.drawerList.setAdapter(adapter);
         this.drawerList.setOnItemClickListener(this);
-
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		if (savedInstanceState != null) {
+        
+		if (savedInstanceState == null) {
+			this.currentFragmentTag = ENGSPA;
+		} else {
+			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+			FragmentManager fragmentManager = getSupportFragmentManager();
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
+			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(VERB_TABLE);
+			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
 			String title = savedInstanceState.getString("title");
 			if (title != null) setTitle(title);
 		}
-		showEngSpaFragment();
+		showFragment();
 	}
 	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,23 +129,17 @@ public class MainActivity extends AppCompatActivity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	@Override // OnItemClickListener
+	@Override // OnItemClickListener - for DrawerList
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (position == 0) {
 			if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
 			this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
 		} else if (position == 1) {
-			if (this.verbTableFragment == null) {
-				this.verbTableFragment = new VerbTableFragment();
-			}
-			showFragment(verbTableFragment, VERB_TABLE);
-			// setTitle(drawerTitles[position]);
+			showFragment(VERB_TABLE);
+			setTitle(drawerTitles[position]);
 		} else if (position == 2) {
-			if (this.raceFragment == null) {
-				this.raceFragment = new RaceFragment();
-			}
-			showFragment(raceFragment, NUMBER_GAME);
-			// setTitle(drawerTitles[position]);
+			showFragment(NUMBER_GAME);
+			setTitle(drawerTitles[position]);
 		} else if (position == 3) {
 			showTopicDialog();
 		} else if (position == 4) {
@@ -161,13 +160,34 @@ public class MainActivity extends AppCompatActivity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.userSettings) {
+		if (item.getItemId() == android.R.id.home) {
+			drawerLayout.openDrawer(drawerList);
+			return true;
+		} else if (id == R.id.userSettings) {
 			if (this.userDialog == null) this.userDialog = new UserDialog();
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
+			return true;
+		} else if (id == R.id.speakerButton) {
+			if (this.spanish != null) speakSpanish(this.spanish);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	@Override // Activity
+	public void onBackPressed() {
+		super.onBackPressed();
+		if (this.currentFragmentTag != ENGSPA) {
+			currentFragmentTag = ENGSPA;
+			currentFragment = this.engSpaFragment;
+			setTitle(this.engSpaTitle);
+		}
+		/* TODO: what happens here?
+		if (drawerLayout.isDrawerOpen(drawerList)) {
+			super.onBackPressed();
+		} */
+	}
+
 	@Override // EngSpaActivity
 	public void showTopicDialog() {
 		if (this.topicDialog == null) this.topicDialog = new TopicDialog();
@@ -185,63 +205,18 @@ public class MainActivity extends AppCompatActivity
 				"MainActivity.onQAStyleSelected(" + qaStyle + ")");
 		this.engSpaFragment.setUserQAStyle(qaStyle);
 	}
-	@Override // OnInitListener (called when textToSpeech is initialised)
-	public void onInit(int status) {
-		if (BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onInit()");
-		progressBar.setVisibility(ProgressBar.INVISIBLE);
-		this.statusTextView.setText("");
-		if (status == TextToSpeech.SUCCESS) {
-			if (this.textToSpeech == null) {
-				// this could happen if activity is paused between creating
-				// new textToSpeech and getting the response back here
-				this.statusTextView.setText("textToSpeech closed down");
-				return;
-			}
-			int result = textToSpeech.setLanguage(LOCALE_ES);
-			if (BuildConfig.DEBUG) {
-				Log.d(TAG, "textToSpeech.setLanguage(); result=" + result);
-			}
-			if (result == TextToSpeech.LANG_MISSING_DATA
-					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
-				this.statusTextView.setText("TextToSpeech for Spanish is not supported");
-			}
-			if (this.questionToSpeak != null) speakQuestion2(); 
-		} else {
-			Log.w(TAG, "MainActivity.onInit(" + status + ")");
-			this.statusTextView.setText(
-				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
-		}
-	}
-	@Override // Activity
-	public void onPause() {
-		if (BuildConfig.DEBUG) Log.d(TAG, "MainActivity.onPause()");
-		super.onPause();
-		if (this.textToSpeech != null) {
-			textToSpeech.stop();
-			textToSpeech.shutdown();
-			textToSpeech = null;
-		}
-	}
 	@Override // Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString("title", getTitle().toString());
+		if (this.currentFragment != null) {
+			savedInstanceState.putString(CURRENT_FRAGMENT_TAG,
+					this.currentFragmentTag);
+		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
 	@Override // EngSpaActivity
-	public void speakQuestion(String question) {
-		this.questionToSpeak = question;
-		if (this.textToSpeech == null) {
-			// invokes onInit() on completion
-			textToSpeech = new TextToSpeech(this, this);
-			this.statusTextView.setText("loading textToSpeech...");
-			this.progressBar.setVisibility(ProgressBar.VISIBLE);
-		} else {
-			speakQuestion2();
-		}
-	}
-	@SuppressWarnings("deprecation")
-	private void speakQuestion2() {
-		textToSpeech.speak(this.questionToSpeak, TextToSpeech.QUEUE_ADD, null);
+	public void speakSpanish(String spanish) {
+		this.engSpaFragment.speakSpanish(spanish);
 	}
 
 	/* Update EngSpa table on database if engspa.txt on server has been updated.
@@ -340,17 +315,48 @@ public class MainActivity extends AppCompatActivity
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaFragment.getEngSpaQuiz();
 	}
-	public void showEngSpaFragment() {
-		if (this.engSpaFragment == null) {
-			this.engSpaFragment = new EngSpaFragment();
+	private void showFragment(String fragmentTag) {
+		if (this.currentFragmentTag == fragmentTag) {
+			if (BuildConfig.DEBUG) Log.d(TAG,
+					"MainActivity.showFragment(" + fragmentTag +
+					"); already current fragment");
+			return;
 		}
-		showFragment(engSpaFragment, ENGSPA);
+		this.currentFragmentTag = fragmentTag;
+		showFragment();
 	}
-	private void showFragment(Fragment fragment, String tag) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.fragmentLayout, fragment, tag);
-		if (tag == VERB_TABLE || tag == NUMBER_GAME) ft.addToBackStack(tag);
-		ft.commit();
+	private void showFragment() {
+		if (this.currentFragmentTag == ENGSPA) {
+			if (this.engSpaFragment == null) {
+				this.engSpaFragment = new EngSpaFragment();
+			}
+			this.currentFragment = engSpaFragment;
+		} else if (this.currentFragmentTag == VERB_TABLE) {
+			if (this.verbTableFragment == null) {
+				this.verbTableFragment = new VerbTableFragment();
+			}
+			this.currentFragment = verbTableFragment;
+		} else if (this.currentFragmentTag == NUMBER_GAME) {
+			if (this.raceFragment == null) {
+				this.raceFragment = new RaceFragment();
+			}
+			this.currentFragment = raceFragment;
+		}
+		FragmentManager manager = getSupportFragmentManager();
+		// pop backstack if there is anything to pop;
+		// in case user chooses fragments from drawer without
+		// pressing 'back'
+		boolean popped = manager.popBackStackImmediate();
+		if (BuildConfig.DEBUG) {
+			Log.d(TAG, "MainActivity.showFragment(); popped=" + popped);
+		}
+		FragmentTransaction transaction = manager.beginTransaction();
+		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
+		if (currentFragmentTag == VERB_TABLE ||
+				currentFragmentTag == NUMBER_GAME) {
+			transaction.addToBackStack(currentFragmentTag);
+		}
+		transaction.commit();
 	}
 
 	/**
@@ -400,5 +406,18 @@ public class MainActivity extends AppCompatActivity
 		editor.putInt(questionSequenceKey, ++questionSeq);
 		editor.commit();
 		return questionSeq;
+	}
+	@Override // EngSpaActivity
+	public void setSpanish(String spanish) {
+		this.spanish = spanish;
+	}
+	@Override // EngSpaActivity
+	public void setEngSpaTitle(String title) {
+		this.engSpaTitle = title;
+		super.setTitle(title);
+	}
+	@Override
+	public void setProgressBarVisibility(int visibility) {
+		progressBar.setVisibility(visibility);
 	}
 }

@@ -41,8 +41,7 @@ how are you,qué tal,phrase,n_a,n_a,1
 well,bien,adjective,n_a,n_a,1
 goodnight,buenas noches,phrase,n_a,n_a,1
 see you later,hasta luego,phrase,n_a,n_a,1
-yes,sí,adjective,n_a,n_a,1
-no,no,adjective,n_a,n_a,1
+yes or no,sí o no,phrase,n_a,n_a,1
 nothing,nada,pronoun,n_a,size,1
 I'm sorry,lo siento,phrase,n_a,n_a,1
 excuse me,perdón,phrase,n_a,n_a,1
@@ -149,7 +148,6 @@ light blue,azul claro,adjective,n_a,colour,1
 dark blue,azul oscuro,adjective,n_a,colour,1
 and,y,conjunction,n_a,n_a,1
 but,pero,conjunction,n_a,n_a,1
-or,o,conjunction,n_a,n_a,1
 if,si,conjunction,n_a,n_a,1
 though,aunque,conjunction,n_a,n_a,1
 as,como,adverb,n_a,n_a,1

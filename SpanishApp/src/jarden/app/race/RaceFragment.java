@@ -1,13 +1,13 @@
 package jarden.app.race;
 
 import com.jardenconsulting.spanishapp.BuildConfig;
+import com.jardenconsulting.spanishapp.EngSpaActivity;
 import com.jardenconsulting.spanishapp.MainActivity;
 import com.jardenconsulting.spanishapp.R;
 
 import jarden.quiz.EndOfQuestionsException;
 import jarden.quiz.NumbersQuiz;
 import jarden.quiz.Quiz;
-import jarden.quiz.QuizListener;
 import jarden.timer.Timer;
 import jarden.timer.TimerListener;
 import android.app.Activity;
@@ -46,7 +46,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 	// these variables don't change once setup in onCreateView:
 	private LaneView laneBView;
 	private LaneView myLaneView;
-	private LaneView opponentLaneView;
+	//!! private LaneView opponentLaneView;
 	private TextView levelBView;
 	private TextView myLevelView;
 	private EditText answerEditText;
@@ -66,7 +66,14 @@ public class RaceFragment extends Fragment implements TimerListener,
 	private SoundPool soundPool;
 	private int soundError;
 	private int soundLost;
+	private EngSpaActivity engSpaActivity;
 	
+	@Override // Fragment
+	public void onAttach(Activity activity) {
+		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "RaceFragment.onAttach()");
+		super.onAttach(activity);
+		this.engSpaActivity = (EngSpaActivity) activity;
+	}
 	@SuppressWarnings("deprecation")
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
@@ -119,9 +126,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 		Button button = (Button) view.findViewById(R.id.resetButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
+		/*!!
 		button = (Button) view.findViewById(R.id.repeatButton);
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
+		 */
 		/*!!
 		if (clientMode) {
 			myLaneView = laneCView;
@@ -157,7 +166,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 		if (actionId == EditorInfo.IME_ACTION_GO) {
 			String answer = answerEditText.getText().toString().trim();
 			if (answer.length() == 0) {
-				statusTextView.setText(getResources().getString(R.string.emptyAnswer));
+	    		poseQuestion(quiz.getCurrentQuestion());
 				return true;
 			}
 			String status;
@@ -177,20 +186,13 @@ public class RaceFragment extends Fragment implements TimerListener,
 			} else {
 				if (result == Quiz.CORRECT) {
 					status = getResources().getString(R.string.correct);
-					onRightAnswer(); // ?
+					onRightAnswer(); // move player in lane
 				} else { // result must be FAIL
 					vibrator.vibrate(WRONG_VIBRATE, -1);
 					soundPool.play(soundLost, 1.0f, 1.0f, 0, 0, 1.5f);
 					status = " Answer: " + quiz.getCorrectAnswer();
 				}
-				try {
-					String question = quiz.getNextQuestion(raceLevel);
-					answerEditText.setText("");
-					poseQuestion(question);
-				} catch (EndOfQuestionsException e) {
-					QuizListener quizListener = (QuizListener) getActivity();
-					quizListener.onEndOfQuestions();
-				}
+				nextQuestion();
 			}
 			this.statusTextView.setText(status);
 			return true;
@@ -204,9 +206,11 @@ public class RaceFragment extends Fragment implements TimerListener,
 		if (id == R.id.resetButton) {
 			this.statusTextView.setText(R.string.resetButtonTip);
 			return true;
+		/*!!
 		} else if (id == R.id.repeatButton) {
 			this.statusTextView.setText(R.string.repeatButtonTip);
 			return true;
+		 */
 		}
 		return false;
     }
@@ -254,13 +258,14 @@ public class RaceFragment extends Fragment implements TimerListener,
 		myLaneView.setStatus(GameData.RUNNING);
 		myLaneView.reset();
 		laneBView.reset();
-		opponentLaneView.reset();
+		//!! opponentLaneView.reset();
 		startTimer();
 	}
 	private void nextQuestion() {
 		try {
-			String question = quiz.getNextQuestion(raceLevel);
-			poseQuestion(question);
+			String spanish = quiz.getNextQuestion(raceLevel);
+			answerEditText.setText("");
+			poseQuestion(spanish);
 		} catch (EndOfQuestionsException e) {
 			this.statusTextView.setText(e.getMessage());
 		}
@@ -354,7 +359,7 @@ public class RaceFragment extends Fragment implements TimerListener,
 				(1 + 0.2 * this.raceLevel));
 	}
 	private void poseQuestion(String question) {
-		((MainActivity) getActivity()).speakQuestion(question);
+		this.engSpaActivity.speakSpanish(question);
 	}
 
 
@@ -385,8 +390,10 @@ public class RaceFragment extends Fragment implements TimerListener,
     	if (viewId == R.id.resetButton) {
     		quiz.reset();
     		this.reset();
+    	/*!!
     	} else if (viewId == R.id.repeatButton) {
     		poseQuestion(quiz.getCurrentQuestion());
+    	 */
     	} else {
 	        Toast.makeText(getActivity(), "unknown button pressed: " + view,
 	        		Toast.LENGTH_LONG).show();

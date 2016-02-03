@@ -2,7 +2,8 @@
 <resources>
     <string name="app_name">Spanish GCSE Revision</string>
 	<string name="cancelStr">Cancel</string>
-    <string name="chooseTopicStr">Choose Topic</string>
+    <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
+	<string name="chooseTopicStr">Choose Topic</string>
 	<string name="conjugateStr">Conjugate</string>
     <string name="correctQueryStr">Correct?</string>
     <string name="correctButtonTip">
@@ -23,7 +24,7 @@ you want to skip a word, just pretend you got it right!</string>
     <string name="helpHomePage">
 <b>¡Bienvenida! Welcome!</b>\n
 Open \'User Settings\' to change your name.
-Long press on a button to show tip.
+Long press on a button to show tip.\n
 If you have any suggestions for improving this app, please send an email
 to amazemequiz@gmail.com
     </string>
@@ -53,9 +54,12 @@ Allows you to speak the answer; requires internet connection</string>
     <string name="showStr">Show</string>
     <string name="spanishHelpStr">Spanish Help</string>
     <string name="spanishStr">Spanish</string>
+    <string name="speakerButtonTip">
+Listen to the current Spanish word</string>
     <string name="tipTip">
-¡Bienvenida! Welcome! Open \'User Settings\' to change your name, or the question style.
-Long press on a button to show tip</string>
+Left swipe from side of screen to see main menu; long press on a button
+to show tip</string>
+    <string name="speakerStr">Speaker</string>
     <string name="updateStr">Update</string>
 	<string name="userLevelStr">User level</string>
 	<string name="userNameStr">User name</string>

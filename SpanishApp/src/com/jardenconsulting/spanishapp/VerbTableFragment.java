@@ -86,6 +86,7 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 			return;
 		}
 		String spanish = engSpa.getSpanish();
+		((EngSpaActivity) getActivity()).setSpanish(spanish);
 		String english = engSpa.getEnglish();
 		String line;
 		this.conjugateListAdapter.setNotifyOnChange(false);

@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.jardenconsulting.spanishapp.MainActivity" >
 
+	<item
+        android:id="@+id/speakerButton"
+        android:icon="@drawable/speaker"
+        android:title="@string/speakerStr"
+        app:showAsAction="ifRoom"/>
+	
     <item
         android:id="@+id/userSettings"
         android:title="@string/userSettingsStr"
