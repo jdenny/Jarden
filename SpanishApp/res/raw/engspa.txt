@@ -627,7 +627,6 @@ relaxed,relajado,adjective,n_a,n_a,1
 too,demasiado,adverb,n_a,n_a,1
 low fat,bajo en grasas,phrase,n_a,n_a,1
 dawn,amanecer,noun,masculine,n_a,1
-dawn,amanecer,verb,n_a,n_a,1
 are these things so,son así estas cosas,phrase,n_a,n_a,1
 likewise,así mismo,adverb,n_a,n_a,1
 small,pequeño,adjective,n_a,n_a,1

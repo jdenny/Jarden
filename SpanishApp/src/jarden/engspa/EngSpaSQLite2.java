@@ -28,6 +28,7 @@ import android.util.Log;
 
 // TODO: merge EngSpaUtils into here
 public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
+	private static EngSpaSQLite2 instance;
 	private static final String DB_NAME = "engspa.db";
 	private static final int DB_VERSION = 27; // updated 16 Jan 2016
 	private static final int DATA_FILE_ID = // R.raw.engspatest;
@@ -84,7 +85,13 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private int dictionarySize = 0;
 	private Random random = new Random();
 
-	public EngSpaSQLite2(Context context, String debugTag) {
+	public static synchronized EngSpaSQLite2 getInstance(Context context, String debugTag) {
+		if (instance == null) {
+			instance = new EngSpaSQLite2(context, debugTag);
+		}
+		return instance;
+	}
+	private EngSpaSQLite2(Context context, String debugTag) {
 		super(context, DB_NAME, null, DB_VERSION);
 		this.context = context;
 		this.TAG = debugTag;
@@ -124,6 +131,16 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		rowCt = bulkInsert(engSpaDB, contentValues);
 		Log.i(TAG, "EngSpaSQLite2.newDictionary(); rows inserted to database: " + rowCt);
 		return rowCt;
+	}
+	
+	@Override // EngSpaDAO
+	public int updateDictionary(List<String> updateLines) {
+		Log.d(TAG, "EngSpaSQLite2.updateDictionary(); updateLines.size=" +
+				updateLines.size());
+		for (String line: updateLines) {
+			Log.d(TAG, "  " + line);
+		}
+		return 0;
 	}
 
 	private int populateDatabase(SQLiteDatabase engSpaDB) {

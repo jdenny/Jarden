@@ -18,7 +18,7 @@ import jarden.quiz.Quiz;
  */
 public class EngSpaQuiz extends Quiz {
 	static public interface QuizEventListener {
-		void onNewLevel(int userLevel);
+		void onNewLevel();
 		void onTopicComplete();
 	}
 	public static final int WORDS_PER_LEVEL = 10;
@@ -101,7 +101,7 @@ public class EngSpaQuiz extends Quiz {
 		if (levelIncremented) {
 			setUserLevel(newUserLevel);
 			if (this.quizEventListener != null) {
-				quizEventListener.onNewLevel(newUserLevel);
+				quizEventListener.onNewLevel();
 			}
 		}
 		return levelIncremented;

@@ -18,6 +18,7 @@ public interface EngSpaDAO {
 	 * from contentValues. Return number of rows added.
 	 */
 	int newDictionary(ContentValues[] contentValues);
+	int updateDictionary(List<String> updateLines);
 	List<EngSpa> getCurrentWordList(int userLevel);
 	EngSpa getRandomPassedWord(int userLevel);
 	EngSpa getWordById(int id);

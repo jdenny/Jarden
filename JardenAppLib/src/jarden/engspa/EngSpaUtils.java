@@ -9,26 +9,38 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.util.Log;
 
 public class EngSpaUtils {
 	private final static String TAG = "EngSpaUtils";
 
-	// Note: don't run this method on the UI thread!
+	/**
+	 * Process lines from inputStream, in the form:
+	 * 		room,habitación,n,f,place,2
+	 * and return ContentValues suitable for loading into EngSpa database.
+	 * Note: don't run this method on the UI thread!
+	 * @throws IOException
+	 */
+
 	public static ContentValues[] getContentValuesArray(InputStream is) throws IOException {
-		List<String> engSpaLines = new ArrayList<String>();
+		List<String> engSpaLines = getLinesFromStream(is);
+		return getContentValuesArray(engSpaLines);
+	}
+	public static List<String> getLinesFromStream(InputStream is) throws IOException {
+		List<String> lines = new ArrayList<String>();
 		BufferedReader reader = null;
 		try {
 			// iso-8859 needed for Android, and maybe for Java;
 			// see javadocs in QuizCache.loadQuizFromServer()
 			InputStreamReader isReader = new InputStreamReader(is, "iso-8859-1");
 			reader = new BufferedReader(isReader);
-			String line; // e.g. room,habitación,n,f,place,2
+			String line;
 			while ((line = reader.readLine()) != null) {
-				engSpaLines.add(line);
+				lines.add(line);
 			}
-			return getContentValuesArray(engSpaLines);
+			return lines;
 		} finally {
 			is.close();
 		}
@@ -98,4 +110,26 @@ public class EngSpaUtils {
 		if (ch == 'ü') return 'u';
 		return ch;
 	}
+	public interface RunnableWithException extends Runnable {
+		void setResult(boolean success, Exception exception);
+	}
+	public static void RunBackgroundTask(final Activity activity, final Runnable backgroundRun,
+			final RunnableWithException foregroundRun) {
+		new Thread(new Runnable() {
+			private boolean success;
+			private Exception exception;
+			@Override public void run() {
+				try {
+					backgroundRun.run();
+					this.success = true;
+				} catch(Exception e) {
+					this.success = false;
+					this.exception = e;
+				}
+				foregroundRun.setResult(success, exception);
+				activity.runOnUiThread(foregroundRun);
+			}
+		}).start();
+	}
+
 }

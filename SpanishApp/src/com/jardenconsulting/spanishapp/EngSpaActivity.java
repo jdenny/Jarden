@@ -1,10 +1,15 @@
 package com.jardenconsulting.spanishapp;
 
+import jarden.engspa.EngSpaDAO;
+import android.content.SharedPreferences;
+
 public interface EngSpaActivity {
 	/**
 	 * See if we need to update the database from the server file.
 	 */
 	void checkDataFileVersion();
+	
+	EngSpaDAO getEngSpaDAO();
 
 	/**
 	 * Each question is given a unique, increment sequence
@@ -13,13 +18,15 @@ public interface EngSpaActivity {
 	 */
 	int getQuestionSequence();
 	
+	SharedPreferences getSharedPreferences();
+	
 	/**
 	 * Get DEBUG tag
 	 * @return
 	 */
 	String getTag();
 	
-	void setProgressBarVisibility(int visibility);
+	void setProgressBarVisible(boolean visible);
 
 	/**
 	 * Set Spanish word if user later clicks on

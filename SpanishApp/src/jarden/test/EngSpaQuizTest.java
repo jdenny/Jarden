@@ -40,7 +40,7 @@ public class EngSpaQuizTest implements QuizEventListener {
 	*/
 
 	public EngSpaQuizTest(Context context) {
-		EngSpaDAO engSpaDAO = new EngSpaSQLite2(context, TAG);
+		EngSpaDAO engSpaDAO = EngSpaSQLite2.getInstance(context, TAG);
 		esQuiz = new EngSpaQuiz(engSpaDAO, new EngSpaUser("Test", 1, QAStyle.writtenEngToSpa));
 		this.userLevel = esQuiz.getUserLevel();
 		esQuiz.setQuizEventListener(this);
@@ -219,9 +219,8 @@ public class EngSpaQuizTest implements QuizEventListener {
 	
 	// implementation of QuizEventListener:
 	@Override
-	public void onNewLevel(int userLevel) {
+	public void onNewLevel() {
 		Log.d(TAG, "onNewLevel(" + userLevel + ")");
-		this.userLevel = userLevel;
 	}
 	@Override
 	public void onTopicComplete() {

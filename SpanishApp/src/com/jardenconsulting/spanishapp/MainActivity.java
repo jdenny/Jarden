@@ -1,11 +1,13 @@
 package com.jardenconsulting.spanishapp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import jarden.app.race.RaceFragment;
 import jarden.engspa.EngSpaDAO;
 import jarden.engspa.EngSpaQuiz;
+import jarden.engspa.EngSpaSQLite2;
 import jarden.engspa.EngSpaUser;
 import jarden.engspa.EngSpaUtils;
 import jarden.http.MyHttpClient;
@@ -53,13 +55,17 @@ public class MainActivity extends AppCompatActivity
 		QAStyleDialog.QAStyleListener, ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
 	
+    private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
+    private static final String DATA_VERSION_KEY = "DataVersion";
+    private static final String ENG_SPA_UPDATES_NAME = 
+    		QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
     private static final String CURRENT_FRAGMENT_TAG =
     		"currentFragmentTag";
     private static String questionSequenceKey = null;
-    private static final String DATA_VERSION_KEY = "DataVersion";
 	private static final String VERB_TABLE = "VERB_TABLE";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
+	private EngSpaDAO engSpaDAO;
 	private EngSpaFragment engSpaFragment;
 	private VerbTableFragment verbTableFragment;
 	private RaceFragment raceFragment;
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onCreate(savedInstanceState is " +
 				(savedInstanceState==null?"":"not ") + "null)");
+		this.engSpaDAO = EngSpaSQLite2.getInstance(this, TAG);
 		sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
@@ -121,6 +128,56 @@ public class MainActivity extends AppCompatActivity
 			String title = savedInstanceState.getString("title");
 			if (title != null) setTitle(title);
 		}
+		loadDB();
+	}
+	public void loadDB() {
+		InputStream is = getResources().openRawResource(R.raw.engspaversion);
+		List<String> engSpaVersionLines;
+		try {
+			engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
+			final int version = Integer.parseInt(engSpaVersionLines.get(0));
+			final SharedPreferences sharedPreferences = getSharedPreferences();
+			int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
+			if (version <= savedVersion) {
+				dbLoadComplete();
+			} else {
+				String statusMessage =
+					(savedVersion == 0)?"Loading Spanish dictionary":
+					"Loading new dictionary version";
+				setStatus(statusMessage + "; please be patient with us!");
+				setProgressBarVisible(true);
+				new Thread(new Runnable() {
+					private String threadResult;
+					@Override
+					public void run() {
+						try {
+							InputStream is = getResources().openRawResource(R.raw.engspa);
+							ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(is);
+							engSpaDAO.newDictionary(contentValues);
+							SharedPreferences.Editor editor = sharedPreferences.edit();
+							editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
+							editor.commit();
+							threadResult = "dictionary load complete";
+						} catch (IOException e) {
+							threadResult = "dictionary load failed: " + e;
+							Log.e(getTag(), "EngSpaFragment.loadDB(): " + e);
+						}
+						runOnUiThread(new Runnable() {
+							public void run() {
+								setStatus(threadResult);
+								setProgressBarVisible(false);
+								dbLoadComplete();
+							}
+						});
+					}
+				}).start();
+			}
+		} catch (IOException e) {
+			Log.e(getTag(), "MainActivity.loadDB(): " + e);
+			setStatus("error loading database: " + e);
+		}
+	}
+	private void dbLoadComplete() {
 		showFragment();
 	}
 	@Override // Activity
@@ -219,7 +276,8 @@ public class MainActivity extends AppCompatActivity
 		this.engSpaFragment.speakSpanish(spanish);
 	}
 
-	/* Update EngSpa table on database if engspa.txt on server has been updated.
+	/**
+	 * Update EngSpa table on database if engspa.txt on server has been updated.
 	 * get dateEngSpaModified from url of engspaversion.txt on server
 	 * get savedVersion from SharedPreferences
 	 * if there is a new version:
@@ -230,6 +288,7 @@ public class MainActivity extends AppCompatActivity
 	 *		set SharedPreferences to latestVersion
 	 */
 	@Override // EngSpaActivity
+	// TODO: rename this checkForServerUpdates(); put this into EngSpaFragment
 	public void checkDataFileVersion() {
 		engSpaFileModified = false;
 		this.statusTextView.setText("checking for updates...");
@@ -239,35 +298,43 @@ public class MainActivity extends AppCompatActivity
 			public void run() {
 				long savedVersion = sharedPreferences.getLong(DATA_VERSION_KEY, 0);
 				try {
-					String urlStr = QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1";
+					String urlStr = ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1";
 					dateEngSpaFileModified = MyHttpClient.getLastModified(urlStr);
 					engSpaFileModified = dateEngSpaFileModified > savedVersion;
+					if (engSpaFileModified) {
+						List<String> engSpaLines = MyHttpClient.getPageLines(
+								ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1", "iso-8859-1");
+						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
+						engSpaDAO.updateDictionary(engSpaLines);
+					}
 				} catch (IOException e) {
 					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
-						statusTextView.setText("");
+						statusTextView.setText("dictionary updated");
 						progressBar.setVisibility(ProgressBar.INVISIBLE);
-						dataFileCheckComplete(engSpaFileModified);
+						//!! dataFileCheckComplete(engSpaFileModified);
 					}
 				});
 			}
 		}).start();
 	}
-	/*
+	/* TODO: remove these 3 methods?
 	 * if new version of data file, ask user to confirm update
 	 */
-	private void dataFileCheckComplete(boolean updated) {
+	public void dataFileCheckComplete(boolean updated) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.dataFileCheckComplete(" + updated + ")");
 		if (updated) {
 			DialogFragment dialog = new NewDBDataDialog();
-			dialog.show(getSupportFragmentManager(), "New Dictionary Version");
+			dialog.show(getSupportFragmentManager(), "New Dictionary Updates");
 		} else endOfUpdate();
 	}
 	private void endOfUpdate() {
-		engSpaFragment.loadDB();
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.endOfUpdate()");
+		// engSpaFragment.loadDB();
 	}
 	
 	/**
@@ -288,13 +355,18 @@ public class MainActivity extends AppCompatActivity
 				public void run() {
 					try {
 						List<String> engSpaLines = MyHttpClient.getPageLines(
-								QuizCache.serverUrlStr + "engspa.txt?attredirects=0&d=1", "iso-8859-1");
-						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
+								ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1", "iso-8859-1");
 						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
+						engSpaDAO.updateDictionary(engSpaLines);
+						/*!!
+						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
 						engSpaDAO.newDictionary(contentValues);
+						*/
+						/* TODO: reinstate these lines when it's working!
 						SharedPreferences.Editor editor = sharedPreferences.edit();
 						editor.putLong(DATA_VERSION_KEY, dateEngSpaFileModified);
 						editor.commit();
+						*/
 						updateStatus = "";
 					} catch (IOException e) {
 						Log.e(TAG, "Exception in onUpdateDecision() " + e);
@@ -416,8 +488,16 @@ public class MainActivity extends AppCompatActivity
 		this.engSpaTitle = title;
 		super.setTitle(title);
 	}
+	@Override // EngSpaActivity
+	public void setProgressBarVisible(boolean visible) {
+		progressBar.setVisibility(visible?ProgressBar.VISIBLE:ProgressBar.INVISIBLE);
+	}
 	@Override
-	public void setProgressBarVisibility(int visibility) {
-		progressBar.setVisibility(visibility);
+	public SharedPreferences getSharedPreferences() {
+		return this.sharedPreferences;
+	}
+	@Override
+	public EngSpaDAO getEngSpaDAO() {
+		return this.engSpaDAO;
 	}
 }
