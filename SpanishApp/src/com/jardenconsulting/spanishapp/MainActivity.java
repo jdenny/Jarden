@@ -38,25 +38,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-/*
- * TODO: add a flow control method:
-	new engSpaFragment ->
-		new engSpaDAO; get engSpaUser
-		if no engSpaUser: create new one with default values
-	if can access updated engspa.txt on web site:
-		showConfirmUpdateDBDialog
-		if confirm:
-			call engSpaFragment to update DB
-	call engSpaFragment to create engSpaQuiz
- */
 public class MainActivity extends AppCompatActivity
 		implements EngSpaActivity, UserSettingsListener,
-		NewDBDataDialog.UpdateDBListener, TopicDialog.TopicListener,
-		QAStyleDialog.QAStyleListener, ListView.OnItemClickListener {
+		TopicDialog.TopicListener, QAStyleDialog.QAStyleListener,
+		ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
 	
     private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
-    private static final String DATA_VERSION_KEY = "DataVersion";
+    private static final String UPDATES_VERSION_KEY = "DataVersion";
     private static final String ENG_SPA_UPDATES_NAME = 
     		QuizCache.serverUrlStr + "engspaupdates.txt?attredirects=0&d=1";
     private static final String CURRENT_FRAGMENT_TAG =
@@ -79,7 +68,6 @@ public class MainActivity extends AppCompatActivity
 	private TextView statusTextView;
 	private boolean engSpaFileModified;
 	private long dateEngSpaFileModified;
-	private String updateStatus;
 	private String spanish;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
@@ -130,7 +118,12 @@ public class MainActivity extends AppCompatActivity
 		}
 		loadDB();
 	}
-	public void loadDB() {
+	/*
+	 * use engspaversion.txt and sharedPreferences to see if there
+	 * is a new version of local resource file engspa.txt, and if
+	 * so, reload the database from engspa.txt 
+	 */
+	private void loadDB() {
 		InputStream is = getResources().openRawResource(R.raw.engspaversion);
 		List<String> engSpaVersionLines;
 		try {
@@ -179,6 +172,7 @@ public class MainActivity extends AppCompatActivity
 	}
 	private void dbLoadComplete() {
 		showFragment();
+		this.checkForDBUpdates();
 	}
 	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,26 +271,18 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	/**
-	 * Update EngSpa table on database if engspa.txt on server has been updated.
-	 * get dateEngSpaModified from url of engspaversion.txt on server
-	 * get savedVersion from SharedPreferences
-	 * if there is a new version:
-	 * 		ask user for confirmation of update
-	 * 		read new data from engspa.txt on server
-	 *		delete all rows in EngSpa
-	 *		add new data to EngSpa
-	 *		set SharedPreferences to latestVersion
+	 * Update EngSpa table on database if there is a new version of
+	 * engspaupdates.txt on server. Version determined from
+	 * dateLastModified, which is saved in SharedPreferences.
 	 */
-	@Override // EngSpaActivity
-	// TODO: rename this checkForServerUpdates(); put this into EngSpaFragment
-	public void checkDataFileVersion() {
+	private void checkForDBUpdates() {
 		engSpaFileModified = false;
 		this.statusTextView.setText("checking for updates...");
-		this.progressBar.setVisibility(ProgressBar.VISIBLE);
 		new Thread(new Runnable() {
+			private String statusMessage = "";
 			@Override
 			public void run() {
-				long savedVersion = sharedPreferences.getLong(DATA_VERSION_KEY, 0);
+				long savedVersion = sharedPreferences.getLong(UPDATES_VERSION_KEY, 0);
 				try {
 					String urlStr = ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1";
 					dateEngSpaFileModified = MyHttpClient.getLastModified(urlStr);
@@ -304,86 +290,28 @@ public class MainActivity extends AppCompatActivity
 					if (engSpaFileModified) {
 						List<String> engSpaLines = MyHttpClient.getPageLines(
 								ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1", "iso-8859-1");
-						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
 						engSpaDAO.updateDictionary(engSpaLines);
+						SharedPreferences.Editor editor = sharedPreferences.edit();
+						editor.putLong(UPDATES_VERSION_KEY, dateEngSpaFileModified);
+						editor.commit();
+						statusMessage = "dictionary updated";
+					} else {
+						statusMessage = "dictionary up to date";
 					}
 				} catch (IOException e) {
+					statusMessage = "error checking for updates: " + e;
 					Log.e(TAG, "Exception in checkDataFileVersion: " + e);
 				}
 				runOnUiThread(new Runnable() {
 					public void run() {
-						statusTextView.setText("dictionary updated");
-						progressBar.setVisibility(ProgressBar.INVISIBLE);
-						//!! dataFileCheckComplete(engSpaFileModified);
+						statusTextView.setText(statusMessage);
 					}
 				});
 			}
 		}).start();
 	}
-	/* TODO: remove these 3 methods?
-	 * if new version of data file, ask user to confirm update
-	 */
-	public void dataFileCheckComplete(boolean updated) {
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.dataFileCheckComplete(" + updated + ")");
-		if (updated) {
-			DialogFragment dialog = new NewDBDataDialog();
-			dialog.show(getSupportFragmentManager(), "New Dictionary Updates");
-		} else endOfUpdate();
-	}
-	private void endOfUpdate() {
-		if (BuildConfig.DEBUG) Log.d(TAG,
-				"MainActivity.endOfUpdate()");
-		// engSpaFragment.loadDB();
-	}
 	
-	/**
-	 * Process response from NewDBDataDialog; if confirmed, get new
-	 * engspa.txt file from server and use it to update the database.
-	 * This needs to be done in background thread, because of access to
-	 * network, and because of the delay while updating the database.
-	 * Note that bulk load is done via content loader, so automatically
-	 * run as background thread.
-	 */
-	@Override // NewDBDataDialog.UpdateDBListener
-	public void onUpdateDecision(boolean doUpdate) {
-		if (doUpdate) {
-			this.statusTextView.setText("loading new dictionary version...");
-			this.progressBar.setVisibility(ProgressBar.VISIBLE);
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						List<String> engSpaLines = MyHttpClient.getPageLines(
-								ENG_SPA_UPDATES_NAME + "?attredirects=0&d=1", "iso-8859-1");
-						EngSpaDAO engSpaDAO = engSpaFragment.getEngSpaDAO();
-						engSpaDAO.updateDictionary(engSpaLines);
-						/*!!
-						ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(engSpaLines);
-						engSpaDAO.newDictionary(contentValues);
-						*/
-						/* TODO: reinstate these lines when it's working!
-						SharedPreferences.Editor editor = sharedPreferences.edit();
-						editor.putLong(DATA_VERSION_KEY, dateEngSpaFileModified);
-						editor.commit();
-						*/
-						updateStatus = "";
-					} catch (IOException e) {
-						Log.e(TAG, "Exception in onUpdateDecision() " + e);
-						updateStatus = "dictionary update failed; using existing version";
-					}
-					runOnUiThread(new Runnable() {
-						public void run() {
-							statusTextView.setText(updateStatus);
-							progressBar.setVisibility(ProgressBar.INVISIBLE);
-							endOfUpdate();
-						}
-					});
-				}
-			}).start();
-		} else endOfUpdate();
-	}
-	
+	@Override
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaFragment.getEngSpaQuiz();
 	}

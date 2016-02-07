@@ -64,6 +64,7 @@ public interface EngSpaDAO {
 	/**
 	 * 
 	 * @param userId if < 1 then delete all user words
+	 *  else delete all users words for specified user.
 	 * @return number of rows deleted
 	 */
 	int deleteAllUserWords(int userId);

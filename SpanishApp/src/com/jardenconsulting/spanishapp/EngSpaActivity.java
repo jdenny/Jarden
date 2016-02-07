@@ -1,15 +1,12 @@
 package com.jardenconsulting.spanishapp;
 
 import jarden.engspa.EngSpaDAO;
+import jarden.engspa.EngSpaQuiz;
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
-	/**
-	 * See if we need to update the database from the server file.
-	 */
-	void checkDataFileVersion();
-	
 	EngSpaDAO getEngSpaDAO();
+	EngSpaQuiz getEngSpaQuiz();
 
 	/**
 	 * Each question is given a unique, increment sequence

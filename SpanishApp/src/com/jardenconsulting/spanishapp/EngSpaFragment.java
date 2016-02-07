@@ -66,7 +66,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private String tipTip = null;
 	private TextToSpeech textToSpeech;
 	private int orientation;
-	//!! private boolean dbLoadCompleted = false;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -82,7 +81,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		setRetainInstance(true);
 		saveOrientation();
 		this.levelStr = getResources().getString(R.string.levelStr);
-		//!! this.engSpaDAO = new EngSpaSQLite2(getActivity(), engSpaActivity.getTag());
 		this.engSpaDAO = engSpaActivity.getEngSpaDAO();
 		this.engSpaUser = engSpaDAO.getUser();
 		if (this.engSpaUser == null) { // i.e. no user yet on database
@@ -91,69 +89,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			engSpaDAO.insertUser(engSpaUser);
 			this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
 		}
-		//!! loadDB();
 		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
-		//!! this.dbLoadCompleted = true;
-		//!! if (statusTextView != null) askQuestion(false);
-		engSpaActivity.checkDataFileVersion();
-
 	}
-	/*!!
-	public void loadDB() {
-		InputStream is = getResources().openRawResource(R.raw.engspaversion);
-		List<String> engSpaVersionLines;
-		try {
-			engSpaVersionLines = EngSpaUtils.getLinesFromStream(is);
-			final int version = Integer.parseInt(engSpaVersionLines.get(0));
-			final SharedPreferences sharedPreferences = engSpaActivity.getSharedPreferences();
-			int savedVersion = sharedPreferences.getInt(ENGSPA_TXT_VERSION_KEY, 0);
-			if (version <= savedVersion) {
-				dbLoadComplete();
-			} else {
-				engSpaActivity.setStatus("loading new dictionary version...");
-				engSpaActivity.setProgressBarVisible(true);
-				new Thread(new Runnable() {
-					private String threadResult;
-
-					@Override
-					public void run() {
-						try {
-							InputStream is = getResources().openRawResource(R.raw.engspa);
-							ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(is);
-							engSpaDAO.newDictionary(contentValues);
-							SharedPreferences.Editor editor = sharedPreferences.edit();
-							editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
-							editor.commit();
-							threadResult = "dictionary load complete";
-						} catch (IOException e) {
-							threadResult = "dictionary load failed: " + e;
-							Log.e(engSpaActivity.getTag(), "EngSpaFragment.loadDB(): " + e);
-						}
-						getActivity().runOnUiThread(new Runnable() {
-							public void run() {
-								engSpaActivity.setStatus(threadResult);
-								engSpaActivity.setProgressBarVisible(false);
-								dbLoadComplete();
-							}
-						});
-					}
-				}).start();
-			}
-		} catch (IOException e) {
-			Log.e(engSpaActivity.getTag(), "EngSpaFragment.loadDB(): " + e);
-			engSpaActivity.setStatus("error loading database: " + e);
-		}
-	}
-	private void dbLoadComplete() {
-		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
-		this.engSpaQuiz.setQuizEventListener(this);
-		this.dbLoadCompleted = true;
-		if (statusTextView != null) askQuestion(false);
-		// TODO: sort this out!
-		engSpaActivity.checkDataFileVersion();
-	}
-	*/
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -212,9 +150,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"; textToSpeech is " + (textToSpeech==null?"":"not ") + "null");
 		}
 		super.onResume();
-		//!! if (dbLoadCompleted) {
-			askQuestion(false);
-		//!! }
+		askQuestion(false);
 	}
 	
 	/*
@@ -636,12 +572,4 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.engSpaActivity.setEngSpaTitle(this.levelStr + " " +
 				engSpaUser.getUserLevel());
 	}
-	/*
-	// TODO: make use of this?
-	public void deleteFails() {
-		// for now, as debug aid, delete all fails, i.e. for all users
-		int rowCt = this.engSpaDAO.deleteAllUserWords(-1);
-			Log.d(engSpaActivity.getTag(), "userWords deleted: " + rowCt);
-	}
-	*/
 }

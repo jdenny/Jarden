@@ -48,23 +48,34 @@ public class EngSpaUtils {
 	public static ContentValues[] getContentValuesArray(List<String> engSpaLines) {
 		ArrayList<ContentValues> contentValuesList = new ArrayList<ContentValues>(); 
 		ContentValues contentValues;
-		for (String line: engSpaLines) {
-			String[] tokens = line.split(",");
-			if (tokens.length == 6) {
-				contentValues = new ContentValues();
-				contentValues.put(EngSpaContract.ENGLISH, tokens[0]);
-				contentValues.put(EngSpaContract.SPANISH, tokens[1]);
-				contentValues.put(EngSpaContract.WORD_TYPE, tokens[2]);
-				contentValues.put(EngSpaContract.QUALIFIER, tokens[3]);
-				contentValues.put(EngSpaContract.ATTRIBUTE, tokens[4]);
-				contentValues.put(EngSpaContract.LEVEL, tokens[5]);
+		for (String engSpaLine: engSpaLines) {
+			contentValues = getContentValues(engSpaLine);
+			if (contentValues != null) {
 				contentValuesList.add(contentValues);
 			} else {
-				Log.w(TAG, "line from bulk update file in wrong format: " +
-						line);
+				Log.w(TAG, "engSpaLine from bulk update file in wrong format: " +
+						engSpaLine);
 			}
 		}
 		return contentValuesList.toArray(new ContentValues[contentValuesList.size()]);
+	}
+	public static ContentValues getContentValues(String engSpaLine) {
+		String[] tokens = engSpaLine.split(",");
+		if (tokens.length == 6) {
+			ContentValues contentValues = new ContentValues();
+			contentValues = new ContentValues();
+			contentValues.put(EngSpaContract.ENGLISH, tokens[0]);
+			contentValues.put(EngSpaContract.SPANISH, tokens[1]);
+			contentValues.put(EngSpaContract.WORD_TYPE, tokens[2]);
+			contentValues.put(EngSpaContract.QUALIFIER, tokens[3]);
+			contentValues.put(EngSpaContract.ATTRIBUTE, tokens[4]);
+			contentValues.put(EngSpaContract.LEVEL, tokens[5]);
+			return contentValues;
+		} else {
+			Log.w(TAG, "line from bulk update file in wrong format: " +
+					engSpaLine);
+			return null;
+		}
 	}
 	/**
 	 * Compare 2 Spanish words for equality.
@@ -113,7 +124,7 @@ public class EngSpaUtils {
 	public interface RunnableWithException extends Runnable {
 		void setResult(boolean success, Exception exception);
 	}
-	public static void RunBackgroundTask(final Activity activity, final Runnable backgroundRun,
+	public static void runBackgroundTask(final Activity activity, final Runnable backgroundRun,
 			final RunnableWithException foregroundRun) {
 		new Thread(new Runnable() {
 			private boolean success;

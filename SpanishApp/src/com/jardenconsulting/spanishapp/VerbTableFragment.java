@@ -30,10 +30,12 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	private TextView statusTextView;
 	private EngSpaQuiz engSpaQuiz;
 	private ArrayAdapter<String> conjugateListAdapter;
+	private EngSpaActivity engSpaActivity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.engSpaActivity = (EngSpaActivity) getActivity();
 		if (BuildConfig.DEBUG) Log.d(MainActivity.TAG, "VerbTableFagment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		
@@ -60,8 +62,7 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 	private void goPressed() {
 		List<EngSpa> matches;
 		if (this.engSpaQuiz == null) {
-			MainActivity mainActivity = (MainActivity) getActivity();
-			this.engSpaQuiz = mainActivity.getEngSpaQuiz();
+			this.engSpaQuiz = engSpaActivity.getEngSpaQuiz();
 		}
 		String verb = this.spanishVerbEditText.getText().toString().trim();
 		if (verb.length() > 0) {
@@ -81,30 +82,32 @@ public class VerbTableFragment extends Fragment implements OnEditorActionListene
 		}
 		// TODO: sort out may have more than 1 match
 		EngSpa engSpa = matches.get(0);
-		if (engSpa.getWordType() != WordType.verb) {
-			this.statusTextView.setText(verb + " is not a verb, but " + engSpa.getWordType());
-			return;
-		}
 		String spanish = engSpa.getSpanish();
-		((EngSpaActivity) getActivity()).setSpanish(spanish);
-		String english = engSpa.getEnglish();
-		String line;
+		engSpaActivity.setSpanish(spanish);
 		this.conjugateListAdapter.setNotifyOnChange(false);
 		this.conjugateListAdapter.clear();
-		for (Tense tense: Tense.values()) {
-			if (tense.isDiffPersons()) {
-				for (Person person: Person.values()) {
-					line = person.getSpaPronoun() + " " +
-						VerbUtils.conjugateSpanishVerb(spanish, tense, person) + "; " +
-						person.getEngPronoun() + " " +
-						VerbUtils.conjugateEnglishVerb(english, tense, person);
+		if (engSpa.getWordType() == WordType.verb) {
+			String english = engSpa.getEnglish();
+			String line;
+			for (Tense tense: Tense.values()) {
+				if (tense.isDiffPersons()) {
+					for (Person person: Person.values()) {
+						line = person.getSpaPronoun() + " " +
+							VerbUtils.conjugateSpanishVerb(spanish, tense, person) + "; " +
+							person.getEngPronoun() + " " +
+							VerbUtils.conjugateEnglishVerb(english, tense, person);
+						conjugateListAdapter.add(line);
+					}
+				} else {
+					line = tense + ": " +
+						VerbUtils.conjugateSpanishVerb(spanish, tense, null) + "; " +
+						VerbUtils.conjugateEnglishVerb(english, tense, null);
 					conjugateListAdapter.add(line);
 				}
-			} else {
-				line = tense + ": " +
-					VerbUtils.conjugateSpanishVerb(spanish, tense, null) + "; " +
-					VerbUtils.conjugateEnglishVerb(english, tense, null);
-				conjugateListAdapter.add(line);
+			}
+		} else {
+			for (EngSpa es: matches) {
+				conjugateListAdapter.add(es.getDictionaryString());
 			}
 		}
 		this.conjugateListAdapter.notifyDataSetChanged();

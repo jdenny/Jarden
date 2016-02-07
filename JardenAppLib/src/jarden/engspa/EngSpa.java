@@ -32,6 +32,9 @@ public class EngSpa extends UserWord {
 	public String toString() {
 		return english + ":" + spanish + "(" + super.toString() + ")";
 	}
+	public String getDictionaryString() {
+		return english + ": " + spanish + ", " + wordType + ", " + qualifier + ", " + attribute;
+	}
 	/**
 	 * Used to disambiguate words.
 	 * @return

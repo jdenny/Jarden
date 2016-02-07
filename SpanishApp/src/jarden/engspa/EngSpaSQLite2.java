@@ -77,6 +77,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			" from EngSpa, UserWord where EngSpa." + BaseColumns._ID +
 			"= UserWord." + WORD_ID +
 			" and UserWord." + USER_ID + "=?";
+	private static final String SELECTION = BaseColumns._ID + "=?";
 	private static final String USER_WORD_SELECTION = USER_ID + "=? and " + WORD_ID + "=?";
 	private static final String USER_SELECTION = USER_ID + "=?";
 
@@ -135,12 +136,33 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	
 	@Override // EngSpaDAO
 	public int updateDictionary(List<String> updateLines) {
-		Log.d(TAG, "EngSpaSQLite2.updateDictionary(); updateLines.size=" +
-				updateLines.size());
+		if (BuildConfig.DEBUG)
+			Log.d(TAG, "EngSpaSQLite2.updateDictionary(); updateLines.size=" +
+					updateLines.size());
+		int rowCount = 0;
 		for (String line: updateLines) {
-			Log.d(TAG, "  " + line);
+			if (BuildConfig.DEBUG) Log.d(TAG, "  " + line);
+			try {
+				if (line.startsWith("u,")) {
+					int index = line.indexOf(',', 2); // get position of 2nd comma
+					String idStr = line.substring(2, index);
+					int id = Integer.parseInt(idStr);
+					ContentValues contentValues = EngSpaUtils.getContentValues(line.substring(index + 1));
+					contentValues.put(BaseColumns._ID, id);
+					update(contentValues, SELECTION, new String[] { idStr });
+					rowCount++;
+					if (BuildConfig.DEBUG) Log.d(TAG, "id of updated row: " + id);
+				} else if (line.startsWith("c,")) {
+					ContentValues contentValues = EngSpaUtils.getContentValues(line.substring(2));
+					long id = insert(contentValues);
+					rowCount++;
+					if (BuildConfig.DEBUG) Log.d(TAG, "id of new row: " + id);
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "EngSpaSQLite2.updateDictionary(); exception: " + e);
+			}
 		}
-		return 0;
+		return rowCount;
 	}
 
 	private int populateDatabase(SQLiteDatabase engSpaDB) {
@@ -355,7 +377,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		return new EngSpa(id, english, spanish,
 				wordType, qualifier, attribute, level);
 	}
-
+	
 	@Override // EngSpaDAO
 	public EngSpa getRandomPassedWord(int userLevel) {
 		if (userLevel < 2) return null;
