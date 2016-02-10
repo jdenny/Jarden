@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>InvokeActivity</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>Invoke Explorer Activity</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Create a new activity in your project, ExplorerActivity:</p><ul>
+	<li>right-click package; New; Other</li>
+	<li>in "Select a wizard", select Android/Android Activity; Next</li>
+	<li>Blank Activity with Fragment; Next</li>
+	<li>set Activity Name to ExplorerActivity; Next; Finish</li>
+</ul>
+Notice ExplorerActivity now added to <code>AndroidManifest.xml</code><br/>
+Notice ExplorerActivity has an inner class, PlaceholderFragment.
+Rename this to ExplorerFragment. We will discuss Fragments in more detail
+later in the course.
+
+<p>Add a button to end of MainActivity layout, to invoke ExplorerActivity;
+set the onClickListener, as we did for goButton.</p>
+
+<p>In method <code>onClick(...)</code> determine which button has been clicked,
+by getting its id:</p>
+<pre><code>int view.getId(); // returns resource identifier
+</code></pre>
+<p>When the 'go' button is clicked, execute the code already in place for
+checking the supplied answer to the quiz; when the 'explorer' button is
+clicked, start the new activity:</p>
+<pre><code>Intent intent = new Intent(this, ExplorerActivity.class);
+startActivity(intent);</code></pre>
+	
+<p>Run your app. Ensure you can start ExplorerActivity by clicking the
+button. Use the back button to return to MainActivity.</p>
+
+<p>In ExplorerActivity, override life-cycle callback methods:<br/>
+<code>onStart(), onResume(), onPause(), onStop(), onDestroy()</code><ul>
+	<li>right-click on blank part of ExplorerActivity.java</li>
+	<li>choose Source, Override/Implement Methods</li>
+</ul>
+
+<p>Override the same life-cycle methods, plus <code>onCreate()</code>, for
+ExplorerFragment.</p>
+	
+<p>Add logging to all the life-cycle callback methods, including
+<code>Activity.onCreate()</code> and <code>Fragment.onCreateView()</code>,
+e.g.</p><code><pre>
+public final static String TAG = "ExplorerActivity";
+...
+@Override
+protected void onStop() {
+   if (BuildConfig.DEBUG) Log.d(TAG, "onStop()");
+   super.onStop();
+}</pre></code>	
+
+<p>Make sure you use a different TAG for ExplorerFragment, and that every log
+message matches the method name.</p>
+
+<p>In method Activity.onCreate() issue Toast message, e.g.</p><code><pre>
+Toast.makeText(this, "ExplorerActivity.onCreate()",
+Toast.LENGTH_LONG).show();
+</pre></code>
+		
+<p>Run your app again in Debug mode, e.g. right-click project name in
+Project Explorer, and choose Debug as Android Application.</p>
+
+Look in log: open DDMS/LogCat view in Eclipse; in Saved Filters pane,
+click on the session filter for your app, identified by its package name;
+if there isn't one already created, add a filter, e.g.<ul>
+	<li>click on green cross in Saved Filters</li>
+	<li>Filter Name: <i>your package</i>, e.g. com.john.student
+	<li>by Application Name: <i>your package</i></ul>
+See what log messages you get when you rotate the device.
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>

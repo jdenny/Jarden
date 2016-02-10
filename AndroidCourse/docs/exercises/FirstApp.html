@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>FirstApp</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div class='banner'>First App</div>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+<p>Objectives of exercise:<ul>
+	<li>create an Android project</li>
+	<li>run app on virtual device</li>
+	<li>run app on real device</li>
+</ul>
+
+<p>Create an Android project; this can be done from a command line - see
+<a href="http://developer.android.com/training/basics/firstapp/creating-project.html#CommandLine">
+Android Developer Guide</a> for more details; we are going to use Eclipse,
+as it's easier!</p>
+
+<ul><li>File | New | Android Application Project</li>
+	<li>supply application name, package name</li>
+	<li>minimum required SDK: API 8</li>
+	<li>target SDK and compile with: highest available</li>
+	<li>theme: one of the Holo themes</li>
+	<li>accept defaults for all other options in wizard</li>
+</ul>
+
+Configure a virtual device:<ul>
+	<li>Window | Android Virtual Device Manager</li>
+	<li>choose one of the templates in <i>Device Definitions</i> or create one from
+	 scratch using <i>Android Virtual Devices</i></li>
+</ul>
+
+Run your app on virtual device:<ul>
+	<li>right-click on project name in Project Explorer, and choose
+	Run As | Android application</li>
+	<li>choose emulator as the target; note that the emulator is quite big,
+	and may take a few minutes to start up!</li>
+</ul>
+Your app should say "Hello world!"
+
+<p>Note: use the Esc key as the <i>back</i> button.</p>
+
+<p>If you have an Android device, close down the emulator, and run your
+app on your own device.</p><ul>
+	<li>Plug in your device to your development machine with a USB cable.
+	If you're developing on Windows, you might need to install the
+	appropriate USB driver for your device.</li>
+	<li>Enable USB debugging on your device.</li>
+</ul>
+For more information, see
+<a href="http://developer.android.com/training/basics/firstapp/running-app.html">
+Running Your App</a> in the Android Developer Guide.
+
+<p>If you are going to continue using the emulator, it's best to leave it running, 
+as it can take some time to start up.</p>
+
+<p>See if you can find out where the string <b><i>Hello world!</i></b>
+comes from, and change it.</p>
+
+<p><a href='ExerciseContents.html'>Back to Exercise List</a></p>
+
+</body>
+</html>
