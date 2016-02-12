@@ -527,7 +527,7 @@ Holland,Holanda,noun,feminine,place,1
 India,India,noun,feminine,place,1
 Ireland,Irlanda,noun,feminine,place,1
 Mexico,México,noun,masculine,place,1
-Netherlands,Países Bajos,noun,masculine,place,1
+The Netherlands,Los Países Bajos,phrase,masculine,place,1
 Pakistan,Pakistán,noun,masculine,place,1
 Peru,Perú,noun,masculine,place,1
 Russia,Rusia,noun,feminine,place,1
@@ -536,7 +536,7 @@ Spain,España,noun,feminine,place,1
 Sweden,Suecia,noun,feminine,place,1
 Turkey,Turquía,noun,feminine,place,1
 Switzerland,Suiza,noun,feminine,place,1
-United States,Estados Unido,noun,masculine,place,1
+The United States,los Estados Unidos,phrase,masculine,place,1
 Wales,País de Gales,noun,masculine,place,1
 country,país,noun,masculine,place,1
 south,sur,noun,masculine,place,1
@@ -801,7 +801,7 @@ free,libre,adjective,n_a,n_a,1
 grateful,agradecido,adjective,n_a,n_a,1
 great,gran,adjective,n_a,n_a,1
 handsome,guapo,adjective,n_a,n_a,1
-happy,happy,adjective,n_a,n_a,1
+happy,alegre,adjective,n_a,n_a,1
 hard,duro,adjective,n_a,n_a,1
 hardworking,trabajador,adjective,n_a,n_a,1
 healthy,sano,adjective,n_a,n_a,1
@@ -811,7 +811,7 @@ last,último,adjective,n_a,n_a,1
 lazy,perezoso,adjective,n_a,n_a,1
 light,ligero,adjective,n_a,n_a,1
 lively,animado,adjective,n_a,n_a,1
-locked,cerrado,adjective,n_a,n_a,1
+locked,cerrado con llave,adjective,n_a,n_a,1
 lost,perdido,adjective,n_a,n_a,1
 magnificent,magnífico,adjective,n_a,n_a,1
 mature,maduro,adjective,n_a,n_a,1
@@ -1016,7 +1016,7 @@ good luck,buena suerte,phrase,n_a,n_a,1
 here you are,aquí lo tienes,phrase,n_a,n_a,1
 how do you spell that,cómo se escribe,phrase,n_a,n_a,1
 I don’t mind,me da igual,phrase,n_a,n_a,1
-I’ve had enough,he tenido bastante,phrase,n_a,n_a,1
+I've had enough,he tenido bastante,phrase,n_a,n_a,1
 in my opinion,en mi opinión,phrase,n_a,n_a,1
 it depends,depende,phrase,n_a,n_a,1
 it doesn’t matter,no importa nada,phrase,n_a,n_a,1
@@ -1052,7 +1052,7 @@ bra,sostén,noun,masculine,clothing,1
 bracelet,brazalete,noun,masculine,clothing,1
 cap,gorra,noun,feminine,clothing,1
 changing room,probador,noun,masculine,clothing,1
-clothes,ropa,noun,feminine,clothing,1
+the clothes,la ropa,phrase,feminine,clothing,1
 clothes shop,tienda de ropa,noun,feminine,building,1
 cotton,algodón,noun,masculine,clothing,1
 dressed in,vestido de,phrase,n_a,clothing,1
@@ -1631,3 +1631,38 @@ west,oeste,noun,masculine,place,1
 shop window,escaparate,noun,masculine,place,1
 forest,bosque,noun,masculine,size,1
 youth hostel,albergue juvenil,noun,masculine,building,1
+bad weather,mal tiempo,phrase,n_a,weather,1
+bright weather,buen tiempo,phrase,n_a,weather,1
+climate,clima,noun,masculine,weather,1
+cloud,nube,noun,feminine,weather,1
+cloudy,nublado,adjective,n_a,weather,1
+cold,frío,adjective,n_a,weather,1
+dry,seco,adjective,n_a,weather,1
+fog,niebla,noun,feminine,weather,1
+foggy,hay niebla,phrase,n_a,weather,1
+heat,calor,noun,masculine,weather,1
+highest temperature,temperatura más alta,phrase,n_a,weather,1
+hot,caluroso,adjective,n_a,weather,1
+in the east,al este,phrase,n_a,n_a,1
+in the north,al norte,phrase,n_a,n_a,1
+in the south,al sur,phrase,n_a,n_a,1
+in the west,al oeste,phrase,n_a,n_a,1
+it is freezing,está helado,phrase,n_a,weather,1
+it is lightning,hay relámpagos,phrase,n_a,weather,1
+it is raining,está lloviendo,phrase,n_a,weather,1
+it is snowing,está nevando,phrase,n_a,weather,1
+it is thundering,hay truenos,phrase,n_a,weather,1
+lowest temperature,temperatura mínima,phrase,n_a,weather,1
+overcast,está nublado,phrase,n_a,weather,1
+rainy,lluvioso,adjective,n_a,weather,1
+sky,cielo,noun,masculine,weather,1
+snow,nieve,noun,feminine,weather,1
+thunderstorm,tormenta,noun,feminine,weather,1
+sun,sol,noun,masculine,weather,1
+sunny,soleado,adjective,n_a,weather,1
+the sun is shining,brilla el sol,phrase,n_a,weather,1
+freeze,helar,verb,transIntrans,weather,1
+shine,brillar,verb,transIntrans,weather,1
+weather report,boletín meteorológico,noun,masculine,weather,1
+wind,viento,noun,masculine,weather,1
+windy,ventoso,adjective,n_a,weather,1

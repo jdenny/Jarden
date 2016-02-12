@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
 	}
 	private void dbLoadComplete() {
 		showFragment();
-		this.checkForDBUpdates();
+		//!! this.checkForDBUpdates();
 	}
 	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity
 	 * engspaupdates.txt on server. Version determined from
 	 * dateLastModified, which is saved in SharedPreferences.
 	 */
-	private void checkForDBUpdates() {
+	public void checkForDBUpdates() {
 		engSpaFileModified = false;
 		this.statusTextView.setText("checking for updates...");
 		new Thread(new Runnable() {

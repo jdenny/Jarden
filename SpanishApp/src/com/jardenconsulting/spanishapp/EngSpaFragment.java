@@ -91,6 +91,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
+		this.engSpaActivity.checkForDBUpdates();
 	}
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,9 +104,11 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
 		String pendingAnswer = null;
+		String statusText = null;
 		int selfMarkLayoutVisibility = View.GONE;
 		if (this.answerEditText != null) pendingAnswer = answerEditText.getText().toString();
 		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
+		if (this.statusTextView != null) statusText = statusTextView.getText().toString();
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
 		this.userNameTextView.setText(this.engSpaUser.getUserName());
@@ -138,6 +141,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		// NOTE: leave statusTextView as the last view to be initialised
 		// as this is used to see if the views are all initialised
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
+		if (statusText != null) this.statusTextView.setText(statusText);
 		showUserLevel();
 		if (tipTip != null) this.statusTextView.setText(tipTip); // tip for new user
 		return rootView;

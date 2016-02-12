@@ -228,20 +228,26 @@ public class VerbUtils {
 	 */
 	public static String conjugateEnglishVerb(String englishVerb, Tense tense,
 			Person person) {
-	    String prefix, suffix, engVerbModified;
+	    String prefix, suffix;
+	    String engVerbModified = englishVerb;
 	    if (tense == Tense.imperative || tense == Tense.noImperative) {
-	        engVerbModified = englishVerb;
+	    	// end of story; note that for these two tenses, person may be null
 	    } else {
 		    boolean thirdPersonSingular = person.isThirdPersonSingular();
 			if (tense == Tense.present) {
-		        if (englishVerb.equals("be")) {
+				if (thirdPersonSingular) {
+					String irreg = irregEnglish3rdPersonSingularPresentMap.get(englishVerb);
+			        if (irreg != null) {
+			        	engVerbModified = irreg;
+			        } else if (englishVerb.endsWith("ss")) {
+			        	engVerbModified = englishVerb + "es";
+			        } else {
+			        	engVerbModified = englishVerb + "s";
+			        }
+				} else if (englishVerb.equals("be")) {
 		        	if (person == Person.yo) engVerbModified = "am";
-		        	else if (thirdPersonSingular) engVerbModified = "is";
 		        	else engVerbModified = "are";
-		        } else {
-		        	if (thirdPersonSingular) engVerbModified = englishVerb + "s";
-		        	else engVerbModified = englishVerb;
-		        }
+			    }
 		    } else if (tense == Tense.imperfect) {
 	        	if (thirdPersonSingular || person == Person.yo) prefix = "was";
 	        	else prefix = "were";
@@ -251,7 +257,7 @@ public class VerbUtils {
 			        if (englishVerb.endsWith("e") && !englishVerb.equals("be") &&
 			        		!englishVerb.equals("see")) {
 			        	stem = englishVerb.substring(0, englishVerb.length() - 1);
-			        } else if (englishVerb.endsWith("et")) {
+			        } else if (englishVerb.endsWith("et") && !englishVerb.endsWith("eet")) {
 			            stem = englishVerb + "t";
 			        } else {
 			            stem = englishVerb;
@@ -279,7 +285,7 @@ public class VerbUtils {
 		    } else {
 		    	throw new IllegalStateException("unrecognised tense: " + tense);
 		    }
-		}
+	    }
 	    return engVerbModified;
 	}
 	
@@ -527,6 +533,14 @@ public class VerbUtils {
 	private static Object[][] hacerTenses = {
 		{"p", hacerPresent}, {"r", hacerPreterite},
 		{"f", "har"}, {"si", "haz"}, {"no", "hagas"}
+	};
+
+	private static String[][] helarPresent = {
+		{"yo", "hielo"}, {"tu", "hielas"},
+		{"el", "hiela"}, {"e", "hielan"}
+	};
+	private static Object[][] helarTenses = {
+		{"p", helarPresent}, {"si", "hiela"}, {"no", "hieles"}
 	};
 
 	private static String[][] irPresent = {
@@ -935,11 +949,10 @@ public class VerbUtils {
 		{"doler", dolerTenses}, {"dormir", dormirTenses},
 		{"descargar", descargarTenses},{"ejercer", ejercerTenses},
 		{"encontrar", encontrarTenses}, {"estar", estarTenses},
-		{"entender", entenderTenses}, {"enviar", enviarTenses},
-		{"preferir", preferirTenses},
+		{"helar", entenderTenses}, {"enviar", enviarTenses},
 		{"haber", haberTenses}, {"hacer", hacerTenses},
-		{"ir", irTenses}, {"jugar", jugarTenses},
-		{"leer", leerTenses},
+		{"helar", helarTenses}, {"ir", irTenses},
+		{"jugar", jugarTenses}, {"leer", leerTenses},
 		{"llegar", llegarTenses}, {"llover", lloverTenses},
 		{"merecer", merecerTenses}, {"morir", morirTenses},
 		{"mostrar", mostrarTenses}, {"nevar", nevarTenses},
@@ -949,6 +962,7 @@ public class VerbUtils {
 		{"pensar", pensarTenses}, {"perder", perderTenses},
 		{"pescar", pescarTenses},
 		{"poder", poderTenses}, {"poner", ponerTenses},
+		{"preferir", preferirTenses},
 		{"prevenir", prevenirTenses}, {"quebrar", quebrarTenses},
 		{"querer", quererTenses}, {"recordar", recordarTenses},
 		{"reír", reirTenses},{"reñir", renirTenses},
@@ -968,6 +982,9 @@ public class VerbUtils {
 	private static RegularSpaVerb regularARVerb;
 	
 	/******************English verb data*****************************/
+	private static String[][] irregEnglish3rdPersonSingularPresent = {
+		{ "go", "goes" }, { "do", "does"}, {"be", "is"}
+	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},
 		{"awake", "awoke"}, {"bring", "brought"},
@@ -999,6 +1016,7 @@ public class VerbUtils {
 		{"run", "runn"},
 		{"regret", "regrett"}, {"swim", "swimm"}, {"win", "winn"}
 	};
+	private static HashMap<String, String> irregEnglish3rdPersonSingularPresentMap;
 	private static HashMap<String, String> irregEnglishPreteritesMap;
 	private static HashMap<String, String> irregEnglishGerundMap;
 
@@ -1018,6 +1036,11 @@ public class VerbUtils {
 			irregSpaVerbsMap2.put(verbSpa, irregularSpaVerb);
 		}
 		
+		irregEnglish3rdPersonSingularPresentMap = new HashMap<String, String>();
+		for (String[] irreg3PSP: irregEnglish3rdPersonSingularPresent) {
+			irregEnglish3rdPersonSingularPresentMap.put(irreg3PSP[0], irreg3PSP[1]);
+		}
+
 		irregEnglishPreteritesMap = new HashMap<String, String>();
 		for (String[] irregPret: irregEnglishPreterites) {
 			irregEnglishPreteritesMap.put(irregPret[0], irregPret[1]);

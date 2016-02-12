@@ -5,6 +5,10 @@ import jarden.engspa.EngSpaQuiz;
 import android.content.SharedPreferences;
 
 public interface EngSpaActivity {
+	/**
+	 * Check the dictionary update file on the server.
+	 */
+	void checkForDBUpdates();
 	EngSpaDAO getEngSpaDAO();
 	EngSpaQuiz getEngSpaQuiz();
 
