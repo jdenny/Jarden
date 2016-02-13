@@ -1,4 +1,47 @@
-MainActivity MVC?
+fresh start of app:
+	MainActivity.onCreate(state null)
+		engSpaDAO = EngSpaSQLite2.getInstance()
+		if new version of local engspa.txt: load dictionary
+	EngSpaFragment.onAttach()
+	EngSpaFragment.onCreate(state null)
+		engSpaDAO from activity
+		create or get engSpaUser
+		new EngSpaQuiz
+		activity.checkForDBUpdates on server
+	EngSpaFragment.onCreateView()
+		if no question: askQuestion(getNext=true)
+			if getNext: nextQuestion()
+			put question into UI
+			showStats()
+		else showStats()
+	EngSpaFragment.onResume()
+
+on open app after Android has destroyed it:
+	EngSpaFragment.onAttach()
+	EngSpaFragment.onCreate(state not null)
+	MainActivity.onCreate(state not null)
+	EngSpaFragment.onCreateView()
+	EngSpaFragment.onResume()
+
+rotate device: same as above, except no Fragment.onCreate()
+	EngSpaFragment.onPause() // closing down previous
+	
+	EngSpaFragment.onAttach()
+	MainActivity.onCreate(state not null)
+	EngSpaFragment.onCreateView()
+	EngSpaFragment.onResume()
+
+run another app:
+	EngSpaFragment.onPause() // closing down previous
+	EngSpaFragment.onResume()
+
+Proposal
+	remove askQuestion from onResume
+	in onCreateView:
+		if (this.spanish == null) askQuestion(true);
+
+========================================================================
+MainActivity
 
 onCreate()
   if no user: showUserDialog

@@ -120,8 +120,9 @@ public class EngSpaQuiz extends Quiz {
 		this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 	}
 	
-	/*
-	Get questions from Current, Passed and Failed lists.
+	/**
+	 * Get questions from Current, Passed and Failed lists.
+	 * @return spanish
 	Note: all fails kept in sync with database using userWordTable (i.e.
 	fails are per user!)
 	Logic:

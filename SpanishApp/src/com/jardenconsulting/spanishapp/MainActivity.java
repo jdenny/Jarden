@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"MainActivity.onCreate(savedInstanceState is " +
 				(savedInstanceState==null?"":"not ") + "null)");
-		this.engSpaDAO = EngSpaSQLite2.getInstance(this, TAG);
+		getEngSpaDAO();
 		sharedPreferences = getSharedPreferences(TAG, Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_main);
 		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity
 	}
 	private void dbLoadComplete() {
 		showFragment();
-		//!! this.checkForDBUpdates();
 	}
 	@Override // Activity
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -426,6 +425,9 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override
 	public EngSpaDAO getEngSpaDAO() {
+		if (this.engSpaDAO == null) {
+			this.engSpaDAO = EngSpaSQLite2.getInstance(this, TAG);
+		}
 		return this.engSpaDAO;
 	}
 }

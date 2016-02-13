@@ -65,7 +65,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaActivity engSpaActivity;
 	private String tipTip = null;
 	private TextToSpeech textToSpeech;
-	private int orientation;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -79,7 +78,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
-		saveOrientation();
 		this.levelStr = getResources().getString(R.string.levelStr);
 		this.engSpaDAO = engSpaActivity.getEngSpaDAO();
 		this.engSpaUser = engSpaDAO.getUser();
@@ -103,12 +101,15 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
-		String pendingAnswer = null;
-		String statusText = null;
+		CharSequence pendingAnswer = null;
+		CharSequence statusText = null;
+		CharSequence attributeText = null;
 		int selfMarkLayoutVisibility = View.GONE;
-		if (this.answerEditText != null) pendingAnswer = answerEditText.getText().toString();
+		if (this.answerEditText != null) pendingAnswer = answerEditText.getText();
 		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
-		if (this.statusTextView != null) statusText = statusTextView.getText().toString();
+		if (this.statusTextView != null) statusText = statusTextView.getText();
+		if (this.attributeTextView != null) attributeText = attributeTextView.getText();
+		// Now get new layout
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
 		this.userNameTextView.setText(this.engSpaUser.getUserName());
@@ -136,14 +137,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
 		if (pendingAnswer != null) this.answerEditText.setText(pendingAnswer);
+		if (attributeText != null) this.attributeTextView.setText(attributeText);
 		if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
 		this.answerEditText.setOnEditorActionListener(this);
-		// NOTE: leave statusTextView as the last view to be initialised
-		// as this is used to see if the views are all initialised
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
 		if (statusText != null) this.statusTextView.setText(statusText);
 		showUserLevel();
 		if (tipTip != null) this.statusTextView.setText(tipTip); // tip for new user
+		if (this.spanish == null) {
+			askQuestion(true);
+		} else {
+			showStats();
+		}
 		return rootView;
 	}
 	@Override // Fragment
@@ -154,13 +159,45 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"; textToSpeech is " + (textToSpeech==null?"":"not ") + "null");
 		}
 		super.onResume();
-		askQuestion(false);
 	}
-	
-	/*
-	 * part 1 of next question: set up business model, i.e. attributes
-	 * which are not part of UI
+	/**
+	 * if getNext is true: get next question
+	 * askQuestion using UI (textFields & voice)
 	 */
+	private void askQuestion(boolean getNext) {
+		if (getNext) {
+			nextQuestion();
+		}
+		String hint = engSpaQuiz.getCurrentWord().getHint();
+		if (hint.length() > 0) hint = "hint: " + hint;
+		this.attributeTextView.setText(hint);
+		if (this.currentQAStyle.voiceText != VoiceText.text) {
+			speakSpanish(this.question);
+		}
+		if (this.currentQAStyle.spaAnswer) {
+			this.answerEditText.setHint(R.string.spanishStr);
+			this.micButton.setVisibility(View.VISIBLE);
+		} else {
+			this.answerEditText.setHint(R.string.englishStr);
+			this.micButton.setVisibility(View.INVISIBLE);
+		}
+		if (this.currentQAStyle.voiceText == VoiceText.voice) {
+			this.questionTextView.setText("");
+		} else {
+			this.questionTextView.setText(this.question);
+		}
+		showStats();
+	}
+	private void showStats() {
+		int cwct = engSpaQuiz.getCurrentWordCount();
+		int fwct = engSpaQuiz.getFailedWordCount();
+		this.currentCtTextView.setText(Integer.toString(cwct));
+		this.failCtTextView.setText(Integer.toString(fwct));
+		if (BuildConfig.DEBUG) {
+			String debugState = engSpaQuiz.getDebugState();
+			Log.d(engSpaActivity.getTag(), debugState);
+		}
+	}
 	private void nextQuestion() {
 		this.spanish = engSpaQuiz.getNextQuestion2(
 				engSpaActivity.getQuestionSequence());
@@ -190,29 +227,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.correctAnswer = english;
 		}
 		this.answerEditText.getText().clear();
-	}
-	/*
-	 * part 2 of next question: set up UI from business model
-	 */
-	private void askQuestion() {
-		String hint = engSpaQuiz.getCurrentWord().getHint();
-		if (hint.length() > 0) hint = "hint: " + hint;
-		this.attributeTextView.setText(hint);
-		if (this.currentQAStyle.voiceText != VoiceText.text) {
-			speakSpanish(this.question);
-		}
-		if (this.currentQAStyle.spaAnswer) {
-			this.answerEditText.setHint(R.string.spanishStr);
-			this.micButton.setVisibility(View.VISIBLE);
-		} else {
-			this.answerEditText.setHint(R.string.englishStr);
-			this.micButton.setVisibility(View.INVISIBLE);
-		}
-		if (this.currentQAStyle.voiceText == VoiceText.voice) {
-			this.questionTextView.setText("");
-		} else {
-			this.questionTextView.setText(this.question);
-		}
 	}
 	public EngSpaQuiz getEngSpaQuiz() {
 		return this.engSpaQuiz;
@@ -283,28 +297,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	@Override // Activity
 	public void onPause() {
 		super.onPause();
-		// TODO: why doesn't this work?
-		if (// !isOrientationChanged() &&
-				this.textToSpeech != null) {
+		if (this.textToSpeech != null) {
 			textToSpeech.stop();
 			textToSpeech.shutdown();
 			textToSpeech = null;
 			if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(),
 					"EngSpaFragment.onPause(); textToSpeech closed");
 		}
-	}
-	// return true if orientation changed since previous call
-	@SuppressWarnings("unused")
-	private boolean isOrientationChanged() {
-		int oldOrientation = this.orientation;
-		saveOrientation();
-		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(),
-				"EngSpaFragment.getOrientation(); orientation was: " +
-				oldOrientation + ", is: " + this.orientation);
-		return this.orientation != oldOrientation;
-	}
-	private void saveOrientation() {
-		this.orientation = getResources().getConfiguration().orientation;
 	}
 	public void speakSpanish(String spanish) {
 		this.spanish = spanish;
@@ -396,13 +395,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.answerEditText.setText(this.correctAnswer);
 			if (this.currentQAStyle.voiceText == VoiceText.voice) {
 				// if question was spoken only, user may want to see the translated word
-				if (this.currentQAStyle.spaAnswer) {
-					this.statusTextView.setText(engSpaQuiz.getEnglish());
-				} else {
-					this.statusTextView.setText(engSpaQuiz.getSpanish());
-				}
-			} else {
-				this.statusTextView.setText("");
+				String translated = this.currentQAStyle.spaAnswer ? engSpaQuiz
+						.getEnglish() : engSpaQuiz.getSpanish();
+				this.attributeTextView.setText(translated);
+//				if (this.currentQAStyle.spaAnswer) {
+//					this.statusTextView.setText(engSpaQuiz.getEnglish());
+//				} else {
+//					this.statusTextView.setText(engSpaQuiz.getSpanish());
+//				}
+//			} else {
+//				this.statusTextView.setText("");
 			}
 		} else {
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
@@ -449,16 +451,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			builder.deleteCharAt(builderLastCharIndex);
 		}
 		return builder.toString();
-	}
-	private void showStats() {
-		int cwct = engSpaQuiz.getCurrentWordCount();
-		int fwct = engSpaQuiz.getFailedWordCount();
-		this.currentCtTextView.setText(Integer.toString(cwct));
-		this.failCtTextView.setText(Integer.toString(fwct));
-		if (BuildConfig.DEBUG) {
-			String debugState = engSpaQuiz.getDebugState();
-			Log.d(engSpaActivity.getTag(), debugState);
-		}
 	}
 
 	@Override // OnEditorActionListener
@@ -558,13 +550,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		this.engSpaQuiz.setTopic(topic);
 		askQuestion(true);
-	}
-	private void askQuestion(boolean getNext) {
-		if (getNext || this.question == null) {
-			nextQuestion();
-		}
-		askQuestion();
-		showStats();
 	}
 
 	@Override // QuizEventListener
