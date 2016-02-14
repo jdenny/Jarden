@@ -3,10 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.jardenconsulting.spanishapp.MainActivity" >
 
-	<item
+    <item
         android:id="@+id/speakerButton"
         android:icon="@drawable/speaker"
         android:title="@string/speakerStr"
+        app:showAsAction="ifRoom"/>
+	
+	<item
+        android:id="@+id/helpButton"
+        android:title="@string/questionMarkStr"
         app:showAsAction="ifRoom"/>
 	
     <item

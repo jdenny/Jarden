@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
 		ListView.OnItemClickListener {
     public static final String TAG = "SpanishMain";
 	
+    private static final String TITLE_KEY = "title";
     private static final String ENGSPA_TXT_VERSION_KEY = "EngSpaTxtVersion";
     private static final String UPDATES_VERSION_KEY = "DataVersion";
     private static final String ENG_SPA_UPDATES_NAME = 
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity
 	private TextView statusTextView;
 	private boolean engSpaFileModified;
 	private long dateEngSpaFileModified;
-	private String spanish;
 	private SharedPreferences sharedPreferences;
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
 			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(VERB_TABLE);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
-			String title = savedInstanceState.getString("title");
+			String title = savedInstanceState.getString(TITLE_KEY);
 			if (title != null) setTitle(title);
 		}
 		loadDB();
@@ -185,15 +185,16 @@ public class MainActivity extends AppCompatActivity
 			if (this.qaStyleDialog == null) this.qaStyleDialog = new QAStyleDialog();
 			this.qaStyleDialog.show(getSupportFragmentManager(), "QAStyleDialog");
 		} else if (position == 1) {
+			showTopicDialog();
+		} else if (position == 2) {
 			showFragment(VERB_TABLE);
 			setTitle(drawerTitles[position]);
-		} else if (position == 2) {
+		} else if (position == 3) {
 			showFragment(NUMBER_GAME);
 			setTitle(drawerTitles[position]);
-		} else if (position == 3) {
-			showTopicDialog();
 		} else if (position == 4) {
 			this.engSpaFragment.setTopic(null);
+			showFragment(ENGSPA);
 		} else if (position == 5) {
 			if (this.helpDialog == null) this.helpDialog = new HelpDialog();
 			this.helpDialog.show(getSupportFragmentManager(), "HelpDialog");
@@ -210,7 +211,9 @@ public class MainActivity extends AppCompatActivity
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (item.getItemId() == android.R.id.home) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onOptionsItemSelected(itemId=" + id);
+		if (id == android.R.id.home) {
 			drawerLayout.openDrawer(drawerList);
 			return true;
 		} else if (id == R.id.userSettings) {
@@ -218,7 +221,10 @@ public class MainActivity extends AppCompatActivity
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
 		} else if (id == R.id.speakerButton) {
-			if (this.spanish != null) speakSpanish(this.spanish);
+			this.engSpaFragment.speakSpanish(this.currentFragmentTag == ENGSPA);
+			return true;
+		} else if (id == R.id.helpButton) {
+			this.statusTextView.setText(R.string.tipTip);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -257,18 +263,18 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // Activity
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString("title", getTitle().toString());
+		CharSequence title = getTitle();
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.onSaveInstanceState(); title=" + title);
+		if (title != null) {
+			savedInstanceState.putString(TITLE_KEY, title.toString());
+		}
 		if (this.currentFragment != null) {
 			savedInstanceState.putString(CURRENT_FRAGMENT_TAG,
 					this.currentFragmentTag);
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
-	@Override // EngSpaActivity
-	public void speakSpanish(String spanish) {
-		this.engSpaFragment.speakSpanish(spanish);
-	}
-
 	/**
 	 * Update EngSpa table on database if there is a new version of
 	 * engspaupdates.txt on server. Version determined from
@@ -408,10 +414,18 @@ public class MainActivity extends AppCompatActivity
 	}
 	@Override // EngSpaActivity
 	public void setSpanish(String spanish) {
-		this.spanish = spanish;
+		// note: spanish String is held in engSpaFragment, so
+		// it can survive screen rotation. 
+		this.engSpaFragment.setSpanish(spanish);
+	}
+	@Override // EngSpaActivity
+	public void speakSpanish(String spanish) {
+		this.engSpaFragment.speakSpanish(spanish);
 	}
 	@Override // EngSpaActivity
 	public void setEngSpaTitle(String title) {
+		if (BuildConfig.DEBUG) Log.d(TAG,
+				"MainActivity.setEngSpaTitle(" + title + ")");
 		this.engSpaTitle = title;
 		super.setTitle(title);
 	}

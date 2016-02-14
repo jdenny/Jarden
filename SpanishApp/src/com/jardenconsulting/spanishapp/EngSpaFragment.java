@@ -56,14 +56,19 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private Random random = new Random();
 	private QAStyle currentQAStyle;
 	private String question;
-	private String spanish;
+	private String spanish; // word to be spoken; used by all fragments
+	/**
+	 * Copy of this.spanish; used when user does 'back' to this
+	 * fragment, in case other fragment has overwritten spanish
+	 * with its own word.
+	 */
+	private String engSpaSpanish;
 	private String correctAnswer;
 	private String responseIfCorrect;
 	private EngSpaQuiz engSpaQuiz;
 	private EngSpaUser engSpaUser;
 	private EngSpaDAO engSpaDAO;
 	private EngSpaActivity engSpaActivity;
-	private String tipTip = null;
 	private TextToSpeech textToSpeech;
 
 	@Override // Fragment
@@ -85,11 +90,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.engSpaUser = new EngSpaUser("your name",
 					1, QAStyle.writtenSpaToEng);
 			engSpaDAO.insertUser(engSpaUser);
-			this.tipTip = getResources().getString(R.string.tipTip); // tip for new user
 		}
 		this.engSpaQuiz = new EngSpaQuiz(engSpaDAO, this.engSpaUser);
 		this.engSpaQuiz.setQuizEventListener(this);
-		this.engSpaActivity.checkForDBUpdates();
+		if (savedInstanceState == null) {
+			// i.e. clean run, not restart after Android
+			// has destroyed app
+			this.engSpaActivity.checkForDBUpdates();
+		}
 	}
 	@Override // Fragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,18 +105,22 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (BuildConfig.DEBUG) {
 			Log.d(engSpaActivity.getTag(),
 					"EngSpaFragment.onCreateView(); question=" + question +
-					"; textToSpeech is " + (textToSpeech==null?"":"not ") + "null");
+					"; savedInstanceState is " + (savedInstanceState==null?"":"not ") + "null");
 		}
 		// Potentially restore state after configuration change; before we re-create
 		// the views, get relevant information from current values. See knowledgeBase.txt
+		CharSequence questionText = null;
+		CharSequence attributeText = null;
 		CharSequence pendingAnswer = null;
 		CharSequence statusText = null;
-		CharSequence attributeText = null;
 		int selfMarkLayoutVisibility = View.GONE;
-		if (this.answerEditText != null) pendingAnswer = answerEditText.getText();
-		if (this.selfMarkLayout != null) selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
-		if (this.statusTextView != null) statusText = statusTextView.getText();
-		if (this.attributeTextView != null) attributeText = attributeTextView.getText();
+		if (savedInstanceState != null) {
+			questionText = questionTextView.getText();
+			attributeText = attributeTextView.getText();
+			pendingAnswer = answerEditText.getText();
+			statusText = statusTextView.getText();
+			selfMarkLayoutVisibility = selfMarkLayout.getVisibility();
+		}
 		// Now get new layout
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		this.userNameTextView = (TextView) rootView.findViewById(R.id.userNameTextView);
@@ -136,16 +148,18 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.questionTextView = (TextView) rootView.findViewById(R.id.questionTextView);
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
-		if (pendingAnswer != null) this.answerEditText.setText(pendingAnswer);
-		if (attributeText != null) this.attributeTextView.setText(attributeText);
-		if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
-		this.answerEditText.setOnEditorActionListener(this);
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
-		if (statusText != null) this.statusTextView.setText(statusText);
-		showUserLevel();
-		if (tipTip != null) this.statusTextView.setText(tipTip); // tip for new user
+		if (savedInstanceState != null) {
+			this.questionTextView.setText(questionText);
+			this.answerEditText.setText(pendingAnswer);
+			this.attributeTextView.setText(attributeText);
+			this.statusTextView.setText(statusText);
+			if (selfMarkLayoutVisibility == View.VISIBLE) showSelfMarkLayout();
+		}
+		this.answerEditText.setOnEditorActionListener(this);
 		if (this.spanish == null) {
 			askQuestion(true);
+			showUserLevel();
 		} else {
 			showStats();
 		}
@@ -172,7 +186,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (hint.length() > 0) hint = "hint: " + hint;
 		this.attributeTextView.setText(hint);
 		if (this.currentQAStyle.voiceText != VoiceText.text) {
-			speakSpanish(this.question);
+			//!! speakSpanish(this.question);
+			speakSpanish(this.spanish); //!! added
 		}
 		if (this.currentQAStyle.spaAnswer) {
 			this.answerEditText.setHint(R.string.spanishStr);
@@ -201,7 +216,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void nextQuestion() {
 		this.spanish = engSpaQuiz.getNextQuestion2(
 				engSpaActivity.getQuestionSequence());
-		this.engSpaActivity.setSpanish(spanish);
+		this.engSpaSpanish = this.spanish;
+		//!! this.engSpaActivity.setSpanish(spanish);
 		String english = engSpaQuiz.getEnglish();
 		
 		QAStyle qaStyle = this.engSpaUser.getQAStyle();
@@ -287,14 +303,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
 				this.statusTextView.setText("TextToSpeech for Spanish is not supported");
 			}
-			if (this.spanish != null) speakQuestion2(); 
+			if (this.spanish != null) speakSpanish2(); 
 		} else {
 			Log.w(engSpaActivity.getTag(), "EngSpaFragment.onInit(" + status + ")");
 			this.statusTextView.setText(
 				"Initilization of textToSpeech failed! Have you installed text-to-speech?");
 		}
 	}
-	@Override // Activity
+	@Override // Fragment
 	public void onPause() {
 		super.onPause();
 		if (this.textToSpeech != null) {
@@ -305,19 +321,36 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"EngSpaFragment.onPause(); textToSpeech closed");
 		}
 	}
-	public void speakSpanish(String spanish) {
+	public void setSpanish(String spanish) {
 		this.spanish = spanish;
+	}
+	public void speakSpanish(String spanish) {
+		setSpanish(spanish);
+		speakSpanish();
+	}
+	public void speakSpanish(boolean engSpaWord) {
+		speakSpanish(engSpaWord?this.engSpaSpanish:this.spanish);
+	}
+	/**
+	 * Ensure textToSpeech is initialised, then speak the
+	 * current Spanish word, set by setSpanish(String spanish)
+	 * or speakSpanish(String spanish).
+	 */
+	public void speakSpanish() {
 		if (this.textToSpeech == null) {
 			// invokes onInit() on completion
 			textToSpeech = new TextToSpeech(getActivity(), this);
 			this.statusTextView.setText("loading textToSpeech...");
 			engSpaActivity.setProgressBarVisible(true);
 		} else {
-			speakQuestion2();
+			speakSpanish2();
 		}
 	}
+	/**
+	 * Part 2 of speakSpanish, invoked when textToSpeech initialised.
+	 */
 	@SuppressWarnings("deprecation")
-	private void speakQuestion2() {
+	private void speakSpanish2() {
 		textToSpeech.speak(this.spanish, TextToSpeech.QUEUE_ADD, null);
 	}
 
@@ -397,14 +430,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 				// if question was spoken only, user may want to see the translated word
 				String translated = this.currentQAStyle.spaAnswer ? engSpaQuiz
 						.getEnglish() : engSpaQuiz.getSpanish();
-				this.attributeTextView.setText(translated);
-//				if (this.currentQAStyle.spaAnswer) {
-//					this.statusTextView.setText(engSpaQuiz.getEnglish());
-//				} else {
-//					this.statusTextView.setText(engSpaQuiz.getSpanish());
-//				}
-//			} else {
-//				this.statusTextView.setText("");
+				this.questionTextView.setText(translated);
 			}
 		} else {
 			String normalisedCorrectAnswer = normalise(this.correctAnswer);
@@ -523,7 +549,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			this.engSpaUser = new EngSpaUser(userName,
 					userLevel, qaStyle);
 			engSpaDAO.insertUser(engSpaUser);
-			this.statusTextView.setText(R.string.tipTip); // tip for new user
 		} else { // update to existing user
 			newLevel = engSpaUser.getUserLevel() != userLevel;
 			engSpaUser.setUserName(userName);

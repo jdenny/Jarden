@@ -2,9 +2,9 @@
 <resources>
 	<string-array name="navigationDrawerTitles">
 	    <item>Question Style</item>
+	    <item>Select Topic</item>
 	    <item>Verb Table</item>
 	    <item>Numbers Game</item>
-	    <item>Select Topic</item>
 	    <item>Questions By Level</item>
 	    <item>Help</item>
 	</string-array>

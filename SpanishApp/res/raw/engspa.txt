@@ -1451,7 +1451,6 @@ drinking water,agua potable,phrase,n_a,drink,1
 driver,conductor,noun,masculine,transport,1
 driving licence,permiso de conducir,phrase,n_a,transport,1
 dustbin,cubo de la basura,noun,masculine,home,1
-east,este,noun,masculine,place,1
 enjoy your stay,que lo pases bien,phrase,n_a,n_a,1
 entertainment,entretenimiento,noun,masculine,culture,1
 entrance,entrada,noun,feminine,place,1
@@ -1627,40 +1626,50 @@ wash basin,lavabo,noun,masculine,home,1
 path,camino,noun,masculine,transport,1
 welcome,bienvenido,adjective,n_a,n_a,1
 well worth seeing,vale la pena ver,phrase,n_a,n_a,1
-west,oeste,noun,masculine,place,1
 shop window,escaparate,noun,masculine,place,1
 forest,bosque,noun,masculine,size,1
 youth hostel,albergue juvenil,noun,masculine,building,1
+what's the weather like,qué tiempo hace,phrase,n_a,weather,1
+what will the weather be like tomorrow,qué tiempo hará manaña,phrase,n_a,weather,1
 bad weather,mal tiempo,phrase,n_a,weather,1
-bright weather,buen tiempo,phrase,n_a,weather,1
+good weather,buen tiempo,phrase,n_a,weather,1
 climate,clima,noun,masculine,weather,1
 cloud,nube,noun,feminine,weather,1
 cloudy,nublado,adjective,n_a,weather,1
 cold,frío,adjective,n_a,weather,1
 dry,seco,adjective,n_a,weather,1
 fog,niebla,noun,feminine,weather,1
-foggy,hay niebla,phrase,n_a,weather,1
+it's foggy,hay niebla,phrase,n_a,weather,1
+it's good,hace buen tiempo,phrase,n_a,weather,1
+it's bad,hace mal tiempo,phrase,n_a,weather,1
+it's cold,hace frío,phrase,n_a,weather,1
+it's stormy,hay tormenta,phrase,n_a,weather,1
+it's warm,hace calor,phrase,n_a,weather,1
+it's hot,hace mucho calor,phrase,n_a,weather,1
+it's windy,hace viento,phrase,n_a,weather,1
 heat,calor,noun,masculine,weather,1
 highest temperature,temperatura más alta,phrase,n_a,weather,1
 hot,caluroso,adjective,n_a,weather,1
+next week,la semana próxima,phrase,n_a,n_a,1
 in the east,al este,phrase,n_a,n_a,1
 in the north,al norte,phrase,n_a,n_a,1
 in the south,al sur,phrase,n_a,n_a,1
 in the west,al oeste,phrase,n_a,n_a,1
-it is freezing,está helado,phrase,n_a,weather,1
-it is lightning,hay relámpagos,phrase,n_a,weather,1
-it is raining,está lloviendo,phrase,n_a,weather,1
-it is snowing,está nevando,phrase,n_a,weather,1
-it is thundering,hay truenos,phrase,n_a,weather,1
+it's freezing,está helado,phrase,n_a,weather,1
+it's lightning,hay relámpagos,phrase,n_a,weather,1
+it's raining,está lloviendo,phrase,n_a,weather,1
+it's snowing,está nevando,phrase,n_a,weather,1
+the sky is clear,está despejado,phrase,n_a,weather,1
+it's thundering,hay truenos,phrase,n_a,weather,1
 lowest temperature,temperatura mínima,phrase,n_a,weather,1
-overcast,está nublado,phrase,n_a,weather,1
+it's cloudy,está nublado,phrase,n_a,weather,1
 rainy,lluvioso,adjective,n_a,weather,1
 sky,cielo,noun,masculine,weather,1
 snow,nieve,noun,feminine,weather,1
 thunderstorm,tormenta,noun,feminine,weather,1
 sun,sol,noun,masculine,weather,1
 sunny,soleado,adjective,n_a,weather,1
-the sun is shining,brilla el sol,phrase,n_a,weather,1
+the sun shines,el sol brilla,phrase,n_a,weather,1
 freeze,helar,verb,transIntrans,weather,1
 shine,brillar,verb,transIntrans,weather,1
 weather report,boletín meteorológico,noun,masculine,weather,1

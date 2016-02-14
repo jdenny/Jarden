@@ -29,8 +29,19 @@ public class EngSpa extends UserWord {
 		this.attribute = attribute;
 		this.level = level;
 	}
+	@Override
 	public String toString() {
 		return english + ":" + spanish + "(" + super.toString() + ")";
+	}
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof EngSpa) {
+			return ((EngSpa) other).id == this.id;
+		} else return false;
+	}
+	@Override
+	public int hashCode() {
+		return id;
 	}
 	public String getDictionaryString() {
 		return english + ": " + spanish + ", " + wordType + ", " + qualifier + ", " + attribute;

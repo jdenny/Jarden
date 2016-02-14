@@ -420,7 +420,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	@Override // EngSpaDAO
 	public List<EngSpa> getFailedWordList(int userId) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
-				"EngSpaSQLite2.getFailedWordList(" + userId + ")");
+				"EngSpaSQLite2.getFailedWordList(userId=" + userId + ")");
 		Cursor cursor = null;
 		try {
 			cursor = getCursor(SELECT_FAILS,

@@ -41,7 +41,7 @@ public interface EngSpaActivity {
 	void showTopicDialog();
 
 	/**
-	 * Set Spanish word (see setSpanish) and speaks it.
+	 * Set Spanish word (see setSpanish) and speak it.
 	 * @param spanish
 	 */
 	void speakSpanish(String spanish);

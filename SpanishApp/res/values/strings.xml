@@ -45,6 +45,7 @@ Allows you to speak the answer; requires internet connection</string>
     <string name="phraseStr">Phrase</string>
     <string name="questionAnswerStr">Question -> Answer</string>
     <string name="questionsByLevelStr">Questions by Level</string>
+    <string name="questionMarkStr">\?</string>
     <string name="questionStyleStr">Question Style</string>
     <string name="repeatStr">Repeat</string>
     <string name="repeatButtonTip">Repeat the spoken question</string>

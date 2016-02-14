@@ -313,7 +313,7 @@ public class EngSpaQuiz extends Quiz {
 	}
 	private boolean isRecentWord(EngSpa word) {
 		for (int i = 0; i < RECENTS_CT; i++) {
-			if (word == recentWords[i]) return true;
+			if (word.equals(recentWords[i])) return true;
 		}
 		return false;
 	}
@@ -331,15 +331,20 @@ public class EngSpaQuiz extends Quiz {
 	}
 	// these 3 methods for testing purposes:
 	public String getDebugState() {
-		StringBuilder sb = new StringBuilder("EngSpaQuiz.questionSequence=" +
-				questionSequence + "; cfpChar=" + cfpChar + "; failedWordList: "); 
+		StringBuilder sb = new StringBuilder("EngSpaQuiz.currentWord=" +
+				currentWord.getEnglish() + "; questionSequence=" +
+				questionSequence + "; cfpChar=" + cfpChar + "; failedWordList:\n"); 
 		for (EngSpa word: this.failedWordList) {
-			sb.append(word + ",");
+			sb.append("  " + word + "\n");
 		}
 		List<EngSpa> dbFailedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
-		sb.append("\ndbFailedWordList: ");
+		sb.append("\ndbFailedWordList:\n");
 		for (EngSpa word: dbFailedWordList) {
-			sb.append(word + ",");
+			sb.append("  " + word + "\n");
+		}
+		sb.append("\nrecentWords: ");
+		for (EngSpa word: recentWords) {
+			sb.append((word==null?"null":word.getEnglish()) + ", ");
 		}
 		return sb.toString();
 	}

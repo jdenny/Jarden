@@ -127,11 +127,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 		button.setOnClickListener(this);
 		button.setOnLongClickListener(this);
 		/*!!
-		button = (Button) view.findViewById(R.id.repeatButton);
-		button.setOnClickListener(this);
-		button.setOnLongClickListener(this);
-		 */
-		/*!!
 		if (clientMode) {
 			myLaneView = laneCView;
 			opponentLaneView = laneAView;
@@ -206,11 +201,6 @@ public class RaceFragment extends Fragment implements TimerListener,
 		if (id == R.id.resetButton) {
 			this.statusTextView.setText(R.string.resetButtonTip);
 			return true;
-		/*!!
-		} else if (id == R.id.repeatButton) {
-			this.statusTextView.setText(R.string.repeatButtonTip);
-			return true;
-		 */
 		}
 		return false;
     }
@@ -390,10 +380,6 @@ public class RaceFragment extends Fragment implements TimerListener,
     	if (viewId == R.id.resetButton) {
     		quiz.reset();
     		this.reset();
-    	/*!!
-    	} else if (viewId == R.id.repeatButton) {
-    		poseQuestion(quiz.getCurrentQuestion());
-    	 */
     	} else {
 	        Toast.makeText(getActivity(), "unknown button pressed: " + view,
 	        		Toast.LENGTH_LONG).show();
