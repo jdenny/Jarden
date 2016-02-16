@@ -285,7 +285,9 @@ wife,esposa,noun,feminine,person,1
 mum,mamá,noun,feminine,person,1
 dad,papá,noun,masculine,person,1
 family,familia,noun,feminine,person,1
-cousin,primo,noun,masculine,person,1
+cousin,primo,noun,mf,person,1
+student,estudiante,mf,person,1
+relative,pariente,noun,mf,person,1
 boyfriend,novio,noun,masculine,person,1
 girlfriend,novia,noun,feminine,person,1
 body,cuerpo,noun,masculine,body,1
@@ -988,15 +990,15 @@ on time,a tiempo,phrase,n_a,time,1
 soon,pronto,adverb,n_a,time,1
 the next day,al día siguiente,phrase,n_a,time,1
 weekend,fin de semana,noun,masculine,time,1
-at one o’clock,a la una,phrase,n_a,time,1
-at two o’clock,a las dos,phrase,n_a,time,1
+at one o'clock,a la una,phrase,n_a,time,1
+at two o'clock,a las dos,phrase,n_a,time,1
 five past three,las tres y cinco,phrase,n_a,time,1
 half past four,las cuatro y media,phrase,n_a,time,1
 hour,hora,noun,feminine,time,1
 in the evening,de la tarde,phrase,n_a,time,1
 in the morning,de la mañana,phrase,n_a,time,1
-it's one o’clock,es la una,phrase,n_a,time,1
-it's two o’clock,son las dos,phrase,n_a,time,1
+it's one o'clock,es la una,phrase,n_a,time,1
+it's two o'clock,son las dos,phrase,n_a,time,1
 minute,minuto,noun,masculine,time,1
 quarter past five,cinco y cuarto,phrase,n_a,time,1
 quarter to six,las seis menos cuarto,phrase,n_a,time,1
@@ -1015,11 +1017,11 @@ all the better,todo lo mejor,phrase,n_a,n_a,1
 good luck,buena suerte,phrase,n_a,n_a,1
 here you are,aquí lo tienes,phrase,n_a,n_a,1
 how do you spell that,cómo se escribe,phrase,n_a,n_a,1
-I don’t mind,me da igual,phrase,n_a,n_a,1
+I don't mind,me da igual,phrase,n_a,n_a,1
 I've had enough,he tenido bastante,phrase,n_a,n_a,1
 in my opinion,en mi opinión,phrase,n_a,n_a,1
 it depends,depende,phrase,n_a,n_a,1
-it doesn’t matter,no importa nada,phrase,n_a,n_a,1
+it doesn't matter,no importa nada,phrase,n_a,n_a,1
 mine,mío,pronoun,n_a,n_a,1
 of course,por supuesto,phrase,n_a,n_a,1
 I agree,de acuerdo,phrase,n_a,n_a,1
@@ -1033,7 +1035,7 @@ for example,por ejemplo,phrase,n_a,n_a,1
 middle,medio,noun,masculine,n_a,1
 half,mitad,noun,feminine,n_a,1
 miss,señorita,noun,feminine,person,1
-mr,señor,noun,feminine,person,1
+mr,señor,noun,masculine,person,1
 mrs,señora,noun,feminine,person,1
 number,número,noun,masculine,n_a,1
 shape,forma,noun,feminine,n_a,1
@@ -1066,7 +1068,7 @@ it fits,te va bien,phrase,n_a,clothing,1
 it suits you,te queda bien,phrase,n_a,clothing,1
 jacket,chaqueta,noun,feminine,clothing,1
 jeans,vaqueros,phrase,n_a,clothing,1
-jeweller’s,joyería,noun,feminine,building,1
+jeweller's,joyería,noun,feminine,building,1
 jewel,joya,noun,feminine,clothing,1
 leather,cuero,noun,masculine,n_a,1
 leggings,leotardos,phrase,n_a,clothing,1
@@ -1135,7 +1137,7 @@ first name,nombre de pila,noun,masculine,person,1
 foolish,tonto,adjective,n_a,person,1
 friend,amigo,adjective,n_a,person,1
 friendship,amistad,noun,feminine,person,1
-furniture,muebles,noun,masculine,home,1
+the furniture,los muebles,phrase,masculine,home,1
 garden,jardín,noun,masculine,home,1
 garage,garaje,noun,masculine,home,1
 goldfish,peces de colores,phrase,n_a,animal,1
@@ -1203,7 +1205,6 @@ study,estudio,noun,masculine,home,1
 surname,apellido,noun,masculine,person,1
 survey,encuesta,noun,feminine,n_a,1
 telephone number,número de teléfono,phrase,n_a,n_a,1
-terraced house,casa adosada,phrase,n_a,n_a,1
 thin,flaco,adjective,n_a,person,1
 slim,delgado,adjective,n_a,person,1
 tidy,ordenado,adjective,n_a,person,1
@@ -1221,7 +1222,7 @@ unemployed,desempleado,adjective,n_a,person,1
 unbearable,inaguantable,adjective,n_a,n_a,1
 untidy,desordenado,adjective,n_a,n_a,1
 visit,visita,noun,feminine,n_a,1
-well behaved,que se porta bien,phrase,n_a,n_a,1
+well behaved,que se porta bien,adjective,n_a,n_a,1
 rock climbing,escalada en roca,phrase,n_a,sport,1
 score a goal,marcar un gol,phrase,n_a,sport,1
 television programme,programa de televisión,phrase,n_a,culture,1
@@ -1260,7 +1261,7 @@ dance,baile,noun,masculine,hobby,1
 detective story,novela policíaca,phrase,n_a,hobby,1
 disco,discoteca,noun,feminine,building,1
 documentary,documental,noun,masculine,culture,1
-drums,batería,noun,feminine,music,1
+drum,tambor,noun,masculine,music,1
 Easter,Pascua,noun,feminine,time,1
 Easter Monday,lunes de Pascua,phrase,n_a,time,1
 entertainment,entretenimiento,noun,masculine,hobby,1
@@ -1276,7 +1277,7 @@ game,juego,noun,masculine,hobby,1
 games console,consola de juegos,phrase,n_a,hobby,1
 Good Friday,Viernes Santo,phrase,n_a,time,1
 guitar,guitarra,noun,feminine,time,1
-gymnastics,gimnasia,noun,feminine,sport,1
+gymnastics,la gimnasia,phrase,n_a,sport,1
 hall,salón,noun,masculine,building,1
 handball,balonmano,noun,masculine,sport,1
 happy birthday,feliz cumpleaños,phrase,n_a,n_a,1
@@ -1284,10 +1285,9 @@ happy new year,feliz año nuevo,phrase,n_a,n_a,1
 hobby,pasatiempo,noun,masculine,hobby,1
 hockey,hockey,noun,masculine,sport,1
 horror film,película de horror,phrase,n_a,culture,1
-ice skating,patinaje,noun,masculine,sport,1
+skating,patinaje,noun,masculine,sport,1
 judo,judo,noun,masculine,sport,1
 karate,karate,noun,masculine,sport,1
-keyboard,teclado,noun,feminine,n_a,1 
 leisure,ocio,noun,masculine,hobby,1
 marriage,casamiento,noun,masculine,n_a,1
 martial arts,artes marciales,phrase,n_a,sport,1
@@ -1311,7 +1311,7 @@ pop music,música pop,phrase,n_a,music,1
 postcode,código postal,noun,masculine,n_a,1
 quiz show,programa concurso,phrase,n_a,culture,1
 race,carrera,noun,feminine,sport,1
-rap,música rap,noun,feminine,music,1
+rap music,música rap,noun,feminine,music,1
 reading,lectura,noun,feminine,hobby,1
 recorder,flauta dulce,noun,feminine,music,1
 referee,árbitro,noun,masculine,sport,1
@@ -1640,8 +1640,8 @@ cold,frío,adjective,n_a,weather,1
 dry,seco,adjective,n_a,weather,1
 fog,niebla,noun,feminine,weather,1
 it's foggy,hay niebla,phrase,n_a,weather,1
-it's good,hace buen tiempo,phrase,n_a,weather,1
-it's bad,hace mal tiempo,phrase,n_a,weather,1
+it's good weather,hace buen tiempo,phrase,n_a,weather,1
+it's bad weather,hace mal tiempo,phrase,n_a,weather,1
 it's cold,hace frío,phrase,n_a,weather,1
 it's stormy,hay tormenta,phrase,n_a,weather,1
 it's warm,hace calor,phrase,n_a,weather,1
@@ -1661,6 +1661,7 @@ it's raining,está lloviendo,phrase,n_a,weather,1
 it's snowing,está nevando,phrase,n_a,weather,1
 the sky is clear,está despejado,phrase,n_a,weather,1
 it's thundering,hay truenos,phrase,n_a,weather,1
+it's sunny,hace sol,phrase,n_a,weather,1
 lowest temperature,temperatura mínima,phrase,n_a,weather,1
 it's cloudy,está nublado,phrase,n_a,weather,1
 rainy,lluvioso,adjective,n_a,weather,1

@@ -76,7 +76,9 @@ public final class EngSpaContract {
 	public enum Qualifier {
 		n_a, // not applicable
 		masculine, feminine, // for nouns
-		transitive, intransitive, transIntrans, auxiliary; // for verbs
+		transitive, intransitive, transIntrans, auxiliary, // for verbs
+		// added 16.2.2016:
+		mf, mpl, fpl, mfpl; // for nouns; masculine or feminine, then plurals
 	}
 	
 	public enum Attribute {

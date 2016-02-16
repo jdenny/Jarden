@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private static final String CURRENT_FRAGMENT_TAG =
     		"currentFragmentTag";
     private static String questionSequenceKey = null;
-	private static final String VERB_TABLE = "VERB_TABLE";
+	private static final String WORD_SEARCH = "WORD_SEARCH";
 	private static final String NUMBER_GAME = "NUMBER_GAME";
 	private static final String ENGSPA = "ENGSPA";
 	private EngSpaDAO engSpaDAO;
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
-			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(VERB_TABLE);
+			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(WORD_SEARCH);
 			this.raceFragment = (RaceFragment) fragmentManager.findFragmentByTag(NUMBER_GAME);
 			String title = savedInstanceState.getString(TITLE_KEY);
 			if (title != null) setTitle(title);
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 		} else if (position == 1) {
 			showTopicDialog();
 		} else if (position == 2) {
-			showFragment(VERB_TABLE);
+			showFragment(WORD_SEARCH);
 			setTitle(drawerTitles[position]);
 		} else if (position == 3) {
 			showFragment(NUMBER_GAME);
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity
 				this.engSpaFragment = new EngSpaFragment();
 			}
 			this.currentFragment = engSpaFragment;
-		} else if (this.currentFragmentTag == VERB_TABLE) {
+		} else if (this.currentFragmentTag == WORD_SEARCH) {
 			if (this.verbTableFragment == null) {
 				this.verbTableFragment = new VerbTableFragment();
 			}
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity
 		}
 		FragmentTransaction transaction = manager.beginTransaction();
 		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
-		if (currentFragmentTag == VERB_TABLE ||
+		if (currentFragmentTag == WORD_SEARCH ||
 				currentFragmentTag == NUMBER_GAME) {
 			transaction.addToBackStack(currentFragmentTag);
 		}

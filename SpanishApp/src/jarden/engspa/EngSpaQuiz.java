@@ -201,6 +201,14 @@ public class EngSpaQuiz extends Quiz {
 				this.english = person.getEngPronoun() + " " + engVerb;
 			}
 		} else if (wordType == WordType.noun) {
+			if (qualifier == Qualifier.mf) {
+				// randomly choose masculine or feminine:
+				qualifier = random.nextBoolean()?Qualifier.masculine:Qualifier.feminine;
+				if (qualifier == Qualifier.feminine && spa.endsWith("o")) {
+					// replace 'o' with 'a':
+					spa = spa.substring(0, spa.length() - 1) + 'a';
+				}
+			}
 			if (random.nextBoolean()) { // definite article?
 				this.english = "the " + eng;
 				if (qualifier == Qualifier.feminine) {

@@ -3,7 +3,7 @@
 	<string-array name="navigationDrawerTitles">
 	    <item>Question Style</item>
 	    <item>Select Topic</item>
-	    <item>Verb Table</item>
+	    <item>Word Search</item>
 	    <item>Numbers Game</item>
 	    <item>Questions By Level</item>
 	    <item>Help</item>

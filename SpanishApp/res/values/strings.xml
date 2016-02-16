@@ -25,6 +25,11 @@ you want to skip a word, just pretend you got it right!</string>
 <b>¡Bienvenida! Welcome!</b>\n
 Open \'User Settings\' to change your name.
 Long press on a button to show tip.\n
+Rotating the device turns off text-to-speech, so if you are using
+a question style where the app speaks the Spanish, it might improve
+the performance if you switch off screen rotation.\n
+Spanish has several words for \'you\'; to differentiate in English
+we use \'thou\' for the familiar, and \'YOU\' for the plural.\n
 If you have any suggestions for improving this app, please send an email
 to amazemequiz@gmail.com
     </string>

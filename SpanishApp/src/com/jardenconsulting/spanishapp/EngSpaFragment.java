@@ -15,6 +15,7 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -70,6 +71,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private EngSpaDAO engSpaDAO;
 	private EngSpaActivity engSpaActivity;
 	private TextToSpeech textToSpeech;
+	private int red;
+	private int blue;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -77,12 +80,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		super.onAttach(activity);
 		this.engSpaActivity = (EngSpaActivity) activity;
 	}
+	@SuppressWarnings("deprecation")
 	@Override // Fragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(), "EngSpaFragment.onCreate(" +
 				(savedInstanceState==null?"":"not ") + "null)");
 		setRetainInstance(true);
+		Resources resources = getResources();
+		this.red = resources.getColor(R.color.samRed);
+		this.blue = resources.getColor(R.color.samBlue);
 		this.levelStr = getResources().getString(R.string.levelStr);
 		this.engSpaDAO = engSpaActivity.getEngSpaDAO();
 		this.engSpaUser = engSpaDAO.getUser();
@@ -114,7 +121,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		CharSequence pendingAnswer = null;
 		CharSequence statusText = null;
 		int selfMarkLayoutVisibility = View.GONE;
-		if (savedInstanceState != null) {
+		//!! if (savedInstanceState != null) {
+		if (questionTextView != null) {
 			questionText = questionTextView.getText();
 			attributeText = attributeTextView.getText();
 			pendingAnswer = answerEditText.getText();
@@ -149,7 +157,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
-		if (savedInstanceState != null) {
+		//!! if (savedInstanceState != null) {
+		if (questionTextView != null) {
 			this.questionTextView.setText(questionText);
 			this.answerEditText.setText(pendingAnswer);
 			this.attributeTextView.setText(attributeText);
@@ -186,13 +195,16 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (hint.length() > 0) hint = "hint: " + hint;
 		this.attributeTextView.setText(hint);
 		if (this.currentQAStyle.voiceText != VoiceText.text) {
-			//!! speakSpanish(this.question);
-			speakSpanish(this.spanish); //!! added
+			speakSpanish(this.spanish);
 		}
 		if (this.currentQAStyle.spaAnswer) {
+			this.answerEditText.setBackgroundColor(red);
+			this.questionTextView.setBackgroundColor(blue);
 			this.answerEditText.setHint(R.string.spanishStr);
 			this.micButton.setVisibility(View.VISIBLE);
 		} else {
+			this.answerEditText.setBackgroundColor(blue);
+			this.questionTextView.setBackgroundColor(red);
 			this.answerEditText.setHint(R.string.englishStr);
 			this.micButton.setVisibility(View.INVISIBLE);
 		}

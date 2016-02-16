@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/speakerButton"
-        android:icon="@drawable/speaker"
+        android:icon="@drawable/sound_high"
         android:title="@string/speakerStr"
         app:showAsAction="ifRoom"/>
 	
