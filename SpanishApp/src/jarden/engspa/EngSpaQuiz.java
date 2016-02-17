@@ -22,12 +22,15 @@ public class EngSpaQuiz extends Quiz {
 		void onTopicComplete();
 	}
 	public static final int WORDS_PER_LEVEL = 10;
+	public static final int USER_LEVEL_ALL = 12345;
 
 	/*
 	 * controls which list of words to choose the next question from,
 	 * one of current, fails and passed
 	 */
-	private static final char[] CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
+	private static final char[] NORMAL_CFP_LIST = {'C', 'F', 'P', 'C', 'F'};
+	private static final char[] ALL_LEVELS_CFP_LIST = {'F', 'P'};
+	private char[] cfpList;
 	
 	private String spanish;
 	private String english;
@@ -82,7 +85,8 @@ public class EngSpaQuiz extends Quiz {
 	public EngSpaQuiz(EngSpaDAO engSpaDAO, EngSpaUser engSpaUser) {
 		this.engSpaUser = engSpaUser;
 		this.engSpaDAO = engSpaDAO;
-		setUserLevel(engSpaUser.getUserLevel());
+		int userLevel = engSpaUser.getUserLevel();
+		setUserLevel(userLevel);
 	} 
 	public void setQuizEventListener(QuizEventListener listener) {
 		this.quizEventListener = listener;
@@ -115,8 +119,14 @@ public class EngSpaQuiz extends Quiz {
 	public void setUserLevel(int level) {
 		this.engSpaUser.setUserLevel(level);
 		this.engSpaDAO.updateUser(engSpaUser);
-		this.currentWordList = this.engSpaDAO.getCurrentWordList(level);
-		Collections.shuffle(currentWordList);
+		if (level == USER_LEVEL_ALL) {
+			this.cfpList = ALL_LEVELS_CFP_LIST;
+			this.currentWordList = null; // no currentWordList
+		} else {
+			this.cfpList = NORMAL_CFP_LIST;
+			this.currentWordList =  this.engSpaDAO.getCurrentWordList(level);
+			Collections.shuffle(currentWordList);
+		}
 		this.failedWordList = this.engSpaDAO.getFailedWordList(engSpaUser.getUserId());
 	}
 	
@@ -141,7 +151,8 @@ public class EngSpaQuiz extends Quiz {
 	 */
 	public String getNextQuestion2(int questionSequence) {
 		this.questionSequence = questionSequence;
-		if (this.currentWordList.size() == 0 &&
+		if (this.currentWordList != null &&
+				this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
 			if (topic == null) incrementUserLevel();
 			else {
@@ -153,8 +164,8 @@ public class EngSpaQuiz extends Quiz {
 		}
 		// check each of the question types; there should be at least one available
 		this.currentWord = null;
-		for (int i = 0; i < CFP_LIST.length && currentWord == null; i++) {
-			this.cfpChar = CFP_LIST[cfpListIndex];
+		for (int i = 0; i < cfpList.length && currentWord == null; i++) {
+			this.cfpChar = cfpList[cfpListIndex];
 			incrementCfpListIndex();
 			if (cfpChar == 'C' && this.currentWordList.size() > 0) {
 				this.currentWord = getCurrentLevelWord();
@@ -235,7 +246,7 @@ public class EngSpaQuiz extends Quiz {
 		return this.spanish;
 	}
 	private void incrementCfpListIndex() {
-		if (++this.cfpListIndex >= CFP_LIST.length) {
+		if (++this.cfpListIndex >= cfpList.length) {
 			this.cfpListIndex = 0;
 		}
 	}
@@ -272,7 +283,9 @@ public class EngSpaQuiz extends Quiz {
 					engSpaDAO.updateUserWord(currentWord);
 				}
 			}
-			currentWordList.remove(currentWord); // remove if in list
+			if (currentWordList != null) {
+				currentWordList.remove(currentWord); // remove if in list
+			}
 		} else { // not correct
 			if (!inFailedList) {
 				currentWord.setUserId(this.engSpaUser.getUserId());

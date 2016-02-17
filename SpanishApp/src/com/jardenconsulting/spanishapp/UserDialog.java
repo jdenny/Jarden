@@ -1,5 +1,6 @@
 package com.jardenconsulting.spanishapp;
 
+import jarden.engspa.EngSpaQuiz;
 import jarden.engspa.EngSpaUser;
 import jarden.provider.engspa.EngSpaContract;
 import jarden.provider.engspa.EngSpaContract.QAStyle;
@@ -14,15 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class UserDialog extends DialogFragment implements DialogInterface.OnClickListener {
+public class UserDialog extends DialogFragment
+		implements DialogInterface.OnClickListener, OnCheckedChangeListener {
 	private EditText userNameEditText;
 	private EditText userLevelEditText;
 	private Spinner qaStyleSpinner;
 	private UserSettingsListener userSettingsListener;
 	private AlertDialog alertDialog;
+	private CheckBox allCheckBox;
 	
 	public interface UserSettingsListener {
 		void onUpdateUser(String userName, int userLevel, QAStyle qaStyle);
@@ -45,6 +51,8 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 		View view = inflater.inflate(R.layout.dialog_user, null);
 		this.userNameEditText = (EditText) view.findViewById(R.id.userNameEditText);
 		this.userLevelEditText = (EditText) view.findViewById(R.id.userLevelEditText);
+		this.allCheckBox = (CheckBox) view.findViewById(R.id.allCheckBox);
+		allCheckBox.setOnCheckedChangeListener(this);
 		this.qaStyleSpinner = (Spinner) view.findViewById(R.id.qaStyleSpinner);
 		ArrayAdapter<String> qaStyleAdapter = new ArrayAdapter<String>(activity,
 				android.R.layout.simple_spinner_item,
@@ -57,7 +65,9 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 			setCancelable(false);
 		} else {
 			userNameEditText.setText(user.getUserName());
-			userLevelEditText.setText(String.valueOf(user.getUserLevel()));
+			int userLevel = user.getUserLevel();
+			userLevelEditText.setText(String.valueOf(userLevel));
+			if (userLevel == EngSpaQuiz.USER_LEVEL_ALL) this.allCheckBox.setChecked(true);
 			int position = user.getQAStyle().ordinal();
 			this.qaStyleSpinner.setSelection(position);
 			// cancel button provided only for updates
@@ -81,14 +91,22 @@ public class UserDialog extends DialogFragment implements DialogInterface.OnClic
 			String userName = userNameEditText.getText().toString().trim();
 			String userLevelStr = userLevelEditText.getText().toString();
 			int userLevel;
-			try {
-				userLevel = Integer.parseInt(userLevelStr);
-			} catch (NumberFormatException nfe) {
-				userLevel = -1;
+			if (allCheckBox.isChecked()) userLevel = EngSpaQuiz.USER_LEVEL_ALL;
+			else {
+				try {
+					userLevel = Integer.parseInt(userLevelStr);
+				} catch (NumberFormatException nfe) {
+					userLevel = -1;
+				}
 			}
 			String qaStyleStr = (String) qaStyleSpinner.getSelectedItem();
 			QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
 			this.userSettingsListener.onUpdateUser(userName, userLevel, qaStyle);
 		}
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		this.userLevelEditText.setEnabled(!isChecked);
 	}
 }

@@ -1298,7 +1298,7 @@ mountain bike,bicicleta de montaña,phrase,n_a,sport,1
 mountaineering,montañismo,noun,masculine,sport,1
 music,música,noun,feminine,music,1
 new year,año nuevo,phrase,n_a,time,1
-news,noticias,phrase,n_a,n_a,1
+the news,las noticias,phrase,n_a,n_a,1
 night club,club nocturno,phrase,n_a,culture,1
 orchestra,orquesta,noun,feminine,music,1
 parachuting,salto con paracaídas,noun,masculine,sport,1
@@ -1365,6 +1365,7 @@ to go for a walk,ir de paseo,phrase,n_a,n_a,1
 to roller-skate,patinar sobre ruedas,phrase,n_a,sport,1
 shoot,disparar,verb,transIntrans,sport,1
 train,entrenar,verb,intransitive,sport,1
+wheel,rueda,noun,feminine,technology,1
 computer,ordenador,noun,masculine,technology,1
 connection,conexión,noun,feminine,technology,1
 cyber bullying,acoso cybernético,phrase,n_a,technology,1
@@ -1378,17 +1379,18 @@ keyboard,teclado,noun,masculine,technology,1
 password,contraseña,noun,feminine,technology,1
 printer,impresora,noun,feminine,technology,1
 programmer,programador,noun,masculine,technology,1
-risk,riesgo,noun,masculine,technology,1
+risk,riesgo,noun,masculine,n_a,1
 screen,pantalla,noun,feminine,technology,1
 security,seguridad,noun,feminine,technology,1
 social network,red social,noun,feminine,technology,1
 software,software,noun,masculine,technology,1
 record,grabar,verb,transitive,technology,1
+machine,máquina,noun,feminine,technology,1
 delete,borrar,verb,transitive,technology,1
 load,cargar,verb,transitive,technology,1
 print,imprimir,verb,transitive,technology,1
 save,guardar,verb,transitive,technology,1
-type,escribir a máquina,phrase,n_a,technology,1
+he types,él escribe a máquina,phrase,n_a,technology,1
 virus,virus,noun,masculine,technology,1
 webpage,página web,noun,feminine,technology,1
 abroad,al extranjero,adverb,n_a,n_a,1
@@ -1401,7 +1403,7 @@ arrival,llegada,noun,feminine,n_a,1
 art gallery,galería de arte,phrase,n_a,building,1
 autonomous community,comunidad autónoma,phrase,n_a,n_a,1
 balcony,balcón,noun,masculine,home,1
-bath towel,toalla de baño,phrase,n_a,home,1
+bath towel,toalla de baño,noun,feminine,home,1
 bath tub,bañera,noun,feminine,home,1
 beach,playa,noun,feminine,n_a,1
 bedlinen,ropa de cama,phrase,n_a,home,1

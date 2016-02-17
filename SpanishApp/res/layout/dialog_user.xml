@@ -14,14 +14,27 @@
 
         <requestFocus />
     </EditText>
-
-    <EditText
-        android:id="@+id/userLevelEditText"
+    
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/userLevelStr"
-        android:inputType="number" />
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+
+	    <EditText
+	        android:id="@+id/userLevelEditText"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:hint="@string/userLevelStr"
+	        android:inputType="number" />
+	
+	    <CheckBox
+	        android:id="@+id/allCheckBox"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/allStr" />
+
+    </LinearLayout>
     
     <Spinner
         android:id="@+id/qaStyleSpinner"
@@ -30,7 +43,7 @@
 
     <TextView
         android:id="@+id/statusTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     
 </LinearLayout>

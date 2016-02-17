@@ -73,6 +73,13 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private TextToSpeech textToSpeech;
 	private int red;
 	private int blue;
+	/**
+	 * Used by QAStyle.alternate, which is used to alternate
+	 * between 2 QAStyles: spokenSpaToEng and writtenEngToSpa.
+	 * If firstAlternative is true, then the style used for the
+	 * next question is the spokenSpaToEng, else writtenEngToSpa.
+	 */
+	private boolean firstAlternative;
 
 	@Override // Fragment
 	public void onAttach(Activity activity) {
@@ -121,7 +128,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		CharSequence pendingAnswer = null;
 		CharSequence statusText = null;
 		int selfMarkLayoutVisibility = View.GONE;
-		//!! if (savedInstanceState != null) {
 		if (questionTextView != null) {
 			questionText = questionTextView.getText();
 			attributeText = attributeTextView.getText();
@@ -157,7 +163,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.attributeTextView = (TextView) rootView.findViewById(R.id.attributeTextView);
 		this.answerEditText = (EditText) rootView.findViewById(R.id.answerEditText);
 		this.statusTextView = (TextView) rootView.findViewById(R.id.statusTextView);
-		//!! if (savedInstanceState != null) {
 		if (questionTextView != null) {
 			this.questionTextView.setText(questionText);
 			this.answerEditText.setText(pendingAnswer);
@@ -215,10 +220,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		}
 		showStats();
 	}
+	private boolean isUserLevelAll() {
+		return this.engSpaUser.getUserLevel() == EngSpaQuiz.USER_LEVEL_ALL;
+	}
 	private void showStats() {
-		int cwct = engSpaQuiz.getCurrentWordCount();
 		int fwct = engSpaQuiz.getFailedWordCount();
-		this.currentCtTextView.setText(Integer.toString(cwct));
+		this.currentCtTextView.setText(
+				isUserLevelAll() ? "" :
+				Integer.toString(engSpaQuiz.getCurrentWordCount()));
 		this.failCtTextView.setText(Integer.toString(fwct));
 		if (BuildConfig.DEBUG) {
 			String debugState = engSpaQuiz.getDebugState();
@@ -229,14 +238,17 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.spanish = engSpaQuiz.getNextQuestion2(
 				engSpaActivity.getQuestionSequence());
 		this.engSpaSpanish = this.spanish;
-		//!! this.engSpaActivity.setSpanish(spanish);
 		String english = engSpaQuiz.getEnglish();
 		
 		QAStyle qaStyle = this.engSpaUser.getQAStyle();
 		if (qaStyle == QAStyle.random) {
-			// minus 1 as last one is Random itself:
-			int randInt = random.nextInt(QAStyle.values().length - 1);
+			// minus 2 as we don't include random and alternate:
+			int randInt = random.nextInt(QAStyle.values().length - 2);
 			this.currentQAStyle = QAStyle.values()[randInt];
+		} else if (qaStyle == QAStyle.alternate) {
+			this.currentQAStyle = this.firstAlternative ? QAStyle.spokenSpaToEng
+					: QAStyle.writtenEngToSpa;
+			this.firstAlternative = !this.firstAlternative;
 		} else {
 			this.currentQAStyle = qaStyle;
 		}
@@ -546,8 +558,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 			QAStyle qaStyle) {
 		int maxUserLevel = engSpaDAO.getMaxUserLevel();
 		if (userLevel > maxUserLevel) {
-			userLevel = maxUserLevel;
-			this.statusTextView.setText("userLevel set to maximum");
+			userLevel = EngSpaQuiz.USER_LEVEL_ALL;
+			this.statusTextView.setText("userLevel set to ALL words");
 		}
 		if (engSpaUser != null &&
 				engSpaUser.getUserName().equals(userName) &&
@@ -595,7 +607,9 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		engSpaActivity.showTopicDialog();
 	}
 	private void showUserLevel() {
+		String userLevelStr = isUserLevelAll() ? "ALL" :
+				Integer.toString(engSpaUser.getUserLevel());
 		this.engSpaActivity.setEngSpaTitle(this.levelStr + " " +
-				engSpaUser.getUserLevel());
+				userLevelStr);
 	}
 }

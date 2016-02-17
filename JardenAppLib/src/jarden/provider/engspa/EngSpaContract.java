@@ -55,7 +55,8 @@ public final class EngSpaContract {
 		spokenWrittenSpaToEng(VoiceText.both, true, false),
 		writtenSpaToEng(VoiceText.text, true, false),
 		writtenEngToSpa(VoiceText.text, false, true),
-		random(null, false, false);
+		random(null, false, false),
+		alternate(null, false, false);
 		
 		public final VoiceText voiceText;
 		public final boolean spaQuestion;
