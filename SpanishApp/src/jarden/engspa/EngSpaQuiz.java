@@ -6,6 +6,7 @@ import java.util.Random;
 
 import jarden.engspa.VerbUtils.Person;
 import jarden.engspa.VerbUtils.Tense;
+import jarden.provider.engspa.EngSpaContract.QAStyle;
 import jarden.provider.engspa.EngSpaContract.Qualifier;
 import jarden.provider.engspa.EngSpaContract.WordType;
 import jarden.quiz.EndOfQuestionsException;
@@ -263,15 +264,16 @@ public class EngSpaQuiz extends Quiz {
 	public int getFailedWordCount() {
 		return this.failedWordList.size();
 	}
+	/*!!
 	public boolean checkAnswer(String answer) {
 		boolean correct = answer.equals(english); 
 		setCorrect(correct);
 		return correct;
 	}
-
-	public void setCorrect(boolean correct) {
+	*/
+	public void setCorrect(boolean correct, QAStyle qaStyle) {
 		boolean inFailedList = this.failedWordList.contains(currentWord);
-		int consecRights = currentWord.addResult(correct, questionSequence);
+		int consecRights = currentWord.addResult(correct, questionSequence, qaStyle);
 		if (correct) {
 			if (inFailedList) {
 				if (consecRights > 1) {
@@ -296,6 +298,23 @@ public class EngSpaQuiz extends Quiz {
 			// but not from DB.userWord until 3 right
 			engSpaDAO.replaceUserWord(currentWord);
 		}
+	}
+	/**
+	 * get hint from current word; make a special case
+	 * for ser and estar if question is in English.
+	 * @param englishQuestion true means question is English
+	 * @return
+	 */
+	public String getHint(boolean englishQuestion) {
+		String hint = this.currentWord.getHint();
+		if (hint.length() == 0 && englishQuestion) {
+			if (this.currentWord.getSpanish().equals("ser")) {
+				hint = "permanent";
+			} if (this.currentWord.getSpanish().equals("estar")) {
+				hint = "temporary";
+			}
+		}
+		return hint;
 	}
 	
 	private EngSpa getCurrentLevelWord() {

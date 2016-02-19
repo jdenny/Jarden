@@ -1,22 +1,30 @@
 package jarden.engspa;
 
+import jarden.provider.engspa.EngSpaContract.QAStyle;
+
 public class UserWord {
 	private int userId;
 	private int wordId;
 	private int consecutiveRightCt;
 	private int questionSequence = 0;
+	/**
+	 * The active style when question was answered incorrectly.
+	 * This allows us to re-ask the question in the same style.
+	 */
+	private QAStyle qaStyle;
 
 	public UserWord(int userId, int wordId) {
-		this(userId, wordId, 0, 0);
+		this(userId, wordId, 0, 0, QAStyle.writtenSpaToEng);
 	}
 	public UserWord(int userId, int wordId,
 			int questionSequence,
-			int consecutiveRightCt) {
+			int consecutiveRightCt, QAStyle qaStyle) {
 		super();
 		this.userId = userId;
 		this.wordId = wordId;
 		this.consecutiveRightCt = consecutiveRightCt;
 		this.questionSequence = questionSequence;
+		this.qaStyle = qaStyle;
 	}
 	/**
 	 * Add result of asking and answering this question.
@@ -24,8 +32,9 @@ public class UserWord {
 	 * @param questionSequence
 	 * @return consecutiveRightCt
 	 */
-	public int addResult(boolean correct, int questionSequence) {
+	public int addResult(boolean correct, int questionSequence, QAStyle qaStyle) {
 		this.questionSequence = questionSequence;
+		this.qaStyle = qaStyle;
 		if (correct) {
 			++consecutiveRightCt;
 		} else {
@@ -41,7 +50,7 @@ public class UserWord {
 	@Override
 	public String toString() {
 		return "UserWord [userId=" + userId + ", wordId=" + wordId +
-				", " + toShortString() + "]";
+				", " + toShortString() + ", " + qaStyle + "]";
 	}
 	public String toShortString() {
 		return 	"consecRightCt=" + consecutiveRightCt +
@@ -77,5 +86,10 @@ public class UserWord {
 	public void setQuestionSequence(int questionSequence) {
 		this.questionSequence = questionSequence;
 	}
-
+	public QAStyle getQaStyle() {
+		return qaStyle;
+	}
+	public void setQaStyle(QAStyle qaStyle) {
+		this.qaStyle = qaStyle;
+	}
 }

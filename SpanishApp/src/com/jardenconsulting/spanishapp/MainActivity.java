@@ -23,7 +23,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -143,18 +142,24 @@ public class MainActivity extends AppCompatActivity
 					private String threadResult;
 					@Override
 					public void run() {
-						try {
+						//!! try {
+							/*!!
 							InputStream is = getResources().openRawResource(R.raw.engspa);
 							ContentValues[] contentValues = EngSpaUtils.getContentValuesArray(is);
 							engSpaDAO.newDictionary(contentValues);
+							*/
+							threadResult = "rows inserted into database: " +
+									engSpaDAO.newDictionary();
 							SharedPreferences.Editor editor = sharedPreferences.edit();
 							editor.putInt(ENGSPA_TXT_VERSION_KEY, version);
 							editor.commit();
-							threadResult = "dictionary load complete";
+							//!! threadResult = "dictionary load complete";
+						/*!!
 						} catch (IOException e) {
 							threadResult = "dictionary load failed: " + e;
 							Log.e(getTag(), "EngSpaFragment.loadDB(): " + e);
 						}
+						*/
 						runOnUiThread(new Runnable() {
 							public void run() {
 								setStatus(threadResult);

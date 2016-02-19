@@ -196,7 +196,8 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (getNext) {
 			nextQuestion();
 		}
-		String hint = engSpaQuiz.getCurrentWord().getHint();
+		String hint = //!! engSpaQuiz.getCurrentWord().getHint();
+				engSpaQuiz.getHint(!this.currentQAStyle.spaQuestion);
 		if (hint.length() > 0) hint = "hint: " + hint;
 		this.attributeTextView.setText(hint);
 		if (this.currentQAStyle.voiceText != VoiceText.text) {
@@ -423,7 +424,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private void selfMarkButton(boolean isCorrect) {
 		this.statusTextView.setText("");
 		showButtonLayout();
-		engSpaQuiz.setCorrect(isCorrect);
+		engSpaQuiz.setCorrect(isCorrect, currentQAStyle);
 		askQuestion(true);
 	}
 	private void showSelfMarkLayout() {
@@ -477,7 +478,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		setIsCorrect(isCorrect, "Wrong!");
 	}
 	private void setIsCorrect(boolean isCorrect, String responseIfWrong) {
-		engSpaQuiz.setCorrect(isCorrect);
+		engSpaQuiz.setCorrect(isCorrect, currentQAStyle);
 		if (isCorrect) {
 			this.statusTextView.setText(this.responseIfCorrect);
 		} else {

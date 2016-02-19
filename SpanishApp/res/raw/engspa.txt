@@ -33,7 +33,7 @@ woman,mujer,noun,feminine,person,1
 child,niño,noun,masculine,person,1
 apple,manzana,noun,feminine,food,1
 bread,pan,noun,masculine,food,1
-be,ser,verb,transIntrans,permanent,1
+be,ser,verb,transIntrans,n_a,1
 water,agua,noun,masculine,drink,1
 good morning,buenos días,phrase,n_a,n_a,1
 good afternoon,buenas tardes,phrase,n_a,n_a,1
@@ -286,7 +286,7 @@ mum,mamá,noun,feminine,person,1
 dad,papá,noun,masculine,person,1
 family,familia,noun,feminine,person,1
 cousin,primo,noun,mf,person,1
-student,estudiante,mf,person,1
+student,estudiante,noun,mf,person,1
 relative,pariente,noun,mf,person,1
 boyfriend,novio,noun,masculine,person,1
 girlfriend,novia,noun,feminine,person,1
@@ -675,7 +675,7 @@ argue,discutir,verb,transIntrans,n_a,1
 arrive,llegar,verb,transIntrans,n_a,1
 ask,preguntar,verb,transIntrans,n_a,1
 avoid,evitar,verb,transIntrans,n_a,1
-be,estar,verb,transIntrans,temporary,1
+be,estar,verb,transIntrans,n_a,1
 call,llamar,verb,transIntrans,n_a,1
 break,romper,verb,transitive,n_a,1
 buy,comprar,verb,transitive,n_a,1
@@ -875,7 +875,6 @@ however,sin embargo,adverb,n_a,n_a,1
 over there,ahí,adverb,n_a,n_a,1
 perhaps,quizás,adverb,n_a,n_a,1
 quickly,rápidamente,adverb,n_a,n_a,1
-quite,bastante,adverb,n_a,n_a,1
 really,realmente,adverb,n_a,n_a,1
 recently,recientemente,adverb,n_a,n_a,1
 still,todavía,adverb,n_a,n_a,1
@@ -954,7 +953,6 @@ part,parte,noun,feminine,size,1
 piece,pedazo,noun,masculine,size,1
 slice,rebanada,noun,feminine,size,1
 tin,lata,noun,feminine,size,1
-enough,bastante,adjective,n_a,size,1
 exactly,exactamente,adjective,n_a,size,1
 gramme,gramo,noun,masculine,size,1
 half,mitad,noun,feminine,size,1
@@ -1088,7 +1086,7 @@ ring,anillo,noun,masculine,clothing,1
 scarf,bufanda,noun,feminine,clothing,1
 shoe shop,zapatería,noun,feminine,building,1
 shorts,pantalón corto,noun,masculine,clothing,1
-shoe size,número de zapata,noun,masculine,clothing,1
+shoe size,número de zapato,noun,masculine,clothing,1
 slipper,zapatilla,noun,feminine,clothing,1
 smart,elegante,adjective,n_a,clothing,1
 sports kit,ropa de deporte,noun,feminine,clothing,1
@@ -1324,7 +1322,7 @@ saxophone,saxofón,noun,masculine,music,1
 science fiction film,película de ciencia ficción,phrase,n_a,culture,1
 series,serie,noun,feminine,culture,1
 show,espectáculo,noun,masculine,culture,1
-singer,cantante,noun,masculine,person,1
+singer,cantante,noun,mf,person,1
 skate boarding,monopatinaje,noun,masculine,sport,1
 skiing,esquí,noun,masculine,sport,1
 soap opera,telenovela,noun,feminine,culture,1
@@ -1392,11 +1390,10 @@ print,imprimir,verb,transitive,technology,1
 save,guardar,verb,transitive,technology,1
 he types,él escribe a máquina,phrase,n_a,technology,1
 virus,virus,noun,masculine,technology,1
-webpage,página web,noun,feminine,technology,1
+web page,página web,noun,feminine,technology,1
 abroad,al extranjero,adverb,n_a,n_a,1
 accommodation,alojamiento,noun,masculine,n_a,1
 entry fee,precio de entrada,phrase,n_a,n_a,1
-entrance,entrada,noun,feminine,n_a,1
 advertisement,anuncio,noun,masculine,n_a,1
 appointment,cita,noun,feminine,n_a,1
 arrival,llegada,noun,feminine,n_a,1
@@ -1417,7 +1414,6 @@ bowling alley,bolera,noun,feminine,building,1
 bridge,puente,noun,masculine,building,1
 brochure,folleto,noun,masculine,culture,1
 run,corrida,noun,feminine,sport,1
-bull ring,plaza de toros,phrase,n_a,building,1
 bus,autobús,noun,masculine,transport,1
 bus stop,parada de autobús,phrase,n_a,building,1
 bus station,estación de autobuses,phrase,n_a,building,1
@@ -1433,15 +1429,12 @@ carry straight on,siga todo recto,phrase,n_a,n_a,1
 city,ciudad,noun,feminine,place,1
 compartment,compartimento,noun,masculine,transport,1
 concert,concierto,noun,masculine,culture,1
-connection,conexión,noun,feminine,culture,1
 corner,esquina,noun,feminine,place,1
 scenery,paisaje,noun,masculine,n_a,1
 crossroads,cruce,noun,masculine,transport,1
 cycle path,vía para bicicletas,phrase,n_a,transport,1
 degree,grado,noun,masculine,size,1
 delay,retraso,noun,masculine,time,1
-departure,salida,noun,feminine,place,1
-diesel,gasoil,noun,masculine,transport,1
 direct,directo,adjective,n_a,n_a,1
 direction,dirección,noun,feminine,place,1
 sense,sentido,noun,masculine,n_a,1
@@ -1456,7 +1449,6 @@ dustbin,cubo de la basura,noun,masculine,home,1
 enjoy your stay,que lo pases bien,phrase,n_a,n_a,1
 entertainment,entretenimiento,noun,masculine,culture,1
 entrance,entrada,noun,feminine,place,1
-entry,entrada,noun,feminine,place,1
 exhibition,exposición,noun,feminine,place,1
 exit,salida,noun,feminine,place,1
 factory,fábrica,noun,feminine,place,1
@@ -1468,7 +1460,6 @@ apartment,apartamento,noun,masculine,place,1
 floor,piso,noun,masculine,place,1
 forbidden,prohibido,adjective,n_a,n_a,1
 foreigner,extranjero,adjective,n_a,n_a,1
-form,ficha,noun,feminine,place,1
 free,libre,adjective,n_a,n_a,1
 fruit shop,frutería,noun,feminine,place,1
 full board,pensión completa,noun,feminine,place,1
@@ -1484,7 +1475,7 @@ historic,histórico,adjective,n_a,n_a,1
 festival,fiesta,noun,feminine,place,1
 hospital,hospital,noun,masculine,building,1
 hotel,hotel,noun,masculine,building,1
-household goods shop,droguería,noun,feminine,building,1
+hardware shop,droguería,noun,feminine,building,1
 hypermarket,hipermercado,noun,masculine,building,1
 ice rink,pista de patinaje,noun,feminine,place,1
 identity card,carnet de identidad,noun,masculine,size,1

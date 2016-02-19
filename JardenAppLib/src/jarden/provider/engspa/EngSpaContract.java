@@ -17,7 +17,8 @@ public final class EngSpaContract {
 	public static final String ATTRIBUTE = "attribute";
 	public static final String LEVEL = "level";
 	public static final String[] PROJECTION_ALL_FIELDS = {
-		BaseColumns._ID, ENGLISH, SPANISH, WORD_TYPE, QUALIFIER, ATTRIBUTE, LEVEL
+		BaseColumns._ID, ENGLISH, SPANISH, WORD_TYPE, QUALIFIER,
+		ATTRIBUTE, LEVEL
 	};
 	
 	// constants for User table:
@@ -43,8 +44,14 @@ public final class EngSpaContract {
 	public static final String CONSEC_RIGHT_CT = "consecutiveRightCt";
 	public static final String QUESTION_SEQUENCE = "questionSequence";
 	public static final String[] PROJECTION_ALL_USER_WORD_FIELDS = {
-		USER_ID, WORD_ID, CONSEC_RIGHT_CT, QUESTION_SEQUENCE
+		USER_ID, WORD_ID, CONSEC_RIGHT_CT, QUESTION_SEQUENCE, QA_STYLE
 	};
+	public static final String[] PROJECTION_ALL_FAILED_WORD_FIELDS = {
+		BaseColumns._ID, ENGLISH, SPANISH, WORD_TYPE, QUALIFIER,
+		ATTRIBUTE, LEVEL,
+		CONSEC_RIGHT_CT, QUESTION_SEQUENCE, QA_STYLE
+	};
+	public static final String FAILED_WORD_VIEW = "FailedWordView";
 	
 	public enum VoiceText {
 		voice, text, both;
@@ -85,7 +92,7 @@ public final class EngSpaContract {
 	public enum Attribute {
 		animal, body, building, clothing, colour, culture, drink, fact, food,
 		hobby, home, interrogative, language, mineral, money, music, n_a,
-		permanent, person, place, size, sport, technology, temporary, time,
+		person, place, size, sport, technology, time,
 		transport, weather;
 	}
 	public static final String[] wordTypeNames;

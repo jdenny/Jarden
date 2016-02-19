@@ -2,8 +2,6 @@ package jarden.engspa;
 
 import java.util.List;
 
-import android.content.ContentValues;
-
 public interface EngSpaDAO {
 	int getDictionarySize();
 	int getMaxUserLevel();
@@ -17,7 +15,7 @@ public interface EngSpaDAO {
 	 * Delete all existing EngSpa rows and insert new rows
 	 * from contentValues. Return number of rows added.
 	 */
-	int newDictionary(ContentValues[] contentValues);
+	int newDictionary(/*!!ContentValues[] contentValues*/);
 	int updateDictionary(List<String> updateLines);
 	List<EngSpa> getCurrentWordList(int userLevel);
 	EngSpa getRandomPassedWord(int userLevel);
@@ -45,13 +43,6 @@ public interface EngSpaDAO {
 	 * @return
 	 */
 	List<EngSpa> getFailedWordList(int userId);
-	/**
-	 * if userId < 1: return all userWords
-	 * else: return userWords for specified user
-	 * @param userId
-	 * @return
-	 */
-	List<UserWord> getUserWordList(int userId);
 	long insertUserWord(UserWord userWord);
 	int updateUserWord(UserWord userWord);
 	int deleteUserWord(UserWord userWord);
