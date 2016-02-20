@@ -98,20 +98,6 @@ public class EngSpaQuiz extends Quiz {
 	public EngSpa getCurrentWord() {
 		return this.currentWord;
 	}
-	/*!!
-	private void incrementUserLevel() {
-		int newUserLevel = this.engSpaUser.getUserLevel() + 1;
-		// successful if there are questions at the next difficulty level
-		boolean levelIncremented =
-				(newUserLevel <= engSpaDAO.getMaxUserLevel());
-		if (levelIncremented) {
-			setUserLevel(newUserLevel);
-			if (this.quizEventListener != null) {
-				quizEventListener.onNewLevel();
-			}
-		}
-	}
-	*/
 	/**
 	 * if userLevel > maximum, based on size of dictionary,
 	 * replace with USER_LEVEL_ALL.
@@ -171,7 +157,7 @@ public class EngSpaQuiz extends Quiz {
 				this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
 			// reached end of questions:
-			if (topic == null) { //!!incrementUserLevel();
+			if (topic == null) {
 				int newUserLevel = validateUserLevel(this.engSpaUser.getUserLevel() + 1);
 				setUserLevel(newUserLevel);
 				if (this.quizEventListener != null) {

@@ -574,13 +574,6 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 */
 	public boolean setUser(String userName, int userLevel,
 			QAStyle qaStyle) {
-		/*!!
-		int maxUserLevel = engSpaDAO.getMaxUserLevel();
-		if (userLevel > maxUserLevel) {
-			userLevel = EngSpaQuiz.USER_LEVEL_ALL;
-			this.statusTextView.setText("userLevel set to ALL words");
-		}
-		*/
 		userLevel = engSpaQuiz.validateUserLevel(userLevel);
 		if (engSpaUser != null &&
 				engSpaUser.getUserName().equals(userName) &&
