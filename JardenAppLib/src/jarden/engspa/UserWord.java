@@ -34,7 +34,7 @@ public class UserWord {
 	 */
 	public int addResult(boolean correct, int questionSequence, QAStyle qaStyle) {
 		this.questionSequence = questionSequence;
-		this.qaStyle = qaStyle;
+		if (!correct) this.qaStyle = qaStyle; // style of last wrong answer
 		if (correct) {
 			++consecutiveRightCt;
 		} else {

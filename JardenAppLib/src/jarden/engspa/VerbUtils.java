@@ -983,7 +983,7 @@ public class VerbUtils {
 	
 	/******************English verb data*****************************/
 	private static String[][] irregEnglish3rdPersonSingularPresent = {
-		{ "go", "goes" }, { "do", "does"}, {"be", "is"}
+		{"be", "is"}, { "do", "does"}, { "go", "goes" }, {"have", "has"}
 	};
 	private static String[][] irregEnglishPreterites = {
 		{"accompany", "accompanied"},
@@ -998,13 +998,13 @@ public class VerbUtils {
 		{"hear", "heard"}, {"hide", "hid"}, {"hit", "hit"},
 		{"hurt", "hurt"}, {"hold", "held"}, {"know", "knew"},
 		{"leave", "left"}, {"lend", "lent"}, {"lose", "lost"}, {"make", "made"},
-		{"meet", "met"},
+		{"meet", "met"}, {"prefer", "preferred"},
 		{"put", "put"}, {"read", "read"}, {"regret", "regretted"},
 		{"reply", "replied"}, {"ring", "rang"}, {"run", "ran"}, {"say", "said"},
 		{"see", "saw"}, {"send", "sent"}, {"sell", "sold"}, {"shoot", "shot"},
 		{"sing", "sang"}, {"sit", "sat"}, {"sleep", "slept"},
-		{"speak", "spoke"}, {"stand", "stood"},
-		{"steal", "stole"}, {"stop", "stopped"}, {"study", "studied"},
+		{"speak", "spoke"}, {"spend", "spent"}, {"stand", "stood"},
+		{"steal", "stole"}, {"stick", "stuck"}, {"stop", "stopped"}, {"study", "studied"},
 		{"swim", "swam"}, {"take", "took"}, {"teach", "taught"},
 		{"tell", "told"}, {"think", "thought"}, {"throw", "threw"},
 		{"tidy", "tidied"}, {"understand", "understood"}, 
@@ -1013,8 +1013,8 @@ public class VerbUtils {
 	// irregularities when adding 'ing' ( or 'ed'
 	private static String[][] irregEnglishGerundStem = {
 		{"chat", "chatt"}, {"die", "dy"}, {"forget", "forgett"},
-		{"hit", "hitt"}, {"put", "putt"}, {"quarrel", "quarrell"},
-		{"run", "runn"},
+		{"hit", "hitt"}, {"prefer", "preferr"}, {"put", "putt"},
+		{"quarrel", "quarrell"}, {"run", "runn"},
 		{"regret", "regrett"}, {"swim", "swimm"}, {"win", "winn"}
 	};
 	private static HashMap<String, String> irregEnglish3rdPersonSingularPresentMap;

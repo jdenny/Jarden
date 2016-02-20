@@ -82,22 +82,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			"DROP TABLE IF EXISTS " + USER_WORD_TABLE;
 	private static final String DROP_FAILED_WORD_VIEW =
 			"DROP VIEW IF EXISTS " + FAILED_WORD_VIEW;
-	/*!!
-	// TODO: can we remove this constant?
-	private static final String SELECT_FAILS =
-			"select EngSpa." + BaseColumns._ID +
-			",EngSpa." + ENGLISH +
-			",EngSpa." + SPANISH +
-			",EngSpa." + WORD_TYPE +
-			",EngSpa." + QUALIFIER +
-			",EngSpa." + ATTRIBUTE +
-			",EngSpa." + LEVEL +
-			",UserWord." + CONSEC_RIGHT_CT +
-			",UserWord." + QUESTION_SEQUENCE +
-			" from EngSpa, UserWord where EngSpa." + BaseColumns._ID +
-			"= UserWord." + WORD_ID +
-			" and UserWord." + USER_ID + "=?";
-	 */
 	private static final String RESET_SEQUENCE_NUMBER =
 			"update SQLITE_SEQUENCE set SEQ = 0 where NAME = '" +
 			TABLE + "'";
@@ -132,7 +116,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		engSpaDB.execSQL(CREATE_USER_TABLE);
 		engSpaDB.execSQL(CREATE_USER_WORD_TABLE);
 		engSpaDB.execSQL(CREATE_FAILED_WORD_VIEW);
-		//!! populateDatabase(engSpaDB);
 	}
 	
 	// TODO: preserve data from user table across upgrades
@@ -149,7 +132,7 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	
 	@Override // EngSpaDAO
-	public int newDictionary(/*!! ContentValues[] contentValues*/) {
+	public int newDictionary() {
 		SQLiteDatabase engSpaDB = getWritableDatabase();
 		int delRowCt = delete(engSpaDB, null, null);
 		Log.i(TAG, "EngSpaSQLite2.newDictionary(); rows deleted from database: " + delRowCt);
@@ -209,21 +192,11 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 			return false;
 		}
 	}
-	/*!!
-	private long insert(ContentValues values) {
-		return insert(getWritableDatabase(), values);
-	}
-	*/
 	private long insert(SQLiteDatabase engSpaDB, ContentValues values) {
 		if (validateValues(values)) {
 			return engSpaDB.insert(TABLE, null, values);
 		} else return -1;
 	}
-	/*!!
-	public int bulkInsert(ContentValues[] values) {
-		return bulkInsert(getWritableDatabase(), values);
-	}
-	*/
 	private int bulkInsert(SQLiteDatabase engSpaDB, ContentValues[] valuesArray) {
 		int rows = 0;
 		if (valuesArray == null || valuesArray.length == 0) {
@@ -250,11 +223,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	private Cursor getCursor(String sql, String[] selectionArgs) {
 		return getReadableDatabase().rawQuery(sql, selectionArgs);
 	}
-	/*!!
-	public void close() {
-		super.close();
-	}
-	*/
 	private int update(ContentValues values, String selection,
 			String[] selectionArgs) {
 		if (validateValues(values)) {
@@ -262,11 +230,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 					selection, selectionArgs);
 		} else return 0;
 	}
-	/*!!
-	private int delete(String selection, String[] selectionArgs) {
-		return delete(getWritableDatabase(), selection, selectionArgs);
-	}
-	*/
 	private int delete(SQLiteDatabase engSpaDB, String selection, String[] selectionArgs) {
 		int rows = engSpaDB.delete(TABLE, selection, selectionArgs);
 		if (selection == null) {
@@ -277,37 +240,14 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	
 	// methods for User table: ****************************************
-	/*!!
-	public Cursor getUserCursor(String[] columns, String selection,
-			String[] selectionArgs, String groupBy, String having,
-			String orderBy) {
-		Cursor cursor = getReadableDatabase().query(
-				USER_TABLE, columns, selection, selectionArgs,
-				groupBy, having, orderBy);
-		return cursor;
-	}
-	public long insertUser(ContentValues values) {
-		return getWritableDatabase().insert(
-			USER_TABLE, null, values);
-	}
-	public int updateUser(ContentValues values, String selection,
-			String[] selectionArgs) {
-		return getWritableDatabase().update(USER_TABLE,
-			values, selection, selectionArgs);
-	}
-	public int deleteUser(String selection, String[] selectionArgs) {
-		return getWritableDatabase().delete(USER_TABLE,
-			selection, selectionArgs);
-	}
-	*/
 	@Override // EngSpaDAO
 	public long insertUser(EngSpaUser engSpaUser) {
-		//!! return insertUser(getContentValues(engSpaUser));
 		return getWritableDatabase().insert(
 				USER_TABLE, null, getContentValues(engSpaUser));
 	}
 	private static ContentValues getContentValues(EngSpaUser engSpaUser) {
 		ContentValues contentValues = new ContentValues();
+		// TODO: currently only supports one user, so this doesn't matter
 		//?? contentValues.put(BaseColumns._ID, engSpaUser.getUserId());
 		contentValues.put(NAME, engSpaUser.getUserName());
 		contentValues.put(LEVEL, engSpaUser.getUserLevel());
@@ -316,11 +256,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	@Override // EngSpaDAO
 	public int updateUser(EngSpaUser engSpaUser) {
-		/*!!
-		return updateUser(getContentValues(engSpaUser),
-				"_id=?",
-				getSelectionArgs(engSpaUser) );
-		 */
 		return getWritableDatabase().update(
 				USER_TABLE,
 				getContentValues(engSpaUser),
@@ -332,10 +267,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	@Override // EngSpaDAO
 	public int deleteUser(EngSpaUser engSpaUser) {
-		/*!! 
-		return deleteUser("_id=?",
-				getSelectionArgs(engSpaUser) );
-		*/
 		return getWritableDatabase().delete(
 				USER_TABLE,
 				"_id=?", // selection
@@ -343,58 +274,12 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 
 	// methods for UserWord table: **********************************************
-	/*!!
-	public Cursor getUserWordCursor(String[] columns, String selection,
-			String[] selectionArgs, String groupBy, String having,
-			String orderBy) {
-		return getReadableDatabase().query(
-				USER_WORD_TABLE, columns, selection, selectionArgs,
-				groupBy, having, orderBy);
-	}
-	public long insertUserWord(ContentValues values) {
-		return getWritableDatabase().insert(
-			USER_WORD_TABLE, null, values);
-	}
-	public int updateUserWord(ContentValues values, String selection,
-			String[] selectionArgs) {
-		return getWritableDatabase().update(USER_WORD_TABLE,
-			values, selection, selectionArgs);
-	}
-	public long replaceUserWord(ContentValues values) {
-		return getWritableDatabase().replace(
-				USER_WORD_TABLE, null, values);
-	}
-	public int deleteUserWord(String selection, String[] selectionArgs) {
-		return getWritableDatabase().delete(USER_WORD_TABLE,
-			selection, selectionArgs);
-	}
-	public int bulkInsertUserWord(ContentValues[] valuesArray) {
-		SQLiteDatabase engSpaDB = getWritableDatabase();
-		int rows = 0;
-		for (ContentValues contentValues: valuesArray) {
-			if (insert(engSpaDB, contentValues) > 0) ++rows;
-		}
-		Log.i(TAG, "EngSpaSQLite2.bulkInsertUserWord(); rows added to database: " + rows);
-		return rows;
-	}
-	public Cursor getFailedWordCursor(String[] columns, String selection,
-			String[] selectionArgs, String groupBy, String having,
-			String orderBy) {
-		return getReadableDatabase().query(
-				FAILED_WORD_VIEW, columns, selection, selectionArgs,
-				groupBy, having, orderBy);
-	}
-	*/
 	@Override // EngSpaDAO
 	public List<EngSpa> getFailedWordList(int userId) {
 		if (BuildConfig.DEBUG) Log.d(TAG,
 				"EngSpaSQLite2.getFailedWordList(userId=" + userId + ")");
 		Cursor cursor = null;
 		try {
-			/*!!
-			cursor = getCursor(SELECT_FAILS,
-					new String[] {Integer.toString(userId)});
-			*/
 			cursor = getReadableDatabase().query(
 					FAILED_WORD_VIEW,
 					PROJECTION_ALL_FAILED_WORD_FIELDS,
@@ -423,56 +308,8 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		}
 	}
 
-	/**
-	 * if userId < 1: return all userWords
-	 * else: return userWords for specified user
-	 * @param userId
-	 * @return
-	 */
-	/*!!
-	private List<UserWord> getUserWordList(int userId) {
-		Cursor cursor = null;
-		String selection;
-		String[] selectionArgs;
-		if (userId < 1) { // i.e. get all rows from table
-			selection = null;
-			selectionArgs = null;
-		} else {
-			selection = USER_ID + "=?";
-			selectionArgs = new String[] {Integer.toString(userId)};
-		}
-		try {
-			cursor = getUserWordCursor(
-				PROJECTION_ALL_USER_WORD_FIELDS,
-				selection,
-				selectionArgs,
-				null, // groupBy,
-				null, // having,
-				null); // orderBy
-			List<UserWord> userWordList = new ArrayList<UserWord>();
-			while (cursor.moveToNext()) {
-				int id = cursor.getInt(0);
-				int wordId = cursor.getInt(1);
-				int consecRightCt = cursor.getInt(2);
-				int questionSequence = cursor.getInt(3);
-				String qaStyleStr = cursor.getString(4);
-				QAStyle qaStyle = QAStyle.valueOf(qaStyleStr);
-				UserWord userWord = new UserWord(
-						id, wordId, questionSequence,
-						consecRightCt, qaStyle);
-				userWordList.add(userWord);
-			}
-			if (BuildConfig.DEBUG) Log.d(TAG, "getUserWordList got " + userWordList.size() + " words");
-			return userWordList;
-		} finally {
-			if (cursor != null) cursor.close();
-		}
-	}
-	*/
-
 	@Override // EngSpaDAO
 	public long insertUserWord(UserWord userWord) {
-		//!! return insertUserWord(getContentValues(userWord));
 		return getWritableDatabase().insert(
 				USER_WORD_TABLE, null, getContentValues(userWord));
 	}
@@ -488,11 +325,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 
 	@Override // EngSpaDAO
 	public int updateUserWord(UserWord userWord) {
-		/*!!
-		return updateUserWord(getContentValues(userWord),
-				USER_WORD_SELECTION,
-				getSelectionArgs(userWord));
-		*/
 		return getWritableDatabase().update(
 				USER_WORD_TABLE,
 				getContentValues(userWord),
@@ -501,16 +333,15 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	}
 	@Override // EngSpaDAO
 	public long replaceUserWord(UserWord userWord) {
-		//!! return replaceUserWord(getContentValues(userWord));
 		return getWritableDatabase().replace(
 				USER_WORD_TABLE, null, getContentValues(userWord));
 	}
 
 	private static String[] getSelectionArgs(UserWord userWord) {
-		return new String[]{
-				Integer.toString(userWord.getUserId()),
-				Integer.toString(userWord.getWordId())
-			};
+		return new String[] {
+			Integer.toString(userWord.getUserId()),
+			Integer.toString(userWord.getWordId())
+		};
 	}
 	private String[] getUserSelectionArgs(int userId) {
 		return new String[] { Integer.toString(userId) };
@@ -518,10 +349,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 
 	@Override // EngSpaDAO
 	public int deleteUserWord(UserWord userWord) {
-		/*!!
-		return deleteUserWord(USER_WORD_SELECTION,
-				getSelectionArgs(userWord) );
-		*/
 		return getWritableDatabase().delete(
 				USER_WORD_TABLE,
 				USER_WORD_SELECTION,
@@ -530,10 +357,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 	
 	@Override // EngSpaDAO
 	public int deleteAllUserWords(int userId) {
-		/*!!
-		if (userId < 1) return deleteUserWord(null, null);
-		else return deleteUserWord(USER_SELECTION, getUserSelectionArgs(userId));
-		*/
 		String selection;
 		String[] selectionArguments;
 		if (userId < 1) {
@@ -691,11 +514,6 @@ public class EngSpaSQLite2 extends SQLiteOpenHelper implements EngSpaDAO {
 		}
 		
 	}
-	/*!!
-	public long getRowCount(String tableName) {
-		return DatabaseUtils.queryNumEntries(getReadableDatabase(), tableName);
-	}
-	*/
 
 	@Override // EngSpaDAO
 	public int getDictionarySize() {

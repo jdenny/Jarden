@@ -264,13 +264,6 @@ public class EngSpaQuiz extends Quiz {
 	public int getFailedWordCount() {
 		return this.failedWordList.size();
 	}
-	/*!!
-	public boolean checkAnswer(String answer) {
-		boolean correct = answer.equals(english); 
-		setCorrect(correct);
-		return correct;
-	}
-	*/
 	public void setCorrect(boolean correct, QAStyle qaStyle) {
 		boolean inFailedList = this.failedWordList.contains(currentWord);
 		int consecRights = currentWord.addResult(correct, questionSequence, qaStyle);
@@ -416,5 +409,14 @@ public class EngSpaQuiz extends Quiz {
 			this.currentWordList = engSpaDAO.findWordsByTopic(topic);
 			Collections.shuffle(this.currentWordList);
 		}
+	}
+	/**
+	 * if the current word is a failed word, return the QAStyle used when
+	 * the user got it wrong; otherwise return null.
+	 * @return
+	 */
+	public QAStyle getQAStyleFromQuestion() {
+		QAStyle qaStyle = (cfpChar == 'F') ? this.currentWord.getQaStyle() : null; 
+		return qaStyle;
 	}
 }

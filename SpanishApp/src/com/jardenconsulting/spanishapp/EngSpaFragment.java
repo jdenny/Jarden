@@ -196,8 +196,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		if (getNext) {
 			nextQuestion();
 		}
-		String hint = //!! engSpaQuiz.getCurrentWord().getHint();
-				engSpaQuiz.getHint(!this.currentQAStyle.spaQuestion);
+		String hint = engSpaQuiz.getHint(!this.currentQAStyle.spaQuestion);
 		if (hint.length() > 0) hint = "hint: " + hint;
 		this.attributeTextView.setText(hint);
 		if (this.currentQAStyle.voiceText != VoiceText.text) {
@@ -241,17 +240,19 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		this.engSpaSpanish = this.spanish;
 		String english = engSpaQuiz.getEnglish();
 		
-		QAStyle qaStyle = this.engSpaUser.getQAStyle();
-		if (qaStyle == QAStyle.random) {
-			// minus 2 as we don't include random and alternate:
-			int randInt = random.nextInt(QAStyle.values().length - 2);
-			this.currentQAStyle = QAStyle.values()[randInt];
-		} else if (qaStyle == QAStyle.alternate) {
-			this.currentQAStyle = this.firstAlternative ? QAStyle.spokenSpaToEng
-					: QAStyle.writtenEngToSpa;
-			this.firstAlternative = !this.firstAlternative;
-		} else {
-			this.currentQAStyle = qaStyle;
+		// get qaStyle from question, if it was a failed word, or from user:
+		this.currentQAStyle = engSpaQuiz.getQAStyleFromQuestion();
+		if (this.currentQAStyle == null) { // i.e. if it's not a failed word
+			this.currentQAStyle = this.engSpaUser.getQAStyle();
+			if (this.currentQAStyle == QAStyle.random) {
+				// minus 2 as we don't include random and alternate:
+				int randInt = random.nextInt(QAStyle.values().length - 2);
+				this.currentQAStyle = QAStyle.values()[randInt];
+			} else if (this.currentQAStyle == QAStyle.alternate) {
+				this.currentQAStyle = this.firstAlternative ? QAStyle.spokenSpaToEng
+						: QAStyle.writtenEngToSpa;
+				this.firstAlternative = !this.firstAlternative;
+			}
 		}
 		this.responseIfCorrect = "Right!";
 		if (this.currentQAStyle.spaQuestion) {
