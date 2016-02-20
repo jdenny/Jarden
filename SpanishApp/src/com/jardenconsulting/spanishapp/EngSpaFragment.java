@@ -55,6 +55,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	private String levelStr;
 
 	private Random random = new Random();
+	private int orientation;
 	private QAStyle currentQAStyle;
 	private String question;
 	private String spanish; // word to be spoken; used by all fragments
@@ -177,6 +178,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 		} else {
 			showStats();
 		}
+		saveOrientation();
 		return rootView;
 	}
 	@Override // Fragment
@@ -338,14 +340,28 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	}
 	@Override // Fragment
 	public void onPause() {
+		boolean orientationChanged = isOrientationChanged();
 		super.onPause();
-		if (this.textToSpeech != null) {
+		if (!orientationChanged &&
+				this.textToSpeech != null) {
 			textToSpeech.stop();
 			textToSpeech.shutdown();
 			textToSpeech = null;
 			if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(),
 					"EngSpaFragment.onPause(); textToSpeech closed");
 		}
+	}
+	// return true if orientation changed since previous call
+	private boolean isOrientationChanged() {
+		int oldOrientation = this.orientation;
+		saveOrientation();
+		if (BuildConfig.DEBUG) Log.d(engSpaActivity.getTag(),
+				"EngSpaFragment.getOrientation(); orientation was: " +
+				oldOrientation + ", is: " + this.orientation);
+		return this.orientation != oldOrientation;
+	}
+	private void saveOrientation() {
+		this.orientation = getResources().getConfiguration().orientation;
 	}
 	public void setSpanish(String spanish) {
 		this.spanish = spanish;
@@ -365,7 +381,7 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	public void speakSpanish() {
 		if (this.textToSpeech == null) {
 			// invokes onInit() on completion
-			textToSpeech = new TextToSpeech(getActivity(), this);
+			textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), this);
 			this.statusTextView.setText("loading textToSpeech...");
 			engSpaActivity.setProgressBarVisible(true);
 		} else {
@@ -558,11 +574,14 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 	 */
 	public boolean setUser(String userName, int userLevel,
 			QAStyle qaStyle) {
+		/*!!
 		int maxUserLevel = engSpaDAO.getMaxUserLevel();
 		if (userLevel > maxUserLevel) {
 			userLevel = EngSpaQuiz.USER_LEVEL_ALL;
 			this.statusTextView.setText("userLevel set to ALL words");
 		}
+		*/
+		userLevel = engSpaQuiz.validateUserLevel(userLevel);
 		if (engSpaUser != null &&
 				engSpaUser.getUserName().equals(userName) &&
 				engSpaUser.getUserLevel() == userLevel &&

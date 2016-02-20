@@ -98,7 +98,8 @@ public class EngSpaQuiz extends Quiz {
 	public EngSpa getCurrentWord() {
 		return this.currentWord;
 	}
-	private boolean incrementUserLevel() {
+	/*!!
+	private void incrementUserLevel() {
 		int newUserLevel = this.engSpaUser.getUserLevel() + 1;
 		// successful if there are questions at the next difficulty level
 		boolean levelIncremented =
@@ -109,7 +110,20 @@ public class EngSpaQuiz extends Quiz {
 				quizEventListener.onNewLevel();
 			}
 		}
-		return levelIncremented;
+	}
+	*/
+	/**
+	 * if userLevel > maximum, based on size of dictionary,
+	 * replace with USER_LEVEL_ALL.
+	 * @param userLevel
+	 * @return
+	 */
+	public int validateUserLevel(int userLevel) {
+		int maxUserLevel = engSpaDAO.getMaxUserLevel();
+		if (userLevel > maxUserLevel) {
+			userLevel = USER_LEVEL_ALL;
+		}
+		return userLevel;
 	}
 	/*
 	 * Words on DB should be in difficulty order. A level is deemed to correspond
@@ -123,6 +137,7 @@ public class EngSpaQuiz extends Quiz {
 		if (level == USER_LEVEL_ALL) {
 			this.cfpList = ALL_LEVELS_CFP_LIST;
 			this.currentWordList = null; // no currentWordList
+			this.cfpListIndex = 0;
 		} else {
 			this.cfpList = NORMAL_CFP_LIST;
 			this.currentWordList =  this.engSpaDAO.getCurrentWordList(level);
@@ -155,7 +170,14 @@ public class EngSpaQuiz extends Quiz {
 		if (this.currentWordList != null &&
 				this.currentWordList.size() == 0 &&
 				this.failedWordList.size() == 0) {
-			if (topic == null) incrementUserLevel();
+			// reached end of questions:
+			if (topic == null) { //!!incrementUserLevel();
+				int newUserLevel = validateUserLevel(this.engSpaUser.getUserLevel() + 1);
+				setUserLevel(newUserLevel);
+				if (this.quizEventListener != null) {
+					quizEventListener.onNewLevel();
+				}
+			}
 			else {
 				endOfTopic();
 				if (this.quizEventListener != null) {

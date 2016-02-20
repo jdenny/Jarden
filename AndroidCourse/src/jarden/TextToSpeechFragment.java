@@ -132,7 +132,7 @@ public class TextToSpeechFragment extends Fragment
 		this.phrase = phrase;
 		if (this.textToSpeech == null) {
 			// invokes onInit() on completion
-			textToSpeech = new TextToSpeech(getActivity(), TextToSpeechFragment.this);
+			textToSpeech = new TextToSpeech(getActivity().getApplicationContext(), TextToSpeechFragment.this);
 			statusTextView.setText("loading textToSpeech...");
 		} else {
 			speakPhrase2();

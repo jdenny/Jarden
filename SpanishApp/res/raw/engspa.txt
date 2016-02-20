@@ -1640,7 +1640,7 @@ it's windy,hace viento,phrase,n_a,weather,1
 heat,calor,noun,masculine,weather,1
 highest temperature,temperatura más alta,noun,feminine,weather,1
 hot,caluroso,adjective,n_a,weather,1
-next week,la semana próxima,phrase,n_a,n_a,1
+next week,la semana próxima,phrase,n_a,time,1
 in the east,al este,phrase,n_a,n_a,1
 in the north,al norte,phrase,n_a,n_a,1
 in the south,al sur,phrase,n_a,n_a,1
@@ -1666,3 +1666,16 @@ shine,brillar,verb,transIntrans,weather,1
 weather report,boletín meteorológico,noun,masculine,weather,1
 wind,viento,noun,masculine,weather,1
 windy,ventoso,adjective,n_a,weather,1
+I arrive on the third of October,yo llego el tres de octubre,phrase,n_a,time,1
+fifth of March 2016,cinco de marzo de 2016,phrase,n_a,time,1
+in the year 2012,en el año dos mil doce,phrase,n_a,time,1
+what are you doing tonight,qué haces esta noche,phrase,n_a,time,1
+tomorrow morning,mañana por la mañana,phrase,n_a,time,1
+last week,la semana pasada,phrase,n_a,time,1
+every fortnight,cada quince días,phrase,n_a,time,1
+I would like an orange juice,quisiera un jugo de naranja,phrase,n_a,n_a,1
+I would like to talk,quisiera hablar,phrase,n_a,n_a,1
+it was nothing,de nada,phrase,n_a,n_a,1
+where do you come from,de dónde eres,phrase,n_a,n_a,1
+where do you live,dónde vives,phrase,n_a,n_a,1
+I live in England,vivo en Inglaterra,phrase,n_a,n_a,1
