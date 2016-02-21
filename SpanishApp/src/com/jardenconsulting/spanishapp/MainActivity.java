@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
 			this.currentFragmentTag = ENGSPA;
 		} else {
 			this.currentFragmentTag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
+			if (this.currentFragmentTag == null) this.currentFragmentTag = ENGSPA;
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			this.engSpaFragment = (EngSpaFragment) fragmentManager.findFragmentByTag(ENGSPA);
 			this.verbTableFragment = (VerbTableFragment) fragmentManager.findFragmentByTag(WORD_SEARCH);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity
 			this.userDialog.show(getSupportFragmentManager(), "UserSettingsDialog");
 			return true;
 		} else if (id == R.id.speakerButton) {
-			this.engSpaFragment.speakSpanish(this.currentFragmentTag == ENGSPA);
+			this.engSpaFragment.speakSpanish(this.currentFragmentTag.equals(ENGSPA));
 			return true;
 		} else if (id == R.id.helpButton) {
 			this.statusTextView.setText(R.string.tipTip);
@@ -313,7 +314,7 @@ public class MainActivity extends AppCompatActivity
 		return this.engSpaFragment.getEngSpaQuiz();
 	}
 	private void showFragment(String fragmentTag) {
-		if (this.currentFragmentTag == fragmentTag) {
+		if (this.currentFragmentTag.equals(fragmentTag)) {
 			if (BuildConfig.DEBUG) Log.d(TAG,
 					"MainActivity.showFragment(" + fragmentTag +
 					"); already current fragment");
@@ -323,17 +324,17 @@ public class MainActivity extends AppCompatActivity
 		showFragment();
 	}
 	private void showFragment() {
-		if (this.currentFragmentTag == ENGSPA) {
+		if (this.currentFragmentTag.equals(ENGSPA)) {
 			if (this.engSpaFragment == null) {
 				this.engSpaFragment = new EngSpaFragment();
 			}
 			this.currentFragment = engSpaFragment;
-		} else if (this.currentFragmentTag == WORD_SEARCH) {
+		} else if (this.currentFragmentTag.equals(WORD_SEARCH)) {
 			if (this.verbTableFragment == null) {
 				this.verbTableFragment = new VerbTableFragment();
 			}
 			this.currentFragment = verbTableFragment;
-		} else if (this.currentFragmentTag == NUMBER_GAME) {
+		} else if (this.currentFragmentTag.equals(NUMBER_GAME)) {
 			if (this.raceFragment == null) {
 				this.raceFragment = new RaceFragment();
 			}
@@ -349,8 +350,8 @@ public class MainActivity extends AppCompatActivity
 		}
 		FragmentTransaction transaction = manager.beginTransaction();
 		transaction.replace(R.id.fragmentLayout, currentFragment, currentFragmentTag);
-		if (currentFragmentTag == WORD_SEARCH ||
-				currentFragmentTag == NUMBER_GAME) {
+		if (currentFragmentTag.equals(WORD_SEARCH) ||
+				currentFragmentTag.equals(NUMBER_GAME)) {
 			transaction.addToBackStack(currentFragmentTag);
 		}
 		transaction.commit();

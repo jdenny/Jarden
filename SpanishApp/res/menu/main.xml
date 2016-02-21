@@ -5,12 +5,13 @@
 
     <item
         android:id="@+id/speakerButton"
-        android:icon="@drawable/sound_high"
+        android:icon="@drawable/speaker"
         android:title="@string/speakerStr"
         app:showAsAction="ifRoom"/>
 	
 	<item
         android:id="@+id/helpButton"
+        android:icon="@drawable/help"
         android:title="@string/questionMarkStr"
         app:showAsAction="ifRoom"/>
 	

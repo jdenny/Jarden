@@ -10,12 +10,12 @@
 	</string-array>
 
 	<array name="navigationDrawIcons">
-        <item>@drawable/red_man</item>
-        <item>@drawable/green_man</item>
-        <item>@drawable/blue_man</item>
-        <item>@drawable/red_man</item>
-        <item>@drawable/green_man</item>
-        <item>@drawable/blue_man</item>
+        <item>@drawable/qastyle</item>
+        <item>@drawable/topic</item>
+        <item>@drawable/search</item>
+        <item>@drawable/number</item>
+        <item>@drawable/levels</item>
+        <item>@drawable/help</item>
     </array>
     
 </resources>
