@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Spanish GCSE Revision</string>
+    <string name="app_name">Revise Spanish</string>
 	<string name="cancelStr">Cancel</string>
     <string name="chooseQAStyleStr">Choose Question/Answer Style</string>
 	<string name="chooseTopicStr">Choose Topic</string>
@@ -23,13 +23,10 @@ you want to skip a word, just pretend you got it right!</string>
     <string name="goStr">Go</string>
     <string name="helpHomePage">
 <b>¡Bienvenida! Welcome!</b>\n
-Open \'User Settings\' to change your name.
+Open <i>User Settings</i> to change your name.
 Long press on a button to show tip.\n
-Rotating the device turns off text-to-speech, so if you are using
-a question style where the app speaks the Spanish, it might improve
-the performance if you switch off screen rotation.\n
-Spanish has several words for \'you\'; to differentiate in English
-we use \'thou\' for the familiar, and \'YOU\' for the plural.\n
+Spanish has several words for <i>you</i>; to differentiate in English
+we use <i>thou</i> for the familiar, and <i>YOU</i> for the plural.\n
 If you have any suggestions for improving this app, please send an email
 to amazemequiz@gmail.com
     </string>

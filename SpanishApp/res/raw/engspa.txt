@@ -1329,7 +1329,6 @@ sport,deporte,noun,masculine,sport,1
 sports ground,campo de deportes,noun,masculine,sport,1
 sporty,deportista,adjective,n_a,sport,1
 spy story,cuento de espías,noun,masculine,culture,1
-squash,squash,noun,masculine,sport,1
 stage,escenario,noun,masculine,culture,1
 music centre,équipo de música,noun,masculine,music,1
 smooth,liso,adjective,n_a,n_a,1
@@ -1533,7 +1532,7 @@ petrol,gasolina,noun,feminine,transport,1
 petrol station,gasolinera,noun,feminine,place,1
 service station,estación de servicio,noun,feminine,place,1
 picturesque,pintoresco,adjective,n_a,n_a,1
-pillow,almohada,noun,feminine,place,1
+pillow,almohada,noun,feminine,home,1
 site,sitio,noun,masculine,place,1
 plane,avión,noun,masculine,transport,1
 platform,andén,noun,masculine,place,1
@@ -1565,7 +1564,7 @@ place of interest,lugar de interés,noun,masculine,place,1
 signal,señal,noun,feminine,n_a,1
 single room,habitación individual,noun,feminine,place,1
 single ticket,billete de ida,noun,masculine,transport,1
-sleeping bag,saco de dormir,noun,masculine,size,1
+sleeping bag,saco de dormir,noun,masculine,hobby,1
 sleeping car,coche-cama,noun,masculine,transport,1
 souvenir,recuerdo,noun,masculine,hobby,1
 sports centre,polideportivo,noun,masculine,place,1
@@ -1578,11 +1577,11 @@ summer camp,campamento de verano,noun,feminine,place,1
 supplement,suplemento,noun,masculine,size,1
 taxi,taxi,noun,masculine,transport,1
 telephone card,tarjeta telefónica,noun,feminine,n_a,1
-tennis court,cancha de tenís,noun,feminine,place,1
+tennis court,cancha de tenis,noun,feminine,place,1
 theme park,parque temático,noun,masculine,place,1
 ticket,billete,noun,masculine,transport,1
-ticket office,mostrador de billetes,noun,masculine,place,1
-timetable,horario,noun,masculine,size,1
+ticket office,despacho de billetes,noun,masculine,place,1
+timetable,horario,noun,masculine,transport,1
 to be situated,estar situado,phrase,n_a,n_a,1
 camp,acampar,verb,intransitive,hobby,1
 cross,cruzar,verb,transIntrans,place,1
@@ -1599,7 +1598,7 @@ tower,torre,noun,feminine,building,1
 tower block,bloque de pisos,noun,masculine,building,1
 town centre,centro ciudad,noun,masculine,place,1
 platform,andén,noun,masculine,transport,1
-traffic,circulación,noun,feminine,transport,1
+the traffic,la circulación,phrase,n_a,transport,1
 traffic jam,atasco,noun,masculine,transport,1
 traffic lights,semáforo,noun,masculine,transport,1
 train,tren,noun,masculine,transport,1
@@ -1617,7 +1616,7 @@ path,camino,noun,masculine,transport,1
 welcome,bienvenido,adjective,n_a,n_a,1
 well worth seeing,vale la pena ver,phrase,n_a,n_a,1
 shop window,escaparate,noun,masculine,place,1
-forest,bosque,noun,masculine,size,1
+forest,bosque,noun,masculine,place,1
 youth hostel,albergue juvenil,noun,masculine,building,1
 what's the weather like,qué tiempo hace,phrase,n_a,weather,1
 what will the weather be like tomorrow,qué tiempo hará mañana,phrase,n_a,weather,1
