@@ -1330,7 +1330,7 @@ sports ground,campo de deportes,noun,masculine,sport,1
 sporty,deportista,adjective,n_a,sport,1
 spy story,cuento de espías,noun,masculine,culture,1
 stage,escenario,noun,masculine,culture,1
-music centre,équipo de música,noun,masculine,music,1
+music centre,equipo de música,noun,masculine,music,1
 smooth,liso,adjective,n_a,n_a,1
 swimming,natación,noun,feminine,sport,1
 table tennis,tenis de mesa,noun,masculine,sport,1

@@ -189,6 +189,12 @@ public class EngSpaFragment extends Fragment implements OnClickListener,
 					"; textToSpeech is " + (textToSpeech==null?"":"not ") + "null");
 		}
 		super.onResume();
+		// askQuestion(false); // TODO: which to use?
+		// if we askQuestion, does that mean we don't need to restore other
+		// fields in onCreateView()?
+		if (this.currentQAStyle.voiceText != VoiceText.text) {
+			speakSpanish(this.spanish);
+		}
 	}
 	/**
 	 * if getNext is true: get next question
